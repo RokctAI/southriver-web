@@ -1,7 +1,36 @@
 {
-  "name": "southriver-web_composer",
+  "name": "southriver_web_composer",
+  "data": "local",
+  "_data_comment": "South River is a no-backend shell: \"local\" makes every composed SDK read the host-owned data/ folder (theme, team, stockists, products, about, legal) through base_sdk's server-only reader and hides base's backend-only surface. See data/README.md and base/nextjs/docs/site-data.md in RokctAI/core.",
   "version": "1.0.0",
   "description": "Active Next.js SDK list for the southriver-web shell (composed by The-Rokct-Protocol core/utils/nextjs/sdk_composer.py)",
-  "_comment": "Starts empty on purpose: a new shell composes nothing yet. Pick entries from composer.json.example beside this file. Every network-cloned SDK entry needs a sha256 pin of that SDK's install.py or the composer exits.",
-  "sdks": []
+  "_comment": "Generated at spawn by the factory's seed_composer.py from RokctAI/The-Rokct-Protocol nextjs_compose_example.json (@ 1dbe1497ea7ff41cd3ea652e0f75be922ff169a4). Registry templates are canonical: when core/utils/frappe/composer/southriver-web.json carries an 'sdks' array, every compose re-materializes this file from it, and `scripts/compose.sh refresh` re-pins every entry from the SDK repos. This committed copy is the offline record of the shell's composition floor (SDK_ECOSYSTEM.md hard invariant 9). Change the registry template first, then mirror it here.",
+  "sdks": [
+    {
+      "name": "telemetry_sdk",
+      "enabled": true,
+      "source": "git",
+      "git": "https://github.com/RokctAI/core",
+      "path": "../core/telemetry/nextjs",
+      "ref": "main",
+      "sha256": "318d20eb7123ffaa549618d06b4530dfce5df9ba0b07df2328c0c6e1738e36c4",
+      "version": "1.2.0",
+      "home_sdk": false,
+      "_sha256_comment": "SHA-256 of telemetry/nextjs/install.py at core@ac9b4c7c (1079 bytes), computed at spawn by the factory's seed_composer.py; required by the composer's unpinned-installer gate. `scripts/compose.sh refresh` re-pins from the registry.",
+      "_comment": "Mandatory in every Next.js composition (SDK_ECOSYSTEM.md hard invariant 9): the delivery-policy seam owner, always first."
+    },
+    {
+      "name": "base_sdk",
+      "enabled": true,
+      "source": "git",
+      "git": "https://github.com/RokctAI/core",
+      "path": "../core/base/nextjs",
+      "ref": "main",
+      "sha256": "b6c434a1c05611d29f1018f68b9423383f7ecfbf9cc1efe74825ba6c4df98fff",
+      "version": "1.35.0",
+      "home_sdk": false,
+      "_sha256_comment": "SHA-256 of base/nextjs/install.py at core@ac9b4c7c (1074 bytes), computed at spawn by the factory's seed_composer.py; required by the composer's unpinned-installer gate. `scripts/compose.sh refresh` re-pins from the registry.",
+      "_comment": "The platform kernel: app/services/base, the landing host and its registries, the admin and manager shells. Every other Next.js SDK 'requires' files it installs."
+    }
+  ]
 }
