@@ -20,7 +20,7 @@ SDK's site-metadata copy and the host's `PLATFORM_NAME`.
 | `stockists` | `data/stockists.json`   | `{ items: [{ name, address, town, lat?, lng?, mapsUrl? }] }` (`lat` and `lng` together or not at all)                                    |
 | `products`  | `data/products.json`    | `{ items: [{ name, description?, sizes?: string[], image?, status?: "active" \| "coming" }] }`                                          |
 | `about`     | `data/about.md`         | the markdown, verbatim, as a string                                                                                                    |
-| `legal`     | `data/legal/<slug>.md`  | one file per document; the title from a `title:` front-matter line, else the first `# ` heading (removed from the body)                |
+| `legal`     | `data/legal/<slug>.md`  | one file per document; the title from a `title:` front-matter line, else the first level-one heading (removed from the body)           |
 
 `photo` and `image` are public paths (`/team/jane.jpg`, served from this
 shell's `public/`) or absolute URLs. A slug is lowercase letters, digits and
