@@ -4,7 +4,7 @@
   "_data_comment": "South River is a no-backend shell: \"local\" makes every composed SDK read the host-owned data/ folder (theme, team, stockists, products, about, legal) through base_sdk's server-only reader and hides base's backend-only surface. See data/README.md and base/nextjs/docs/site-data.md in RokctAI/core.",
   "version": "1.0.0",
   "description": "Active Next.js SDK list for the southriver-web shell (composed by The-Rokct-Protocol core/utils/nextjs/sdk_composer.py)",
-  "_comment": "Generated at spawn by the factory's seed_composer.py from RokctAI/The-Rokct-Protocol nextjs_compose_example.json (@ 1dbe1497ea7ff41cd3ea652e0f75be922ff169a4). Registry templates are canonical: when core/utils/frappe/composer/southriver-web.json carries an 'sdks' array, every compose re-materializes this file from it, and `scripts/compose.sh refresh` re-pins every entry from the SDK repos. This committed copy is the offline record of the shell's composition floor (SDK_ECOSYSTEM.md hard invariant 9). Change the registry template first, then mirror it here.",
+  "_comment": "Mirror of the registry template core/utils/frappe/composer/southriver-web.json in RokctAI/The-Rokct-Protocol (@ 3c4fae2d1dee7d7af7781095ee6cd246eaa7423b), re-pinned by `scripts/compose.sh refresh` from the SDK repos; .rokct/lock.json records the same pins plus each SDK's commit and cache content hash. Registry templates are canonical: every compose re-materializes this file from the template and carries the shell-owned \"data\" key through. This committed copy is the offline record of the shell's composition floor (SDK_ECOSYSTEM.md hard invariant 9). Change the registry template first, then mirror it here.",
   "sdks": [
     {
       "name": "telemetry_sdk",
@@ -16,7 +16,7 @@
       "sha256": "318d20eb7123ffaa549618d06b4530dfce5df9ba0b07df2328c0c6e1738e36c4",
       "version": "1.2.0",
       "home_sdk": false,
-      "_sha256_comment": "SHA-256 of telemetry/nextjs/install.py at core@ac9b4c7c (1079 bytes), computed at spawn by the factory's seed_composer.py; required by the composer's unpinned-installer gate. `scripts/compose.sh refresh` re-pins from the registry.",
+      "_sha256_comment": "SHA-256 of telemetry/nextjs/install.py at core@557517e, re-pinned by `scripts/compose.sh refresh`; required by the composer's unpinned-installer gate.",
       "_comment": "Mandatory in every Next.js composition (SDK_ECOSYSTEM.md hard invariant 9): the delivery-policy seam owner, always first."
     },
     {
@@ -27,10 +27,23 @@
       "path": "../core/base/nextjs",
       "ref": "main",
       "sha256": "b6c434a1c05611d29f1018f68b9423383f7ecfbf9cc1efe74825ba6c4df98fff",
-      "version": "1.35.0",
+      "version": "1.38.0",
       "home_sdk": false,
-      "_sha256_comment": "SHA-256 of base/nextjs/install.py at core@ac9b4c7c (1074 bytes), computed at spawn by the factory's seed_composer.py; required by the composer's unpinned-installer gate. `scripts/compose.sh refresh` re-pins from the registry.",
-      "_comment": "The platform kernel: app/services/base, the landing host and its registries, the admin and manager shells. Every other Next.js SDK 'requires' files it installs."
+      "_sha256_comment": "SHA-256 of base/nextjs/install.py at core@557517e, re-pinned by `scripts/compose.sh refresh`; required by the composer's unpinned-installer gate.",
+      "_comment": "The platform kernel: app/services/base, the landing host and its registries, the admin and manager shells, and (1.35.0+) the lib/site-data reader and generate.mjs bundler behind this shell's local data mode. Every other Next.js SDK 'requires' files it installs."
+    },
+    {
+      "name": "corporate_sdk",
+      "enabled": true,
+      "source": "git",
+      "git": "https://github.com/RokctAI/corporate",
+      "path": "../corporate/corporate/nextjs",
+      "ref": "main",
+      "sha256": "6e03485fd03617ea1e175adc50354a91af25e213908371fa3581083d8aa7d4ba",
+      "version": "1.1.0",
+      "home_sdk": false,
+      "_sha256_comment": "SHA-256 of corporate/nextjs/install.py at corporate@1d28d71, re-pinned by `scripts/compose.sh refresh`; required by the composer's unpinned-installer gate.",
+      "_comment": "The company pages: app/legal and app/legal/[id] (the published legal documents), app/about and app/team, with their renderers under components/custom/legal and components/custom/company. In local data mode they read data/about.md, data/team.json and data/legal/*.md through base_sdk's site-data reader. Listed directly after base_sdk (no auth_sdk in this template); never home."
     }
   ]
 }
