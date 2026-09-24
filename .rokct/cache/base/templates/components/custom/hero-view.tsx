@@ -73,6 +73,7 @@ import {
   loadHeroForm,
   type HeroFormProps,
 } from "@/components/custom/landing/hero-form";
+import type { LandingNavItem } from "@/components/custom/landing/landing-config";
 import type { HeroWordmark } from "@/components/custom/landing/landing-page";
 
 /**
@@ -195,16 +196,33 @@ function HeroWordmarkSlot({ wordmark }: { wordmark: HeroWordmark | null }) {
       />
     );
   }
+  // The same font utilities and the same hook as the header's stem
+  // wordmark (header.tsx BrandStemWordmark; 1.40.0): no family of its own,
+  // so both inherit the shell's face, and `data-brand-wordmark="stem"` for
+  // a home SDK to style both at once. With `brand: "stem-tld"` (1.41.0;
+  // Ray, 2026-09-11: "also site name the .school get primary color in
+  // nextjs") the resolver hands a `suffix` - the dot and the rest of the
+  // name - and it is drawn after the stem, inside the same span so it
+  // shares the face and size, in the shell's primary colour with the
+  // header's `data-brand-wordmark="tld"` hook.
   return (
     <span
       aria-label={wordmark.name}
       title={wordmark.name}
-      className={`inline-block whitespace-nowrap font-sans font-bold tracking-tighter leading-none text-black dark:text-white ${HERO_STEM_PADDING_CLASS}`}
+      data-brand-wordmark="stem"
+      className={`inline-block whitespace-nowrap font-bold tracking-tighter leading-none text-black dark:text-white ${HERO_STEM_PADDING_CLASS}`}
       style={{
-        fontSize: `min(76px, calc(250px / (${Math.max(wordmark.text.length, 1)} * 0.6)))`,
+        // Sized to the WHOLE displayed text, suffix included, so a
+        // dotted name still fits the slot.
+        fontSize: `min(76px, calc(250px / (${Math.max(wordmark.text.length + (wordmark.suffix?.length ?? 0), 1)} * 0.6)))`,
       }}
     >
       {wordmark.text}
+      {wordmark.suffix && (
+        <span data-brand-wordmark="tld" className="text-primary">
+          {wordmark.suffix}
+        </span>
+      )}
     </span>
   );
 }
@@ -216,6 +234,8 @@ export interface HeroViewProps {
   wordmark?: HeroWordmark | null;
   signupUrl?: string;
   id?: string;
+  /** The page's live nav, handed to the registered form (see HeroFormProps.nav). */
+  nav?: LandingNavItem[];
   /** Reports whether the form is showing results; HeroResultsContext stands in when absent. */
   onResultsChange?: (hasResults: boolean) => void;
 }
@@ -225,6 +245,7 @@ export function HeroView({
   wordmark = null,
   signupUrl = "/register",
   id,
+  nav,
   onResultsChange,
 }: HeroViewProps) {
   const reportResults = useContext(HeroResultsContext);
@@ -299,7 +320,7 @@ export function HeroView({
         >
           <div className="flex flex-row items-center justify-center h-[72px]">
             <div className="relative flex items-center h-[56px]">
-              <BrandLogo width={56} height={56} showBadge={true} />
+              {hero.logo !== "none" && <BrandLogo width={56} height={56} showBadge={true} />}
               {/* Country code appears next to logo only when text is collapsed */}
               <div
                 className="transition-all duration-500 overflow-hidden flex items-start"
@@ -341,8 +362,14 @@ export function HeroView({
           </div>
         </motion.div>
 
-        {/* Main Headline: the server's text is visible before hydration (initial={false}) */}
-        <div className="mb-12 h-[1.2em] flex items-end md:items-center justify-center">
+        {/* Main Headline: the server's text is visible before hydration (initial={false}).
+            `min-h` and not `h`: the box reserves one line so the hero does not
+            jump as the word rotates, but a headline that wraps - a long suffix,
+            a narrow screen - must be allowed to make the box taller. With a
+            fixed `h-[1.2em]` the wrapped h1 overflowed its 19px box upward and
+            ran into the wordmark above it (11px of the intended 6.7rem gap
+            survived at 390px), which is a layout fault at every phone width. */}
+        <div className="mb-12 min-h-[1.2em] flex items-end md:items-center justify-center">
           {word && (
             <motion.h1
               initial={false}
@@ -364,18 +391,27 @@ export function HeroView({
                   </motion.span>
                 </AnimatePresence>
               </div>
+              {/* A word with no verb renders no verb span: an empty one still
+                  took a `gap-4` of its own, and left the h1's text reading
+                  "Intercity parcelson a white-label delivery platform" - what
+                  a screen reader announces and what a crawler indexes. The
+                  whitespace-only child below is the separator that puts back:
+                  a whitespace-only anonymous flex item is not rendered, so it
+                  costs no layout and the words read as words. */}
               <div className="flex items-center gap-4">
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.span
-                    key={word.verb}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {word.verb}
-                  </motion.span>
-                </AnimatePresence>
+                {word.verb ? (
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={word.verb}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {word.verb}
+                    </motion.span>
+                  </AnimatePresence>
+                ) : null}{" "}
                 <span>{hero.headlineSuffix}</span>
               </div>
             </motion.h1>
@@ -389,6 +425,7 @@ export function HeroView({
             // only place the view's copy is widened to the form's contract.
             hero={hero as HeroConfig}
             signupUrl={signupUrl}
+            nav={nav}
             onFocusChange={setFormFocused}
             onActiveChange={setFormActive}
             onHeadlineWordsChange={setFormWords}

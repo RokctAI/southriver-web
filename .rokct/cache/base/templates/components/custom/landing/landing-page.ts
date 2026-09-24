@@ -85,7 +85,7 @@
 import {
   loadHeaderMenu,
   resolveHeaderMenu,
-  brandStemOf,
+  brandStemLabel,
   type ResolvedHeaderMenu,
 } from "@/components/custom/landing/header-menu";
 import {
@@ -217,17 +217,29 @@ export function describeMetaProblem(meta: unknown): string | null {
 /**
  * Loads one registry entry into a [LoadedSection]; null, after a logged
  * error, when its module fails to load - the rule the client effect
- * applied until 1.31.0, unchanged. When its `meta` is not something the
- * server can read (a "use client" module's client reference proxy, a
- * missing export, any non-object) the section still loads, with
- * [fallbackSectionMeta] and one logged warning naming the module, the
- * settings it renders with and [SECTION_ENTRY_CONTRACT].
+ * applied until 1.31.0, unchanged - or (1.40.0) when it loads with no
+ * default export to render: React would otherwise throw "Element type is
+ * invalid" for the section at render time and the whole page would answer
+ * 500, so a module that is not a component is skipped, named, and the rest
+ * of the page renders. When its `meta` is not something the server can
+ * read (a "use client" module's client reference proxy, a missing export,
+ * any non-object) the section still loads, with [fallbackSectionMeta] and
+ * one logged warning naming the module, the settings it renders with and
+ * [SECTION_ENTRY_CONTRACT].
  */
 export async function loadPageSection(
   entry: PageSectionEntry,
 ): Promise<LoadedSection | null> {
   try {
     const mod: PageSectionModule = await entry.load();
+    if (typeof mod.default !== "function") {
+      console.error(
+        `[landing] section "${entry.id}" has no component to render: ` +
+          "its module has no default export; section skipped. " +
+          SECTION_ENTRY_CONTRACT,
+      );
+      return null;
+    }
     const problem = describeMetaProblem(mod.meta);
     let meta: PageSectionMeta;
     if (problem === null) {
@@ -382,24 +394,44 @@ export async function resolveHeroConfig(): Promise<HeroConfig> {
 
 /** What the hero's wordmark slot shows as text, when it shows text at all. */
 export interface HeroWordmark {
-  /** The visible text: the stem of `name`, or `name` itself when it has none. */
+  /** The visible text: the capitalised stem of `name`, or `name` itself when it has none. */
   text: string;
   /** The full platform name, for the aria-label and title on the text. */
   name: string;
+  /**
+   * The rest of the name after the stem - the dot and the suffix
+   * (".school" of "acme.school") - drawn after `text` in the shell's
+   * primary colour when the copy declares `brand: "stem-tld"` (1.41.0).
+   * Absent for `"stem"`, and for a name with no dot.
+   */
+  suffix?: string;
 }
 
 /**
  * The 1.32.0 `brand` rule. `"name"` (the default, and what every shell
  * drew before the field existed) answers null: the hero draws the host's
  * own wordmark component, exactly as it did. `"stem"` answers the text the
- * hero renders instead: [brandStemOf] of `name` ("acme.school" gives
- * "acme"), or the whole name when it has no stem, with the full name on
- * the element's aria-label and title. No brand string is known here.
+ * hero renders instead: [brandStemLabel] of `name` - the stem with its
+ * first character upper-cased, since 1.39.0 ("acme.school" gives "Acme") -
+ * or the whole name, untouched, when it has no stem, with the full name
+ * as declared on the element's aria-label and title. `"stem-tld"`
+ * (1.41.0; Ray, 2026-09-11: "also site name the .school get primary
+ * color in nextjs") answers the same text and, beside it, `suffix`: the
+ * rest of the trimmed name after the stem (".school"), which the hero
+ * draws after the stem in the shell's primary colour; a name with no
+ * stem answers what `"stem"` answers. No brand string is known here.
  */
 export function resolveHeroWordmark(
   brand: HeroConfig["brand"],
   name: string,
 ): HeroWordmark | null {
-  if (brand !== "stem") return null;
-  return { text: brandStemOf(name) ?? name, name };
+  if (brand !== "stem" && brand !== "stem-tld") return null;
+  if (brand === "stem-tld") {
+    // The suffix is cut from the trimmed name at the stem's length, the
+    // way header.tsx BrandStemWordmark cuts it: the stem's label and the
+    // suffix together read the whole name, in its own case.
+    const label = brandStemLabel(name);
+    if (label !== null) return { text: label, name, suffix: name.trim().slice(label.length) };
+  }
+  return { text: brandStemLabel(name) ?? name, name };
 }

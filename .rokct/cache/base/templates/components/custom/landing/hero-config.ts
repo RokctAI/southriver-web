@@ -94,15 +94,32 @@ export interface HeroConfig {
    * default, and what every shell drew before the field existed - draws
    * the host's own wordmark component (components/custom/branding.tsx).
    * `"stem"` draws the platform name's stem as text instead - the part
-   * before the first dot, the same rule the header folds a dotted name
-   * to (header-menu.ts: brandStemOf; "acme.school" shows "acme"), or the
-   * whole name when it has no dot - with the full name on the element's
-   * aria-label and title. Resolved on the server (landing-page.ts:
+   * before the first dot with its first character upper-cased, the same
+   * rule the header folds a dotted name to (header-menu.ts:
+   * brandStemLabel; "acme.school" shows "Acme"), or the whole name,
+   * untouched, when it has no dot - with the full name as declared on
+   * the element's aria-label and title. Resolved on the server (landing-page.ts:
    * resolveHeroWordmark), so the first HTML already carries the stem; no
    * brand string lives in base, and no shell changes until its home SDK's
-   * hero copy declares it.
+   * hero copy declares it. `"stem-tld"` (1.41.0; Ray, 2026-09-11: "also
+   * site name the .school get primary color in nextjs") draws the same
+   * stem and, after it, the rest of the name - the dot and the suffix -
+   * in the shell's primary colour, the way the header's stem wordmark
+   * draws its suffix; a name with no dot draws exactly what `"stem"`
+   * draws.
    */
-  brand?: "name" | "stem";
+  brand?: "name" | "stem" | "stem-tld";
+  /**
+   * The logo tile beside the wordmark slot (since 1.46.0). `"tile"` -
+   * the default, and what every shell drew before the field existed -
+   * draws the host's own BrandLogo (components/custom/brand-logo.tsx, 56px
+   * with its badge); `"none"` draws no tile at all, for a shell whose
+   * BrandLogo IS the full wordmark while the hero already draws the
+   * stem (`brand: "stem"` or `"stem-tld"`) - the same declaration the
+   * header's brand takes (header-menu.ts: `logo: "none"`). Declared by a
+   * home SDK's hero copy; no shell changes until it does.
+   */
+  logo?: "tile" | "none";
 }
 
 const CHROME_BADGE: HeroBadge = {
@@ -148,4 +165,5 @@ export const HERO_CONFIG: HeroConfig = {
   ],
   fallbackHref: (_query, signupUrl) => signupUrl,
   brand: "name",
+  logo: "tile",
 };

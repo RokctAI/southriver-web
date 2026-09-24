@@ -1,5 +1,512 @@
 # Changelog
 
+## 1.48.0
+
+* The landing hero, two faults visible on every composed storefront and a
+  seam its forms were missing.
+  * `components/custom/hero-view.tsx`: the headline box is `min-h-[1.2em]`
+    rather than `h-[1.2em]`. It still reserves one line so the hero does not
+    jump as the word rotates, but a headline that wraps is no longer clipped
+    to a 19px box it overflows upward: measured on juvo's storefront at
+    390px, the wrapped `<h1>` is 115px tall and ate all but 11px of the
+    6.7rem gap under the wordmark (63px of it at 1440px). Both ends of the
+    headline now sit where the spacing says.
+  * `components/custom/hero-view.tsx`: a headline word with no verb renders
+    no verb span. The empty one took a `gap-4` of its own and, having no
+    text, left the `<h1>` reading "Intercity parcelson a white-label
+    delivery platform" to a screen reader and to a crawler; a
+    whitespace-only child now separates the word from the suffix, which
+    costs no layout (a whitespace-only anonymous flex item is not rendered).
+  * `components/custom/landing/hero-form.ts`: `HeroFormProps.nav`
+    (optional), the page's live nav - the list the floating nav and the
+    header menu are already built from, so it names the sections that ARE
+    on this render after each `meta.renders` has answered. A form whose
+    call to action is an in-page anchor reads it before drawing that
+    button. `components/custom/hero.tsx` (`HeroProps.nav`),
+    `components/custom/hero-view.tsx` (`HeroViewProps.nav`) and
+    `app/landing/page.tsx` (`nav={page.navItems}`) hand it down. A form
+    that ignores it behaves exactly as before.
+
+## 1.47.0
+
+* The site frame: the shell a composed page that is not the landing sits
+  in, so it reads as the same site as `/landing`. Ray, 2026-09-11 20:44Z,
+  of an about page in its own bare frame: "we have no way to get here and
+  its so disconnected to the rest of the site". Nothing new is registered:
+  a home SDK marks the sections that ARE its frame - the theme section
+  carrying `rootClass`, the footer - with `frame: true` on the `meta` it
+  already exports, and keeps its header menu where it is.
+  * `components/custom/landing/page-sections.ts`: `PageSectionMeta.frame`
+    (optional; absent is the landing only, as before) and
+    `sectionFramesSite(meta)`. A frame section still renders on the
+    landing exactly as its `order` and `page` say.
+  * NEW `components/custom/landing/site-frame.ts`: `arrangeSiteFrame`
+    (the pure rule) and `resolveSiteFrame(ctx)` (the loader a page awaits,
+    through the landing's own `loadPageSections` and `loadHeaderMenu`).
+    The answer, `SiteFrameLayout`: `registered` (any frame section
+    present after `renders(ctx)`), `before` (negative order) and `after`
+    (the rest) in order, `rootClass` joined from the frame sections, the
+    landing's `navItems`, and the header `menu` resolved against the
+    LANDING's nav with every anchor on the landing route
+    (`/landing#pricing`), the `local` rule dropping backend-only actions
+    as the landing does. `frameSectionsOf`, `landingNavItemsOf` and
+    `SITE_FRAME_ROOT_CLASS` (the landing root's own classes) beside them.
+  * `components/custom/landing/header-menu.ts`: `resolveHeaderMenu` and
+    `resolveHeaderMenuItems` take an optional third argument,
+    `anchorHref: (id) => string` (`sameAnchorHref`, `#id`, when absent -
+    every existing call is unchanged); `anchorHrefOn(route)` builds the
+    one the frame passes.
+  * NEW `components/custom/site-frame.tsx`: `SiteFrame({ frame?, session?,
+    dataMode?, page?, children })`, a directive-free server component
+    that draws the frame - the landing root's classes plus `rootClass`
+    (`data-site-frame` naming the page), base's `Header` with the
+    resolved menu (its links in the first HTML), the `before` sections,
+    `<main>`, the `after` sections, each with the `PageSectionProps` a
+    landing section gets (no plans, no nav), and `BackToTop` once. A
+    page resolves the frame first and keeps its own when `registered` is
+    false (corporate_sdk 1.2.0's `/about`, `/team` and `/legal` do), so a
+    shell composed without a home landing still renders; a caller that
+    hands no `frame` has it resolved here.
+  * Nothing in base names a brand, a host or a route beyond the existing
+    `LANDING_ROUTE`. A home SDK opts in with `frame: true` on its theme
+    and footer sections and nothing else.
+* Tests: `tests/landing-page.test.mts` executes the rule (a frame with
+  nothing marked is not registered; `before` / `after` split and ordered;
+  `renders` honoured; `rootClass` from frame sections only; the menu's
+  anchors on the landing route, a missing anchor dropped, links kept; the
+  `local` rule; `resolveSiteFrame` against the neutral registries);
+  `tests/test_manifest.py` pins the installs, the field, the component's
+  contract and that it is directive-free.
+
+## 1.46.0
+
+* The install offer runs the browser's install prompt as a real action.
+  Ray, 2026-09-11 20:35:38Z: "nextjs no longer offering me to install app
+  like it used to with pwa"; 20:46:43Z: "the install offer used to show
+  its not showing, that bottom offer is not really an offer its
+  attention, no clicking icon on browser and it try to install or it
+  popup and install". Root cause, in the 1.41.0
+  `components/custom/install-offer.tsx`: the `beforeinstallprompt`
+  listener was attached only when NO declared download matched the
+  visitor's platform (`if (platform === undefined || hasEntry) return;`),
+  and only from a second effect after the platform read - so a shell
+  with a matching entry never offered the install at all, and elsewhere
+  an event that fired before that effect was missed while a later one
+  was swallowed by `preventDefault()` with no control drawn for it. Now
+  the FIRST effect on mount, before any platform read, listens for
+  `beforeinstallprompt` and `appinstalled` (once, `[]`); the handler
+  calls `preventDefault()` only when our control will render - a page
+  running installed (`display-mode: standalone`) leaves the browser's
+  own banner alone - and stashes the event, which survives until the
+  visitor acts (`appinstalled` drops it). The Install control renders
+  only once an event is stashed; a click calls `event.prompt()`, awaits
+  `userChoice`, then clears the stash (a second click while it shows is
+  ignored; a later event is stashed again). With a matching download the
+  offer draws BOTH "Get the <label>" and, when an event is stashed,
+  Install - the 1.41.0 link is unchanged. `BeforeInstallPromptEvent` is
+  exported. The server and the first client render still draw nothing;
+  every window read is in an effect. Base registers no service worker:
+  the browser fires the event only for an installable page, which needs
+  the host's `app/manifest.ts` to carry `icons`.
+* The offered platform's icon button is hidden. Ray, 2026-09-11
+  20:33:16Z, of the icon buttons: "they become double when you tell user
+  to download for that platform, i think should hide the normal one when
+  showing the other". NEW client component
+  `components/custom/download-buttons.tsx` `DownloadButtons({ downloads,
+  hideOffered? })` draws the row's buttons - the same `<a>` per entry
+  `FooterChromeRow` drew (label as aria-label and title,
+  `data-download-platform`, `DOWNLOAD_BUTTON_CLASS`, `DownloadMark`) -
+  minus the one entry the install offer is showing. The offer publishes
+  that entry's id after mount to NEW `OFFERED_DOWNLOAD`
+  (`landing/install-offer.ts`; `createOfferedDownloadStore()`: a plain
+  `get`/`set`/`subscribe` store, `null` until set, notifying on a change
+  only) and clears it on unmount; the buttons read it through
+  `React.useSyncExternalStore` with `null` as the server snapshot and
+  filter with NEW `visibleDownloads(entries, offeredId)` (every entry but
+  that id, in order; `null` or an unknown id keeps all). So the server
+  HTML and the first client render carry EVERY icon - no window read at
+  render - and the duplicate goes after mount; with no offer mounted, no
+  platform recognised or an installed page nothing is hidden.
+  `useOfferedDownload()` is exported for a home SDK's own row;
+  `hideOffered={false}` keeps every button. `FooterChromeRow` renders
+  `<DownloadButtons downloads={downloads} />` after the offer, in the
+  same nav; nothing else in the row changes.
+* Tests: `tests/install-offer.test.mts` (node) executes
+  `visibleDownloads` and the store; `test_manifest.py` gains
+  `test_install_offer_runs_the_prompt_and_hides_the_offered_icon` (the
+  early attach, the guarded `preventDefault`, `prompt()` then
+  `userChoice`, the publish, the row's snapshot), re-pins the 1.41.0
+  offer and row needles (three effects now; the buttons in their file)
+  and raises the node pass floor. Manifest installs the new file.
+  `docs/downloads-and-install.md` describes both.
+* The hero's logo tile can be declared away. `HeroConfig.logo?: "tile" |
+  "none"` (`landing/hero-config.ts`, beside `brand`): `"tile"` - the
+  default, `HERO_CONFIG.logo`, and what every shell drew - draws the
+  host's `BrandLogo` (56px, with its badge) beside the wordmark slot;
+  `"none"` skips that render in `hero-view.tsx`
+  (`{hero.logo !== "none" && <BrandLogo width={56} height={56} showBadge={true} />}`),
+  for a shell whose `BrandLogo` is the full wordmark while the hero
+  already draws the stem (`brand: "stem"` or `"stem-tld"`) - the same
+  declaration the header's brand takes (`logo: "none"`). A home SDK's
+  hero copy declares it; nothing changes until one does.
+  `test_manifest.py` gains `test_hero_logo_tile_can_be_declared_none`.
+* Home SDKs: nothing to declare for the install offer; a shell that
+  mounts the offer in a header slot and its own icon row imports
+  `DownloadButtons` (or `useOfferedDownload`) for the same hiding. A
+  home SDK whose host `BrandLogo` is the wordmark declares
+  `logo: "none"` in its hero copy.
+
+## 1.45.0
+
+* The public terms list falls back to the shell's bundled `data/legal`
+  pages when the backend publishes nothing. `app/actions/base/legal.ts`
+  `listPublicTerms()` still asks the backend first, as a guest, for
+  every enabled "Terms and Conditions" document and returns its rows
+  unchanged whenever it answers any; when the answer is nothing - no
+  base URL (a shell with no backend), a refused guest read, a failed
+  call, or a backend that has published no document yet - and the shell
+  bundles the 1.35.0 `legal` kind (`hasSiteData("legal")`: a `local` or
+  `hybrid` data mode with `data/legal/<slug>.md` files present, never
+  backend mode), the answer is those pages, each as the same
+  `{name: slug, title, disabled: false}` a gateway row becomes, in slug
+  order, read through the generated `lib/site-data/generated.ts` and
+  never the disk at request time. The two lists are never merged, the
+  guest soft-fail is kept (a failing bundle read logs and answers `[]`),
+  and a shell with no legal folder, or in backend mode, answers exactly
+  what it did. A footer's Legal row (`legalFooterLinks`) and
+  corporate_sdk's `/legal` index, which already read `listPublicTerms()`,
+  list the shell's own documents with no code change - a shell whose
+  backend has no documents carries its own markdown instead. Shells need
+  the `prebuild` generate step (`docs/site-data.md`) and a data mode that
+  bundles legal for the fallback to have anything to answer.
+  `tests/legal-fallback.test.mts` executes the action against a
+  `generated.ts` the real generator writes from the acme fixture and
+  against the neutral module.
+
+## 1.42.0
+
+* The landing has a floating "Back to top" button. Ray, 2026-09-11
+  12:32Z: "whats missing is floating push to home, that button you press
+  and it get you to top i just forgot what it says". NEW client component
+  `components/custom/back-to-top.tsx` `BackToTop({ threshold?, label?,
+  className? })`: hidden at the top of the page, shown once the visitor
+  has scrolled past `threshold` pixels (one viewport height by default,
+  read on every check), fixed at the bottom right (`bottom-4 right-4`,
+  `md:bottom-6 md:right-6`, the safe-area inset as margin) at `z-30` -
+  under the sticky header (`z-50`) and its mobile panel (`z-40`), so an
+  open menu covers it, and clear of the left edge and the vertical
+  middle a home SDK's floating nav uses; the install offer is inline in
+  the footer, never fixed, so the two never meet. A click calls
+  `window.scrollTo({ top: 0, behavior })` - `"smooth"`, or `"auto"` (the
+  instant jump) when `(prefers-reduced-motion: reduce)` matches - and
+  blurs the button. The scroll and resize listeners are `passive: true`
+  and folded into one `requestAnimationFrame` per frame; every window
+  read is in the effect or the click, never at render, so the server and
+  the first client render agree on hidden. The button stays in the tree
+  and fades (`motion-safe:transition-opacity`); while hidden it carries
+  `tabIndex={-1}`, `aria-hidden` and `pointer-events-none`, so it is
+  never in the tab order unseen. `aria-label` and `title` are
+  `BACK_TO_TOP_LABEL` ("Back to top"; `label` overrides). Lucide's
+  `ArrowUp`, the icon set the shells already import; theme tokens only
+  (`bg-background`, `border-border`, `text-primary`, `hover:bg-muted`,
+  `ring-ring`). NEW `landing/back-to-top.ts` is the pure half:
+  `BACK_TO_TOP_LABEL`, `REDUCED_MOTION_MEDIA_QUERY`,
+  `resolveThreshold(threshold, viewportHeight)`,
+  `isPastThreshold(scrollY, threshold)` (strictly past, so the top is
+  always hidden), `scrollBehaviour(reducedMotion)`.
+  `components/custom/landing-content.tsx` mounts `<BackToTop />` once,
+  after `<main>`, so a base-only host and a home SDK's composed landing
+  (its `/` sends an anonymous visitor to `/landing`) both have it with
+  no host edit; a host that wants it on every page mounts it in its own
+  root layout. `docs/downloads-and-install.md` describes it.
+* The header's suffix no longer clips its last glyph. Ray, 2026-09-11
+  13:57Z: the final "l" of the site name's suffix was "a bit cut". The
+  suffix span (`components/custom/header.tsx` `BrandStemWordmark`) clips
+  its own overflow so the slot can slide closed over it, and its box is
+  the text's advance width - so once a home SDK italicises the wordmark
+  through the `data-brand-wordmark="stem"` hook, the last glyph's
+  italic overhang (a 900 italic lowercase "l" leans about 0.09em past
+  its advance) was sheared off at the box's right edge. The span now
+  carries `pr-[0.12em] -mr-[0.12em]`: the padding keeps the overhang
+  inside the clipped box, the negative margin hands that width back to
+  the grid, so the track, the stem's width and the country code beside
+  it measure exactly what they did, open and folded. No font, size or
+  colour changes; an upright face draws as before. The hero's suffix
+  never clipped and is untouched.
+* Tests: NEW `tests/back-to-top.test.mts` (node) executes the rules;
+  `test_manifest.py` gains
+  `test_back_to_top_is_a_client_component_mounted_in_the_landing_shell`,
+  `test_back_to_top_rules_under_node`,
+  `test_back_to_top_type_checks_under_tsc` and
+  `test_brand_suffix_has_room_for_its_italic_overhang`. Manifest
+  installs the two new files.
+
+## 1.41.0
+
+* The site name's suffix is in the primary colour. Ray, 2026-09-11
+  07:34:03Z: "also site name the .school get primary color in nextjs".
+  The header's stem wordmark (`components/custom/header.tsx`
+  `BrandStemWordmark`) draws the dot and what follows the stem in
+  `text-primary` - the theme token, no brand colour named - with its own
+  `data-brand-wordmark="tld"` hook on that span
+  (`<span data-brand-wordmark="tld" className="min-w-0 overflow-hidden text-primary">`);
+  the stem span, the country-code span, the wordmark's class list and
+  the slide are untouched. The hero has the matching mode:
+  `HeroConfig.brand` accepts `"stem-tld"` (`landing/hero-config.ts`),
+  `resolveHeroWordmark` (`landing/landing-page.ts`) answers
+  `{ text, name, suffix }` for it - `HeroWordmark.suffix?` is the trimmed
+  name after the stem - and `HeroWordmarkSlot` (`hero-view.tsx`) draws the
+  suffix after the stem inside the same span, in primary with the same
+  hook, sized over the stem and the suffix together; `"stem"` and `"name"`
+  draw exactly what they drew. `docs/downloads-and-install.md` describes
+  both.
+* The footer's downloads are icon buttons. Ray, 2026-09-11 07:34:37Z:
+  "footer has  download links let them be platform icons buttons". NEW
+  `FooterChromeConfig.downloads?: DownloadEntry[]`
+  (`landing/footer-chrome-config.ts`): `DownloadPlatform` is the closed
+  set `ios | android | huawei | macos | windows | linux | web`, and
+  `DownloadEntry` is `{ id, platform, label, href, external?, title?,
+  mark?: BrandMarkId }`. `FooterChromeRow` (`components/custom/footer-chrome.tsx`)
+  draws them as `<nav aria-label="Downloads">` beside the link groups,
+  above the copyright line, one `<a>` per entry - the label as
+  aria-label and title, external ones `target="_blank"
+  rel="noreferrer"`, `h-10 w-10 rounded-full border border-border
+  bg-transparent hover:bg-muted flex items-center justify-center` - with
+  the named mark from `BRAND_MARKS` through `next/image` and
+  `markImageClass`, else a neutral glyph from NEW
+  `landing/platform-glyphs.tsx` (`PlatformGlyph`: a phone, a laptop, a
+  terminal, a globe in `currentColor`; `DownloadMark`; the button class
+  `DOWNLOAD_BUTTON_CLASS`) - never a third-party mark drawn by hand. NEW
+  `landing/download-platform.ts` is the pure half: `DOWNLOAD_PLATFORMS`,
+  `isDownloadPlatform`, `isDownloadHref` (https with a host, or a route
+  with one leading slash), `isDownloadEntry`, `normaliseDownloads`,
+  `downloadTitle`. `FooterChromeLabels.downloads` ("Downloads") names the
+  nav. Nothing declared draws nothing; base declares no entry.
+* The install offer checks the platform. Ray, 2026-09-11 07:37:17Z:
+  "this nextjs has install, it does show on mobile though i havent seen
+  it in desktop i think it installs as pwa but i think it should check
+  the platform and offer app of that platform". NEW client component
+  `components/custom/install-offer.tsx` `InstallOffer({ downloads,
+  labels?, platform?, className? })`: nothing on the server and the first
+  client render; after mount it hides when
+  `matchMedia("(display-mode: standalone)")` matches, reads the platform
+  (NEW `landing/install-offer.ts` `detectPlatform()`:
+  `navigator.userAgentData.platform`, then the user-agent string -
+  iPhone/iPad, HarmonyOS/HUAWEI, Android, Windows, Mac, Linux/X11 - and
+  `detectPlatformFrom(hints)` for tests), picks the entry
+  (`pickDownload(entries, platform)`: its own platform first, android and
+  huawei standing in for each other, the desktops and iOS their own
+  only, `DOWNLOAD_FALLBACKS`) and draws one icon button with "Get the
+  <label>" linking there; with none it listens for `beforeinstallprompt`,
+  keeps the event and draws "Install", which calls `prompt()`; with
+  neither it draws nothing. `INSTALL_OFFER_LABELS` (`get`, `install`) and
+  `installOfferText` hold the words; `platform` forces one for a preview.
+  `FooterChromeRow` mounts it FIRST in the Downloads nav (`installOffer`
+  prop, default true); a home SDK that wants it in a header slot imports
+  `@/components/custom/install-offer` itself - no header change in base.
+* Tests: NEW `tests/download-platform.test.mts` and
+  `tests/install-offer.test.mts` (node) execute the rules;
+  `landing-page.test.mts` covers `"stem-tld"`; `header-brand.test.mts`
+  reads the suffix span's new markup; `test_manifest.py` gains
+  `test_brand_suffix_is_in_the_primary_colour`,
+  `test_footer_downloads_seam_shape`,
+  `test_install_offer_is_a_client_component_that_checks_the_platform` and
+  `test_download_and_install_rules_under_node`, and reads the suffix
+  span's new markup in the 1.29.0 test. Manifest installs the four new
+  files.
+* Home SDKs: lms_sdk 1.31.0 declares its entries (the marks by key, its
+  own hrefs) on its footer config; supacharge re-pins after.
+
+## 1.40.0
+
+* The network strip's sites come from the home SDK that owns them, or
+  from the shell's own data, never from base (Ray, 2026-09-11: a shell
+  with no declaration shows no "Trusted by" strip - a shell outside the
+  network must not list products it has nothing to do with; site names
+  are brand content and logos are hostnames, neither of which base may
+  hard-code). NEW `NetworkStripConfig.sites?: NetworkSite[]` on
+  `components/custom/landing/network-strip.ts` is where a home SDK
+  declares the network beside its heading, order, hidden keys and
+  placement; `resolveNetworkStrip(config, selfHost, sites)` draws
+  `config.sites` when the config declares them and its `sites` argument
+  otherwise. `NETWORK_SITES` in `network-sites.ts` is now an EMPTY
+  readonly list - the default the rules fall back to, so nothing is drawn
+  with nothing declared - and the hidden place-holder entries went with
+  the list to the home SDK. The `NetworkSite` shape, `networkSiteHost`,
+  `hasTrackingParameters`, self-exclusion by host and the once-per-page
+  rule are unchanged; `networkStripRendersAt` already answered false with
+  no site, so a config that says only WHERE the strip goes draws nothing
+  until its sites arrive. A shell whose home SDK registers no `sites` and
+  runs in local or hybrid data mode may commit `data/network.json`: NEW
+  site-data kind `network` (`lib/site-data/kinds.ts` `SiteNetwork`
+  `{ heading?, sites: SiteNetworkSite[] }`, `SITE_DATA_KINDS`,
+  `SITE_DATA_FILES`; `validate.mjs` `validateNetwork` holds every `url`
+  to an https origin with no path, query string or fragment - or `null`
+  with `shown: false` - and every logo to a path or URL with no
+  parameters), read by the NEW `"use server"` action
+  `app/actions/base/network-sites.ts` `getNetworkSites()` (`{ sites: [] }`
+  in backend mode or with no file, the bundled file otherwise). NEW
+  `withOwnNetworkSites(config, own)` on `network-strip.ts` lays the data
+  under the config - registered sites win, else the shell's own data (and
+  its heading when the config names none), else none - and
+  `components/custom/network-strip.tsx`'s `loadResolvedNetworkStrip`
+  answers that merge; the module-level render resolves the registered
+  config with the page (`loadNetworkStripInputs`) and reads the data
+  AFTER MOUNT (`loadOwnNetworkSites`, `useOwnNetworkSites`), because a
+  server function cannot be called while a client component renders on
+  the server, so the server markup and the first client render agree. A
+  home SDK that draws the strip itself (a "section" placement) keeps
+  calling `loadResolvedNetworkStrip` and, with its own `sites` declared,
+  never waits on the action. `docs/site-data.md` gains the kind.
+* Tests: `network-strip.test.mts` no longer pins any brand - its list is
+  an inline fixture handed to the rules as the `sites` argument - and
+  asserts `NETWORK_SITES` is empty, a declared `sites` wins over the
+  argument, `withOwnNetworkSites` in every combination, and zero sites
+  rendering on no surface; `site-data.test.mts` validates
+  `data/network.json` (the acme fixture gains one) and bundles it;
+  `test_manifest.py` replaces `test_network_sites_list_shape` with
+  `test_network_sites_list_is_empty` and
+  `test_network_sites_come_from_the_home_sdk_or_data` (the action is
+  installed, names no host and no brand; the component stages the data
+  read after mount), and its first-party host allowlist drops the product
+  origins - no base default names one now.
+* Home SDKs: agent_sdk declares rokct.ai's five entries (three sites, two
+  hidden place-holders) on its registration in the same release train;
+  lms_sdk's registration (`footer: false`, landing `none`) and every shell
+  with no registration draw no strip, as ruled.
+* A registered section whose module loads with NO default export is
+  skipped, not rendered: `loadPageSection` in
+  `components/custom/landing/landing-page.ts` now checks
+  `typeof mod.default === "function"` before it builds the section, logs
+  one `console.error` naming the section id ("its module has no default
+  export; section skipped", with `SECTION_ENTRY_CONTRACT`) and answers
+  null, the way a module that fails to load already did - so the rest of
+  the page renders instead of React throwing "Element type is invalid" at
+  render time and the route answering 500. A module with a default export
+  is loaded exactly as before, its `meta` read or defaulted as before.
+  `landing-page.test.mts` gains the case: a module with meta but no
+  default export (and one whose default is not a function) is skipped
+  with the error logged and no meta warning, and a proper module beside
+  it still renders with its own meta.
+* A 2xx status probe whose body is EMPTY is not an answer:
+  `getPlatformStatus` (`app/actions/base/status.ts`) now asks NEW
+  `isProbeAnswer(answer)` on `components/custom/landing/footer-chrome-config.ts`
+  (a plain object with at least one field, the gateway's `message`
+  envelope looked through) after `attempted = true` and before it reads
+  the answer, and `continue`s when the resolved body is null, undefined,
+  a scalar, an array, `{}` or `{"message": null}` - a proxy or a
+  placeholder page in front of a backend that is not there answers 200
+  with nothing, and that read as `operational`. The three empty shapes
+  `platformCall` produces all read as `offline`: a body that parses to
+  JSON null (`platformCall` answers null and throws nothing), a genuinely
+  empty body (`res.json()` rejects, so it throws a `network_error`) and a
+  body of `{"message": null}` (`data.message || data` hands back the
+  envelope itself, a truthy object). It now reads as `offline` once every
+  probe is tried (the doc comment that said "an answer at all is the
+  signal" now says an answer with something in it is). The three states
+  keep their meaning: `unconfigured` - the state the footer hides the
+  indicator on - is reached from `ROKCT_STATUS_SOURCE=off` / `none`, or
+  from no probe having an origin to ask, and never from a failed or an
+  empty probe, which are `offline`; a real answer is `operational` or
+  `maintenance` with its version, as before. Tests: NEW `status.test.mts`
+  executes the action against a stub gateway (one test per empty shape:
+  a JSON-null body, a body that fails to parse, `{"message": null}` -
+  plus `undefined`, `{}`, a scalar and an array - each offline and never
+  operational or unconfigured; `{status:"ok"}` is
+  operational; the envelope's maintenance and version read as before; an
+  empty tenant answer falls through to an opted-in control probe; `off` /
+  `none` are unconfigured with no probe run; a failed probe is offline,
+  not unconfigured), staged by `test_manifest.py`'s NEW
+  `test_status_action_behaviour_under_node` and held in shape by
+  `test_status_action_treats_an_empty_answer_as_none`;
+  `status-probes.test.mts` covers `isProbeAnswer` itself.
+* The admin system-info actions ask a cmd that EXISTS for the version.
+  `app/actions/base/admin/settings.ts` and `system.ts` `getSystemInfo`
+  called `paasCall("api.get_version")`, a cmd registered nowhere -
+  not among the tenant cmds in `base/frappe/manifest.json`, not in the
+  platform's hooks, not in any cached SDK manifest - so the version was
+  always null. Both now call `paasCall(PLATFORM_VERSION_CMD)` - NEW on
+  `components/custom/landing/footer-chrome-config.ts`,
+  `"api.system.api_status"`, the one registered tenant cmd that carries
+  `version` (`{data: {status, version, user}}`; the same cmd the footer's
+  tenant probe asks) - and read it with NEW `readPlatformVersion(answer)`
+  beside it (the envelope, the gateway's `message` wrapper around it, or
+  a bare `version`; a string, else null). The callers' return shape is
+  unchanged (`{ ...info, version }`); `status.ts` reads its version
+  through the same reader. Tests: `status-probes.test.mts` asserts the
+  cmd name and the reader's string-or-null rule; `test_manifest.py`'s NEW
+  `test_admin_system_info_asks_a_registered_version_cmd` holds both call
+  sites to the constant, checks the frappe manifest registers the cmd and
+  not the phantom, and that no template or kernel file asks
+  `api.get_version`.
+* The header's stem wordmark is set in the same face as the hero's (Ray,
+  2026-09-11: on supacharge.school the "Supacharge" wordmark is right in
+  the hero and the footer but wrong in the header). The header's
+  `BrandStemWordmark` (`components/custom/header.tsx`) and the hero's
+  `HeroWordmarkSlot` (`components/custom/hero-view.tsx`) now carry the
+  SAME font utilities - `font-bold tracking-tighter leading-none`, no
+  family of their own - so both inherit the face the shell's root
+  declares (the hero span's `font-sans`, which forced Tailwind's default
+  stack over whatever the shell set, is gone; the header never had one),
+  and both carry the one hook `data-brand-wordmark="stem"`, so a home
+  SDK that gives its wordmark a face of its own styles the header and
+  the hero with ONE rule instead of reaching the hero through a deep
+  selector and leaving the header in the body font. The code span
+  beside the stem keeps `font-medium` at its `calc(44px * 0.28)` cap;
+  the stem's label (`brandStemLabel`) and sizes are unchanged. NEW
+  `test_header_stem_wordmark_shares_the_hero_wordmark_font` holds the
+  two class lists equal.
+* The admin settings and content actions send their `frappe.client.*`
+  calls through the gateway instead of nowhere. `app/actions/base/admin/settings.ts`
+  (21 sites: payment gateways, permission settings, Flutter app and build
+  settings, terms, privacy policies) and `admin/content.ts` (4 sites:
+  FAQs) still called `frappe.call({ method, args })` on the client from
+  `getPaaSClient()`; frappe-js-sdk's `call()` takes no object argument,
+  so those calls sent nothing and the admin surfaces were silently
+  empty. Every site is now `paasCall(cmd, args)` - the cmd string
+  verbatim, the same args, the `message` envelope unwrapped by the
+  gateway as the already-migrated sites in the same files have it - and
+  the `getPaaSClient` import is gone from both. NEW
+  `test_admin_actions_call_the_gateway_not_the_sdk_client` in
+  `test_manifest.py` walks every action file and fails on any `.call({`,
+  `frappe.call(` or `as any).call(` left, on a `getPaaSClient` import,
+  or on a dotted `/api/method/` URL, and pins the 25 sites per cmd.
+
+## 1.39.0
+
+* The folded brand stem is capitalised where base shows ONLY the stem
+  (Ray, 2026-09-11 04:23Z: the brand string stays the domain, lower
+  case - "supacharge.school" - and the stem without ".school" is
+  capitalised: "supacharge" shows as "Supacharge"). NEW
+  `brandStemLabel(name)` beside `brandStemOf` in
+  `components/custom/landing/header-menu.ts` is the one rule: the
+  1.29.0 stem with its first character upper-cased, `null` for a name
+  with no stem exactly as `brandStemOf` answers, so an undotted name
+  ("Rokct") is never touched and a stem that already starts upper-case
+  ("Juvo") is itself. The header's stem wordmark (`header.tsx`,
+  `BrandStemWordmark`) shows the label in the stem span, still cuts the
+  suffix from the name at the stem's length so ".school" slides away
+  as it did, and now carries `title={name.trim()}` - the full name as
+  declared. The hero's stem wordmark (`landing-page.ts`,
+  `resolveHeroWordmark`) answers `{ text: brandStemLabel(name) ?? name,
+  name }`, so `brand: "stem"` draws "Supacharge" with the full domain on
+  the element's aria-label and title as before; the whole-name case
+  ("stem" on an undotted name) is unchanged. Nothing else changes case:
+  the site metadata, the network strip, the footer and every brand
+  string source stay what the shell declared. The fold rule, the
+  1.36.0 code cap (`calc(44px * 0.28)`) and the code's placement beside
+  the stem are untouched; no brand string is named in base.
+* Tests: `header-brand.test.mts` gains the `brandStemLabel` cases
+  (lower-case, already-capitalised and undotted names, the header
+  markup) and `landing-page.test.mts` reads "Acme" / "Supacharge" from
+  `resolveHeroWordmark` with the lower-case name beside it;
+  `test_manifest.py` gains `test_folded_stem_is_capitalised` (one
+  `toUpperCase` in base, in `brandStemLabel`; the header and the hero
+  show the label and title the full name).
+* Release order: 1.38.0 (RokctAI/core #220, the page slot and the
+  header's local-mode switch) merged first; this release sits above it
+  on main and touches none of its files' rules.
+
 ## 1.38.0
 
 * A registered section may name the PAGE it belongs to, so a home SDK's

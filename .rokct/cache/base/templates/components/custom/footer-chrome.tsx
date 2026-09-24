@@ -45,12 +45,32 @@
 // legal documents (components/custom/landing/legal-links.ts turns the
 // published documents into that group, one link each to corporate_sdk's
 // /legal/<name> page). Nothing is drawn when no group is passed.
+//
+// Since 1.41.0 the row can carry DOWNLOADS beside the link groups
+// (`config.downloads`; Ray, 2026-09-11: "footer has  download links let
+// them be platform icons buttons"): one ICON BUTTON per entry in a nav of
+// its own - the mark base serves when the entry names one, else the
+// platform's neutral glyph (components/custom/landing/platform-glyphs.tsx),
+// the entry's label on the button's aria-label and title - and, first in
+// that nav, the INSTALL OFFER (components/custom/install-offer.tsx; Ray,
+// same day: "it should check the platform and offer app of that
+// platform"), which reads the visitor's platform after mount and offers
+// the download declared for it and, since 1.46.0, the browser's install
+// prompt as an action beside it. Nothing is drawn when no download is
+// declared. Since 1.46.0 the buttons are components/custom/download-buttons.tsx,
+// which hides the one entry the offer already shows (Ray, 2026-09-11
+// 20:33:16Z: "they become double when you tell user to download for that
+// platform, i think should hide the normal one when showing the other")
+// after mount - the server HTML still carries every icon.
 
 import React from "react";
 import Link from "next/link";
 
 import { getPlatformStatus } from "@/app/actions/base/status";
+import { DownloadButtons } from "@/components/custom/download-buttons";
+import { InstallOffer } from "@/components/custom/install-offer";
 import { NetworkStrip } from "@/components/custom/network-strip";
+import { normaliseDownloads } from "@/components/custom/landing/download-platform";
 import {
   FOOTER_CHROME_CONFIG,
   FOOTER_CHROME_LABELS,
@@ -76,6 +96,13 @@ export interface FooterChromeRowProps {
    * registered placement keeps `footer` on, and never lists this shell.
    */
   networkStrip?: boolean;
+  /**
+   * Whether the install offer is drawn first in the Downloads nav (since
+   * 1.41.0). Default true; a footer whose shell mounts the offer
+   * elsewhere (a header slot) passes false. Nothing is drawn either way
+   * when `config.downloads` is empty.
+   */
+  installOffer?: boolean;
 }
 
 export function FooterChromeRow({
@@ -83,6 +110,7 @@ export function FooterChromeRow({
   className = "",
   refreshMs = 0,
   networkStrip = true,
+  installOffer = true,
 }: FooterChromeRowProps) {
   const [status, setStatus] = React.useState<PlatformStatus | null>(null);
 
@@ -114,6 +142,7 @@ export function FooterChromeRow({
   const colors = { ...FOOTER_CHROME_STATUS_COLORS, ...config.statusColors };
 
   const groups = (config.links ?? []).filter((g) => g.items.length > 0);
+  const downloads = normaliseDownloads(config.downloads);
 
   const year = config.copyrightYear ?? new Date().getFullYear();
   const holder = config.copyrightHolder?.trim();
@@ -143,44 +172,58 @@ export function FooterChromeRow({
   return (
     <>
       {networkStrip && <NetworkStrip surface="footer" />}
-      {groups.length > 0 && (
-        <nav
-          aria-label="Footer links"
-          className="flex flex-wrap items-center gap-x-8 gap-y-2 pb-4 text-sm"
-        >
-          {groups.map((group) => (
-            <div
-              key={group.id}
-              className="flex flex-wrap items-center gap-x-4 gap-y-1"
-              data-footer-group={group.id}
+      {(groups.length > 0 || downloads.length > 0) && (
+        <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 pb-4">
+          {groups.length > 0 && (
+            <nav
+              aria-label="Footer links"
+              className="flex flex-wrap items-center gap-x-8 gap-y-2 text-sm"
             >
-              <span className="text-xs font-bold uppercase tracking-tight opacity-50">
-                {group.label}
-              </span>
-              {group.items.map((item) =>
-                item.external ? (
-                  <a
-                    key={item.id}
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="opacity-70 hover:opacity-100 underline-offset-4 hover:underline"
-                  >
-                    {item.label}
-                  </a>
-                ) : (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    className="opacity-70 hover:opacity-100 underline-offset-4 hover:underline"
-                  >
-                    {item.label}
-                  </Link>
-                ),
-              )}
-            </div>
-          ))}
-        </nav>
+              {groups.map((group) => (
+                <div
+                  key={group.id}
+                  className="flex flex-wrap items-center gap-x-4 gap-y-1"
+                  data-footer-group={group.id}
+                >
+                  <span className="text-xs font-bold uppercase tracking-tight opacity-50">
+                    {group.label}
+                  </span>
+                  {group.items.map((item) =>
+                    item.external ? (
+                      <a
+                        key={item.id}
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="opacity-70 hover:opacity-100 underline-offset-4 hover:underline"
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <Link
+                        key={item.id}
+                        href={item.href}
+                        className="opacity-70 hover:opacity-100 underline-offset-4 hover:underline"
+                      >
+                        {item.label}
+                      </Link>
+                    ),
+                  )}
+                </div>
+              ))}
+            </nav>
+          )}
+          {downloads.length > 0 && (
+            <nav
+              aria-label={labels.downloads}
+              className="flex flex-wrap items-center gap-2"
+              data-footer-downloads={downloads.length}
+            >
+              {installOffer && <InstallOffer downloads={downloads} className="mr-2" />}
+              <DownloadButtons downloads={downloads} />
+            </nav>
+          )}
+        </div>
       )}
       <div
         className={`flex flex-row justify-between items-center gap-6 ${className}`}
