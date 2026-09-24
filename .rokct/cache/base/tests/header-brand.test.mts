@@ -36,6 +36,7 @@ import {
   brandFoldsToLetter,
   brandFoldsToStem,
   brandLetterOf,
+  brandStemLabel,
   brandStemOf,
   headerBrandNeedsCopy,
   isGeneratedBrandIcon,
@@ -361,6 +362,61 @@ describe('brandStemOf: the text before the first dot (1.29.0)', () => {
   });
 });
 
+// base_sdk 1.39.0: the DISPLAYED stem is capitalised (Ray, 2026-09-11: the
+// stem without .school is capitalised - "supacharge" shows as "Supacharge",
+// the full domain stays lower case as the title / aria / metadata).
+describe('brandStemLabel: the stem with its first character upper-cased (1.39.0)', () => {
+  it('a dotted lower-case name: the stem, first character upper-cased', () => {
+    assert.equal(brandStemLabel('supacharge.school'), 'Supacharge');
+    assert.equal(brandStemLabel('rokct.ai'), 'Rokct');
+    assert.equal(brandStemLabel('  supacharge.school '), 'Supacharge');
+    assert.equal(brandStemLabel('a.b.c'), 'A');
+  });
+
+  it('a stem that already starts upper-case is itself; only the first character changes', () => {
+    assert.equal(brandStemLabel('Juvo.app'), 'Juvo');
+    assert.equal(brandStemLabel('ACME.school'), 'ACME');
+    assert.equal(brandStemLabel('south river.school'), 'South river');
+  });
+
+  it('no stem, no label: an undotted name ("Rokct") is never touched', () => {
+    assert.equal(brandStemLabel('Rokct'), null);
+    assert.equal(brandStemLabel('rokct'), null);
+    assert.equal(brandStemLabel('.school'), null);
+    assert.equal(brandStemLabel(''), null);
+    assert.equal(brandStemLabel(null), null);
+    assert.equal(brandStemLabel(undefined), null);
+  });
+
+  it('the full name is what brandStemOf folds: the label never changes the fold rule', () => {
+    for (const name of ['supacharge.school', 'Juvo.app', 'a.b.c', 'x.']) {
+      const stem = brandStemOf(name);
+      const label = brandStemLabel(name);
+      assert.ok(stem !== null && label !== null);
+      assert.equal(label.length, stem.length);
+      assert.equal(label.slice(1), stem.slice(1));
+      assert.equal(label.toLowerCase(), stem.toLowerCase());
+    }
+  });
+
+  it('the header shows the label, cuts the suffix at the stem and titles the full name', () => {
+    const header = readFileSync(new URL('./header.tsx', import.meta.url), 'utf8');
+    const wordmark = header.slice(header.indexOf('function BrandStemWordmark('), header.indexOf('function BrandBlock('));
+    assert.ok(wordmark.includes('const suffix = name.trim().slice(stem.length);'));
+    assert.ok(wordmark.includes('const label = brandStemLabel(name) ?? stem;'));
+    assert.ok(wordmark.includes('<span>{label}</span>'));
+    assert.ok(!wordmark.includes('<span>{stem}</span>'));
+    assert.ok(wordmark.includes('title={name.trim()}'));
+    assert.ok(!wordmark.includes('toUpperCase'));
+    // The stem still comes from brandStemOf (the fold rule), the label from
+    // brandStemLabel, and both from the same header-menu import.
+    const collapsing = header.slice(header.indexOf('function CollapsingBrand('), header.indexOf('const UNDECLARED_BRAND'));
+    assert.ok(collapsing.includes('const stem = brandFoldsToStem(brand, PLATFORM_NAME) ? brandStemOf(PLATFORM_NAME) : null;'));
+    assert.ok(collapsing.includes('<BrandStemWordmark name={PLATFORM_NAME} stem={stem} collapsed={collapsed} />'));
+    assert.match(header, /import \{[^}]*\bbrandStemLabel\b[^}]*\} from "@\/components\/custom\/landing\/header-menu";/);
+  });
+});
+
 describe('brandFoldsToStem: an icon-less collapsing brand with a dotted name (1.29.0)', () => {
   const iconless = resolveHeaderBrand({ logo: 'none', collapse: true }, null);
 
@@ -481,11 +537,48 @@ describe('BRAND_STEM_FONT_SIZE: the stem wordmark fits the bar (1.29.0)', () => 
     assert.ok(!wordmark.includes('text-[60px]'));
     assert.ok(!wordmark.includes('text-['));
     assert.equal(wordmark.match(/fontSize/g)?.length, 1);
-    // Neither inner span sizes itself: the stem and the suffix inherit.
-    assert.ok(wordmark.includes('<span>{stem}</span>'));
-    assert.ok(wordmark.includes('<span className="min-w-0 overflow-hidden">{suffix}</span>'));
+    // Neither inner span sizes itself: the stem (its 1.39.0 label) and the
+    // suffix inherit. 1.41.0: the suffix span is in the primary colour and
+    // carries its own hook (Ray, 2026-09-11: "also site name the .school
+    // get primary color in nextjs").
+    assert.ok(wordmark.includes('<span>{label}</span>'));
+    assert.ok(
+      wordmark.includes(
+        '<span data-brand-wordmark="tld" className="min-w-0 overflow-hidden pr-[0.12em] -mr-[0.12em] text-primary">',
+      ),
+    );
+    assert.ok(!wordmark.includes('<span className="min-w-0 overflow-hidden">{suffix}</span>'));
     // The 1.24.0 Branding slot keeps its 60px literal.
     assert.ok(header.includes('<Branding className="text-[60px] tracking-tighter leading-none" />'));
+  });
+
+  // 1.42.0 (Ray, 2026-09-11 13:57Z: the final "l" of the suffix was "a bit
+  // cut"): the suffix span clips its own overflow so the slot can close
+  // over it, and its box is the text's advance width, so an italic face's
+  // last glyph - which leans past its advance - was sheared off at the
+  // right edge once a home SDK italicised the wordmark. The span pads its
+  // right in em and hands the same width back as a negative margin, so
+  // the grid track, the stem's width and the code beside it are what they
+  // were, open and folded; the clip itself stays for the fold.
+  it('the suffix span keeps room for an italic overhang without widening the stem', () => {
+    const header = readFileSync(new URL('./header.tsx', import.meta.url), 'utf8');
+    const wordmark = header.slice(header.indexOf('function BrandStemWordmark('), header.indexOf('function BrandBlock('));
+    const tld = wordmark.match(/<span data-brand-wordmark="tld" className="([^"]+)">/);
+    assert.ok(tld);
+    const classes = tld[1].split(' ');
+    assert.ok(classes.includes('overflow-hidden'), 'the fold still clips');
+    assert.ok(classes.includes('min-w-0'), 'the track still closes to zero');
+    const pad = classes.find((c) => /^pr-\[[\d.]+em\]$/.test(c));
+    const neg = classes.find((c) => /^-mr-\[[\d.]+em\]$/.test(c));
+    assert.ok(pad, 'a right padding in em');
+    assert.ok(neg, 'a matching negative right margin in em');
+    const em = (c: string) => Number(c.match(/\[([\d.]+)em\]/)![1]);
+    assert.equal(em(pad), em(neg), 'the padding is handed back in full');
+    // A 900 italic lowercase "l" overhangs its advance by about 0.09em.
+    assert.ok(em(pad) >= 0.09);
+    assert.ok(em(pad) <= 0.2, 'room, not a gap');
+    assert.ok(!wordmark.includes('pr-[0.12em]"'), 'the padding is not the last class: text-primary still closes the list');
+    assert.ok(classes.includes('text-primary'));
   });
 });
 

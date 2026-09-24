@@ -153,6 +153,7 @@ import {
   HEADER_MENU,
   brandFoldsToLetter,
   brandFoldsToStem,
+  brandStemLabel,
   brandLetterOf,
   brandStemOf,
   loadHeaderBrand,
@@ -315,24 +316,67 @@ function BrandStemWordmark({
   collapsed: boolean;
 }) {
   const suffix = name.trim().slice(stem.length);
+  // What the stem span shows (1.39.0): the stem with its first character
+  // upper-cased ([brandStemLabel]; "acme.school" folds to "Acme"). The
+  // suffix is still cut from the name at the stem's length, and the
+  // title on the wordmark is the full name as declared, so nothing but
+  // the one displayed character changes case.
+  const label = brandStemLabel(name) ?? stem;
   // One size for the whole name, set on this span so the stem and the
   // suffix inherit it: the 60px of the large wordmark when the FULL name
   // fits the bar, else what fits ([BRAND_STEM_FONT_SIZE], from the name's
   // character count and the viewport), so the name never widens the bar
   // and the stem's glyphs are the same before and after the fold.
   const size = { "--brand-chars": name.trim().length, fontSize: BRAND_STEM_FONT_SIZE } as React.CSSProperties;
+  // The face (1.40.0; Ray, 2026-09-11: the header's stem wordmark was in a
+  // different font from the hero's and the footer's): the stem wordmark
+  // here and the hero's (hero-view.tsx HeroWordmarkSlot) carry the SAME
+  // font utilities - bold, tracking-tighter, leading-none, and NO family
+  // of their own, so both inherit the face the shell's root declares -
+  // and the same `data-brand-wordmark="stem"` hook, so a home SDK that
+  // gives its wordmark a face of its own styles both with ONE rule
+  // ([data-brand-wordmark="stem"]) instead of reaching one and not the
+  // other. The code span beside it keeps its own font-medium at its
+  // 1.36.0 cap. tests/test_manifest.py holds the two class lists equal.
+  //
+  // The suffix (1.41.0; Ray, 2026-09-11: "also site name the .school get
+  // primary color in nextjs"): the dot and what follows the stem sit in
+  // the shell's PRIMARY colour (`text-primary`, the theme token - no
+  // brand colour is named here) inside the sliding slot, and carry their
+  // own `data-brand-wordmark="tld"` hook so a home SDK can restyle the
+  // suffix alone; the stem span before it and the code span beside it
+  // keep `text-foreground`. The hero's `brand: "stem-tld"` draws the
+  // same suffix the same way (hero-view.tsx HeroWordmarkSlot).
+  //
+  // Room for the last glyph (1.42.0; Ray, 2026-09-11 13:57Z: the final
+  // "l" of the suffix was "a bit cut"): the suffix span clips its own
+  // overflow so the slot can close over it, and its box is exactly the
+  // text's advance width - but an italic face's last glyph leans PAST
+  // its advance (a 900 italic lowercase "l" by about 0.09em), and that
+  // overhang was sheared off at the box's right edge whenever a home SDK
+  // italicises the wordmark through the stem hook. `pr-[0.12em]` keeps
+  // the overhang inside the clipped box; the matching `-mr-[0.12em]`
+  // hands that width straight back to the grid, so the track, the stem's
+  // width and the code beside it measure exactly what they did, open
+  // and folded (folded, the padding-only box sits at opacity 0 outside
+  // a 0fr track). Neither number is a font's: any upright face has
+  // nothing to overhang and draws as before.
   return (
     <span
+      title={name.trim()}
+      data-brand-wordmark="stem"
       className="flex shrink-0 items-center whitespace-nowrap pt-0.5 font-bold tracking-tighter leading-none text-foreground"
       style={size}
     >
-      <span>{stem}</span>
+      <span>{label}</span>
       <span
         aria-hidden={collapsed}
         className="grid transition-all duration-500 ease-in-out"
         style={{ gridTemplateColumns: collapsed ? "0fr" : "1fr", opacity: collapsed ? 0 : 1 }}
       >
-        <span className="min-w-0 overflow-hidden">{suffix}</span>
+        <span data-brand-wordmark="tld" className="min-w-0 overflow-hidden pr-[0.12em] -mr-[0.12em] text-primary">
+          {suffix}
+        </span>
       </span>
     </span>
   );

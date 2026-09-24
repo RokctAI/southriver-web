@@ -52,6 +52,7 @@ next-env.d.ts
 /app/actions/base/admin/system.ts
 /app/actions/base/landing.ts
 /app/actions/base/legal.ts
+/app/actions/base/network-sites.ts
 /app/actions/base/status.ts
 /app/actions/corporate/legal.ts
 /app/actions/telemetry/admin/dashboard.ts
@@ -101,6 +102,7 @@ next-env.d.ts
 /app/twitter-image.tsx
 /components/admin/GenericReport.tsx
 /components/custom/app-sidebar.tsx
+/components/custom/back-to-top.tsx
 /components/custom/beta-toggle.tsx
 /components/custom/company/company-frame.tsx
 /components/custom/company/company-pages.ts
@@ -108,19 +110,24 @@ next-env.d.ts
 /components/custom/company/markdown-parser.ts
 /components/custom/company/markdown.tsx
 /components/custom/company/team-grid.tsx
+/components/custom/download-buttons.tsx
 /components/custom/footer-chrome.tsx
 /components/custom/header-menu.tsx
 /components/custom/header.tsx
 /components/custom/hero-view.tsx
 /components/custom/hero.tsx
+/components/custom/install-offer.tsx
 /components/custom/landing-content.tsx
+/components/custom/landing/back-to-top.ts
 /components/custom/landing/brand-marks.ts
+/components/custom/landing/download-platform.ts
 /components/custom/landing/footer-chrome-config.ts
 /components/custom/landing/header-menu.ts
 /components/custom/landing/hero-config.ts
 /components/custom/landing/hero-copy.ts
 /components/custom/landing/hero-form.ts
 /components/custom/landing/hero-sections.ts
+/components/custom/landing/install-offer.ts
 /components/custom/landing/landing-config.ts
 /components/custom/landing/landing-page.ts
 /components/custom/landing/legal-links.ts
@@ -128,6 +135,8 @@ next-env.d.ts
 /components/custom/landing/network-strip.ts
 /components/custom/landing/page-sections.ts
 /components/custom/landing/plans-query.ts
+/components/custom/landing/platform-glyphs.tsx
+/components/custom/landing/site-frame.ts
 /components/custom/landing/site-metadata.ts
 /components/custom/landing/testimonials-marquee.tsx
 /components/custom/legal/legal-doc.tsx
@@ -139,6 +148,7 @@ next-env.d.ts
 /components/custom/nav/nav-user.tsx
 /components/custom/nav/team-switcher.tsx
 /components/custom/network-strip.tsx
+/components/custom/site-frame.tsx
 /components/custom/site-theme.tsx
 /components/custom/theme-provider.client.tsx
 /components/custom/theme-provider.tsx
