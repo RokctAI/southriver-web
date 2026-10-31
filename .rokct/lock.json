@@ -42,11 +42,11 @@
       "cache": ".rokct/cache/corporate",
       "git": "https://github.com/RokctAI/corporate",
       "path": "../corporate/corporate/nextjs",
-      "ref": "main",
-      "commit": "b53646a17e25fcae92ee860f9edbf87a20a72eb1",
-      "version": "1.4.1",
+      "ref": "claude/project-thread-3o3tuh-site-fonts",
+      "commit": "92b996a314f8fc3ce85fed0b3f823d18617bee6b",
+      "version": "1.4.2",
       "install_py_sha256": "6e03485fd03617ea1e175adc50354a91af25e213908371fa3581083d8aa7d4ba",
-      "content_sha256": "05677a88a7274d1f17638158daf65b7eae16227b4c6383697d063764c3aa15af"
+      "content_sha256": "420e27eb0e9bfde2b5bb34da1b018d7d175133c9cf7776d031fabecfb957be3d"
     }
   ]
 }

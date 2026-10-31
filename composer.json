@@ -38,7 +38,7 @@
       "source": "git",
       "git": "https://github.com/RokctAI/corporate",
       "path": "../corporate/corporate/nextjs",
-      "ref": "main",
+      "ref": "claude/project-thread-3o3tuh-site-fonts",
       "sha256": "6e03485fd03617ea1e175adc50354a91af25e213908371fa3581083d8aa7d4ba",
       "version": "1.4.0",
       "home_sdk": true,
