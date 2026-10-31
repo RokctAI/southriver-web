@@ -1,0 +1,23 @@
+{
+  "tiers": [
+    {
+      "name": "Ten cases or more",
+      "price": "R150",
+      "unit": "per case",
+      "detail": "500 ml bottles with your label. The price for most offices, shops and events.",
+      "best": true,
+      "minQty": 10,
+      "previewNote": "a case, 10 or more"
+    },
+    {
+      "name": "Fewer than ten cases",
+      "price": "R180",
+      "unit": "per case",
+      "detail": "The same bottles and label for a small first order or a single function.",
+      "minQty": 1,
+      "previewNote": "a case, under 10 cases"
+    }
+  ],
+  "ctaLabel": "Order on WhatsApp",
+  "bestLabel": "Best price"
+}

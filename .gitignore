@@ -35,6 +35,11 @@ next-env.d.ts
 # build loudly if a cache entry is ever incomplete or edited.
 .rokct/cache/
 .rokct/sdk_installer_base.py
+# The installers' own record of what the last compose wrote. It is local,
+# per-run state from that machine's compose, not part of the pinned cache -
+# never commit it, even though `refresh` stages the cache with -f. Listed
+# explicitly so it stays out if the cache rule above ever changes.
+.rokct/cache/install_state.json
 
 # Composed output — everything the SDK installers write into the host, listed
 # in the generated block at the end of this file. The shell commits none of
@@ -89,6 +94,7 @@ next-env.d.ts
 /app/manager/page.tsx
 /app/manager/reports/page.tsx
 /app/opengraph-image.tsx
+/app/page.tsx
 /app/services/base/gateway-constants.ts
 /app/services/base/index.ts
 /app/services/base/platform-gateway.ts
@@ -96,6 +102,7 @@ next-env.d.ts
 /app/services/base/telemetry.ts
 /app/services/base/tenant-host-control.ts
 /app/services/base/tenant-hosts.ts
+/app/site-shots/\[file\]/route.ts
 /app/styles/rokct-marquee.css
 /app/styles/rokct-scroll.css
 /app/team/page.tsx
@@ -109,6 +116,7 @@ next-env.d.ts
 /components/custom/company/company-sections.tsx
 /components/custom/company/markdown-parser.ts
 /components/custom/company/markdown.tsx
+/components/custom/company/team-count.tsx
 /components/custom/company/team-grid.tsx
 /components/custom/download-buttons.tsx
 /components/custom/footer-chrome.tsx
@@ -136,8 +144,10 @@ next-env.d.ts
 /components/custom/landing/page-sections.ts
 /components/custom/landing/plans-query.ts
 /components/custom/landing/platform-glyphs.tsx
+/components/custom/landing/site-credit.ts
 /components/custom/landing/site-frame.ts
 /components/custom/landing/site-metadata.ts
+/components/custom/landing/site-shots.ts
 /components/custom/landing/testimonials-marquee.tsx
 /components/custom/legal/legal-doc.tsx
 /components/custom/legal/legal-frame.tsx
@@ -148,8 +158,25 @@ next-env.d.ts
 /components/custom/nav/nav-user.tsx
 /components/custom/nav/team-switcher.tsx
 /components/custom/network-strip.tsx
+/components/custom/site-credit.tsx
 /components/custom/site-frame.tsx
 /components/custom/site-theme.tsx
+/components/custom/site/site-art.tsx
+/components/custom/site/site-fonts.ts
+/components/custom/site/site-footer-section.tsx
+/components/custom/site/site-header-menu.ts
+/components/custom/site/site-hero-copy.ts
+/components/custom/site/site-hero-form.tsx
+/components/custom/site/site-metadata.ts
+/components/custom/site/site-order-form.client.tsx
+/components/custom/site/site-plans-query.ts
+/components/custom/site/site-sections.tsx
+/components/custom/site/site-slots.tsx
+/components/custom/site/site-source.ts
+/components/custom/site/site-theme-section.tsx
+/components/custom/site/site-theme.client.tsx
+/components/custom/site/site-theme.ts
+/components/custom/site/site.css
 /components/custom/theme-provider.client.tsx
 /components/custom/theme-provider.tsx
 /components/ui/date-range-picker.tsx
@@ -159,6 +186,7 @@ next-env.d.ts
 /lib/site-data/kinds.ts
 /lib/site-data/read-site-data.ts
 /lib/site-data/site-theme.ts
+/lib/site-data/validate-site.mjs
 /lib/site-data/validate.mjs
 /public/brand/marks/app-gallery.svg
 /public/brand/marks/app-store.svg

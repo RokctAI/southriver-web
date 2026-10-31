@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "node lib/site-data/generate.mjs",
+    "prebuild": "test -f lib/site-data/generate.mjs || bash scripts/compose.sh; node lib/site-data/generate.mjs",
     "predev": "node lib/site-data/generate.mjs",
     "dev": "next dev --turbo",
     "build": "next build",
