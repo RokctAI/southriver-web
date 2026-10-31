@@ -1,0 +1,192 @@
+{
+  "name": "southriver_sdk",
+  "version": "1.0.0",
+  "installs": [],
+  "dependencies": {},
+  "devDependencies": {},
+  "integrations": [],
+  "requires": [],
+  "app_type": {
+    "southriver-web": {
+      "installs": [
+        {
+          "from": "templates/app/page.tsx",
+          "to": "app/page.tsx"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-art.tsx",
+          "to": "components/custom/landing/southriver-art.tsx"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-fonts.ts",
+          "to": "components/custom/landing/southriver-fonts.ts"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-theme-classes.ts",
+          "to": "components/custom/landing/southriver-theme-classes.ts"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-theme.css",
+          "to": "components/custom/landing/southriver-theme.css"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-theme.tsx",
+          "to": "components/custom/landing/southriver-theme.tsx"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-landing-config.ts",
+          "to": "components/custom/landing/southriver-landing-config.ts"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-hero-copy.ts",
+          "to": "components/custom/landing/southriver-hero-copy.ts"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-hero-form.tsx",
+          "to": "components/custom/landing/southriver-hero-form.tsx"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-header-menu.ts",
+          "to": "components/custom/landing/southriver-header-menu.ts"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-site-metadata.ts",
+          "to": "components/custom/landing/southriver-site-metadata.ts"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-plans-query.ts",
+          "to": "components/custom/landing/southriver-plans-query.ts"
+        },
+        {
+          "from": "templates/components/custom/landing/southriver-footer-chrome.ts",
+          "to": "components/custom/landing/southriver-footer-chrome.ts"
+        },
+        {
+          "from": "templates/components/custom/southriver-theme-section.tsx",
+          "to": "components/custom/southriver-theme-section.tsx"
+        },
+        {
+          "from": "templates/components/custom/southriver-how-section.tsx",
+          "to": "components/custom/southriver-how-section.tsx"
+        },
+        {
+          "from": "templates/components/custom/southriver-pricing-section.tsx",
+          "to": "components/custom/southriver-pricing-section.tsx"
+        },
+        {
+          "from": "templates/components/custom/southriver-who-section.tsx",
+          "to": "components/custom/southriver-who-section.tsx"
+        },
+        {
+          "from": "templates/components/custom/southriver-water-section.tsx",
+          "to": "components/custom/southriver-water-section.tsx"
+        },
+        {
+          "from": "templates/components/custom/southriver-order-section.tsx",
+          "to": "components/custom/southriver-order-section.tsx"
+        },
+        {
+          "from": "templates/components/custom/southriver-order-form.client.tsx",
+          "to": "components/custom/southriver-order-form.client.tsx"
+        },
+        {
+          "from": "templates/components/custom/southriver-contact-section.tsx",
+          "to": "components/custom/southriver-contact-section.tsx"
+        },
+        {
+          "from": "templates/components/custom/southriver-footer-section.tsx",
+          "to": "components/custom/southriver-footer-section.tsx"
+        }
+      ],
+      "dependencies": {},
+      "devDependencies": {},
+      "integrations": [
+        {
+          "target": "components/custom/landing/hero-copy.ts",
+          "placeholder": "// @rokct-sdk-hero-copy-start",
+          "replacement": "  { id: \"southriver-hero-copy\", load: () => import(\"@/components/custom/landing/southriver-hero-copy\") },"
+        },
+        {
+          "target": "components/custom/landing/hero-form.ts",
+          "placeholder": "// @rokct-sdk-hero-form-start",
+          "replacement": "  { id: \"southriver-hero-form\", load: () => import(\"@/components/custom/landing/southriver-hero-form\") },"
+        },
+        {
+          "target": "components/custom/landing/header-menu.ts",
+          "placeholder": "// @rokct-sdk-header-menu-start",
+          "replacement": "  { id: \"southriver-header-menu\", load: () => import(\"@/components/custom/landing/southriver-header-menu\") },"
+        },
+        {
+          "target": "components/custom/landing/site-metadata.ts",
+          "placeholder": "// @rokct-sdk-site-metadata-start",
+          "replacement": "  { id: \"southriver-site-metadata\", load: () => import(\"@/components/custom/landing/southriver-site-metadata\") },"
+        },
+        {
+          "target": "components/custom/landing/plans-query.ts",
+          "placeholder": "// @rokct-sdk-plans-query-start",
+          "replacement": "  { id: \"southriver-plans\", load: () => import(\"@/components/custom/landing/southriver-plans-query\") },"
+        },
+        {
+          "target": "components/custom/landing/page-sections.ts",
+          "placeholder": "// @rokct-sdk-page-sections-start",
+          "replacement": "  { id: \"southriver-theme-section\", load: () => import(\"@/components/custom/southriver-theme-section\") },"
+        },
+        {
+          "target": "components/custom/landing/page-sections.ts",
+          "placeholder": "// @rokct-sdk-page-sections-start",
+          "replacement": "  { id: \"southriver-how-section\", load: () => import(\"@/components/custom/southriver-how-section\") },"
+        },
+        {
+          "target": "components/custom/landing/page-sections.ts",
+          "placeholder": "// @rokct-sdk-page-sections-start",
+          "replacement": "  { id: \"southriver-pricing-section\", load: () => import(\"@/components/custom/southriver-pricing-section\") },"
+        },
+        {
+          "target": "components/custom/landing/page-sections.ts",
+          "placeholder": "// @rokct-sdk-page-sections-start",
+          "replacement": "  { id: \"southriver-who-section\", load: () => import(\"@/components/custom/southriver-who-section\") },"
+        },
+        {
+          "target": "components/custom/landing/page-sections.ts",
+          "placeholder": "// @rokct-sdk-page-sections-start",
+          "replacement": "  { id: \"southriver-water-section\", load: () => import(\"@/components/custom/southriver-water-section\") },"
+        },
+        {
+          "target": "components/custom/landing/page-sections.ts",
+          "placeholder": "// @rokct-sdk-page-sections-start",
+          "replacement": "  { id: \"southriver-order-section\", load: () => import(\"@/components/custom/southriver-order-section\") },"
+        },
+        {
+          "target": "components/custom/landing/page-sections.ts",
+          "placeholder": "// @rokct-sdk-page-sections-start",
+          "replacement": "  { id: \"southriver-contact-section\", load: () => import(\"@/components/custom/southriver-contact-section\") },"
+        },
+        {
+          "target": "components/custom/landing/page-sections.ts",
+          "placeholder": "// @rokct-sdk-page-sections-start",
+          "replacement": "  { id: \"southriver-footer-section\", load: () => import(\"@/components/custom/southriver-footer-section\") },"
+        }
+      ],
+      "requires": [
+        "app/actions/base/legal.ts",
+        "app/config/constants.ts",
+        "app/config/platform.ts",
+        "app/landing/page.tsx",
+        "components/custom/footer-chrome.tsx",
+        "components/custom/landing/footer-chrome-config.ts",
+        "components/custom/landing/header-menu.ts",
+        "components/custom/landing/hero-copy.ts",
+        "components/custom/landing/hero-form.ts",
+        "components/custom/landing/landing-config.ts",
+        "components/custom/landing/legal-links.ts",
+        "components/custom/landing/page-sections.ts",
+        "components/custom/landing/plans-query.ts",
+        "components/custom/landing/site-metadata.ts"
+      ]
+    }
+  },
+  "_comment": {
+    "about": "The Next.js half of the South River SDK: the home SDK of the South River site (RokctAI/southriver-web, protocol template core/utils/nextjs/composer/southriver-web.json: telemetry_sdk, base_sdk, southriver_sdk as home_sdk, corporate_sdk). South River has no backend (the shell runs base_sdk's local data mode), so this SDK has no frappe half and calls nothing: every word, price and picture is in its templates. Everything installs through the app_type[\"southriver-web\"] block, so no other shell picks any of it up.",
+    "app_type": "southriver-web: the landing for private-label bottled water (Ray, 30 Oct brief; approved 31 Oct: 'build, we will change when built'). It owns app/page.tsx (every visitor to base_sdk's /landing) and fills base_sdk's landing registries with one module each: hero copy (empty, the hero form carries the h1), hero form (the red poster with the private-label bottle and South River's own 1.25 litre), header menu (no image mark, the wordmark only; six anchors and a WhatsApp order action), site metadata and a null plans query; and eight page sections: theme (order -2, rootClass, frame), how (20), pricing (30), who (40), water (50), order (60, server entry over the .client form), contact (80) and footer (95, frame, FooterChromeRow + legal links). The identity is the printed South River label: red #D9001B with white type, Montserrat 900 italic SOUTH over a light RIVER, the label's yellow, the bottles redrawn in SVG wearing that label (no barcode), and the label's composition table in the water section. Contact is WhatsApp 015 000 6069 (also the label's careline)."
+  }
+}

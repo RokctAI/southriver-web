@@ -24,7 +24,7 @@
 #                                      protocol composer and every SDK named by
 #                                      the registry template
 #                                      (.rokct/config/app_type ->
-#                                      core/utils/frappe/composer/<app_type>.json),
+#                                      core/utils/nextjs/composer/<app_type>.json),
 #                                      replaces .rokct/cache/<sdk>/ wholesale,
 #                                      rewrites .rokct/lock.json (every SDK's
 #                                      pins and its home_sdk flag), the
@@ -109,7 +109,13 @@ ROOT = os.getcwd()
 PROTOCOL_GIT = "https://github.com/RokctAI/The-Rokct-Protocol"
 PROTOCOL_FILES = ("sdk_composer.py", "sdk_installer_base.py")
 PROTOCOL_UTILS_REL = os.path.join("core", "utils", "nextjs")
-PROTOCOL_TEMPLATES_REL = os.path.join("core", "utils", "frappe", "composer")
+# Next.js shells' sdks[] templates live in core/utils/nextjs/composer/ since
+# the protocol split them out of the frappe registry; the frappe directory is
+# kept as a fallback for a protocol ref that predates the split.
+PROTOCOL_TEMPLATES_RELS = (
+    os.path.join("core", "utils", "nextjs", "composer"),
+    os.path.join("core", "utils", "frappe", "composer"),
+)
 
 ROKCT_DIR = os.path.join(ROOT, ".rokct")
 CACHE_DIR = os.path.join(ROKCT_DIR, "cache")
@@ -431,9 +437,11 @@ def guard_sibling_checkouts(protocol_dir, app_type):
     a sibling checkout present unless explicitly allowed."""
     if os.environ.get("ROKCT_REFRESH_ALLOW_SIBLINGS", "").lower() in ("1", "true", "yes"):
         return
-    template = os.path.join(protocol_dir, PROTOCOL_TEMPLATES_REL, f"{app_type}.json")
-    if not os.path.exists(template):
-        die(f"registry template '{app_type}' is missing from the protocol checkout ({PROTOCOL_TEMPLATES_REL}/{app_type}.json)")
+    candidates = [os.path.join(protocol_dir, rel, f"{app_type}.json") for rel in PROTOCOL_TEMPLATES_RELS]
+    template = next((c for c in candidates if os.path.exists(c)), None)
+    if template is None:
+        die(f"registry template '{app_type}' is missing from the protocol checkout "
+            f"(looked in {', '.join(PROTOCOL_TEMPLATES_RELS)})")
     urls = {s.get("git") for s in load_json(template).get("sdks", [])
             if isinstance(s, dict) and s.get("enabled", True) and s.get("git")}
     parent = os.path.dirname(ROOT)

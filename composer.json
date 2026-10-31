@@ -33,6 +33,19 @@
       "_comment": "The platform kernel: app/services/base, the landing host and its registries, the admin and manager shells, and (1.35.0+) the lib/site-data reader and generate.mjs bundler behind this shell's local data mode. Every other Next.js SDK 'requires' files it installs."
     },
     {
+      "name": "southriver_sdk",
+      "enabled": true,
+      "source": "git",
+      "git": "https://github.com/RokctAI/corporate",
+      "path": "../corporate/southriver/nextjs",
+      "ref": "main",
+      "sha256": "f68db995960ea2a849121682ab0b11b6f6d6856debd7affc7dcb316d0973db51",
+      "version": "1.0.0",
+      "home_sdk": true,
+      "_sha256_comment": "SHA-256 of southriver/nextjs/install.py at corporate main (polaris/nextjs's installer text with sdk_name 'southriver_sdk'); required by the composer's unpinned-installer gate.",
+      "_comment": "The South River home SDK (corporate southriver/nextjs): owns app/page.tsx (every visitor to /landing) and fills base_sdk's landing registries with the private-label water landing. Directly behind base_sdk."
+    },
+    {
       "name": "corporate_sdk",
       "enabled": true,
       "source": "git",

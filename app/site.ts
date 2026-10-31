@@ -35,7 +35,10 @@ function resolveSiteUrl(): string {
 
 export const SITE_URL = resolveSiteUrl();
 
-/** The app_type this shell was spawned with; the neutral fallback name. */
+/** The app_type this shell was spawned with. */
 export const APP_TYPE = "southriver-web";
 
-export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME?.trim() || APP_TYPE;
+/** The product's name: the fallback when NEXT_PUBLIC_SITE_NAME is unset. */
+export const PRODUCT_NAME = "South River";
+
+export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME?.trim() || PRODUCT_NAME;
