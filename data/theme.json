@@ -45,5 +45,21 @@
     "displayWeight": 900,
     "displayItalic": true,
     "displayUppercase": true
+  },
+  "backToTop": {
+    "shape": "circle",
+    "icon": "arrow-up",
+    "position": "bottom-right",
+    "size": "3rem",
+    "background": "var(--cs-brand, hsl(var(--primary)))",
+    "foreground": "var(--cs-on-brand, hsl(var(--primary-foreground)))",
+    "hoverBackground": "var(--cs-brand-hi, hsl(var(--primary)))",
+    "hoverForeground": "var(--cs-on-brand, hsl(var(--primary-foreground)))",
+    "border": "transparent",
+    "ring": "var(--cs-highlight, hsl(var(--ring)))",
+    "borderWidth": "0px",
+    "shadow": "0 14px 30px -14px color-mix(in srgb, var(--cs-brand, hsl(var(--primary))) 70%, transparent)",
+    "duration": "180ms",
+    "easing": "ease"
   }
 }
