@@ -1,50 +1,44 @@
-# `data/` — South River's host-owned site data
+# `data/` — South River's whole site, as data
 
 This shell runs in **`local`** data mode (`"data": "local"` in
-[`composer.json`](../composer.json)): South River has no backend, so every
-composed SDK reads what it would otherwise ask a backend for from the files
-in this folder, through `base_sdk`'s server-only reader
-(`@/lib/site-data/read-site-data`). The contract is
-`base/nextjs/docs/site-data.md` in `RokctAI/core` (base_sdk 1.35.0 and
-later); this file only summarises it.
+[`composer.json`](../composer.json)) with **corporate_sdk as its home SDK**.
+There is no South River SDK: corporate_sdk is the one renderer every
+local-data client site shares, and everything that makes this site South
+River lives here and in [`public/`](../public). The contract is
+`base/nextjs/docs/site-data.md` in `RokctAI/core` (base_sdk 1.53.0 and
+later); how a client is added is `corporate/nextjs/docs/local-sites.md` in
+`RokctAI/corporate`.
 
-The brand name is never in `data/`. It stays where it is declared: the home
-SDK's site-metadata copy and the host's `PLATFORM_NAME`.
+## What is here
 
-## Kinds
+| file            | what it holds                                                                                                     |
+| --------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `theme.json`    | the red-label palette (light and dark), Montserrat 900 italic capitals for display and Figtree for text           |
+| `site.json`     | the name, the SOUTH ® RIVER wordmark, motto, the WhatsApp number, header action, page metadata and footer line   |
+| `sections.json` | the page top to bottom: poster hero with the two bottles, since 2021, how it works, pricing, who it is for, the water (pH and the label's composition table), the order form and contact |
+| `pricing.json`  | R150 a case from ten cases, R180 under ten                                                                        |
+| `order.json`    | the WhatsApp order form: fields, the message it types and the label preview                                      |
+| `site.css`      | the last mile: South River's exact shadcn colour triplets and one table colour                                   |
 
-| kind        | file                    | shape                                                                                                                                  |
-| ----------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `theme`     | `data/theme.json`       | `{ primary, secondary?, accent? }` — hex strings (`#rgb` or `#rrggbb`)                                                                   |
-| `team`      | `data/team.json`        | `{ members: [{ name, role, photo?, links?: [{ label, href }] }] }`                                                                       |
-| `stockists` | `data/stockists.json`   | `{ items: [{ name, address, town, lat?, lng?, mapsUrl? }] }` (`lat` and `lng` together or not at all)                                    |
-| `products`  | `data/products.json`    | `{ items: [{ name, description?, sizes?: string[], image?, status?: "active" \| "coming" }] }`                                          |
-| `about`     | `data/about.md`         | the markdown, verbatim, as a string                                                                                                    |
-| `legal`     | `data/legal/<slug>.md`  | one file per document; the title from a `title:` front-matter line, else the first level-one heading (removed from the body)           |
+The own label on the 1.25 L bottle is `public/brand/south-river-label.svg`,
+with its text outlined so it draws without web fonts.
 
-`photo` and `image` are public paths (`/team/jane.jpg`, served from this
-shell's `public/`) or absolute URLs. A slug is lowercase letters, digits and
-single dashes. Any other `.json` or `.md` file in `data/` (a typo such as
-`teams.json`) fails the build; this `README.md` is allowed.
+## Rules
 
-## What is here today
-
-- `theme.json` — the brand colour: `primary` `#e4333b`. `base_sdk` turns it
-  into the shell's `--primary` / `--ring` tokens (and `--site-primary` as the
-  raw hex) on every route; no layout edit is needed.
-
-The other kinds are deliberately absent until South River supplies the
-content: team, stockists, products, about and legal are South River's own
-words and will be added as real files, never as placeholders. In `local`
-mode a kind that a composed SDK's manifest declares under
-`site_data.requires` must exist or the build stops with the file named, so
-add the file before composing an SDK that needs it.
+- `theme`, `site` and `sections` are required by corporate_sdk as home: in
+  `local` mode a build without one stops and names the file. A pricing or
+  order section needs its file, and anything that opens WhatsApp needs the
+  number in `site.json`.
+- Every file is validated down to the field at build time; any other
+  `.json` or `.md` file here (a typo such as `section.json`) fails the
+  build. This `README.md` is allowed.
+- Art is a public path (`/brand/...`, served from `public/`) or an https URL.
 
 ## How it reaches the bundle
 
 `package.json` runs `node lib/site-data/generate.mjs` as `prebuild` and
-`predev` (the script is installed by `base_sdk` at compose time). It reads
-the mode from `composer.json`, validates every file here, and writes
-`lib/site-data/generated.ts` so the content travels inside the build —
+`predev` (installed by `base_sdk` at compose time). It reads the mode from
+`composer.json`, validates every file here, and writes
+`lib/site-data/generated.ts` so the content travels inside the build:
 nothing reads the disk at request time. The generated module is composed
 output and is not committed.

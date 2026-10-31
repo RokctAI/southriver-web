@@ -62,6 +62,8 @@ COMPANY_SECTIONS = os.path.join(COMPANY_COMPONENTS, "company-sections.tsx")
 MARKDOWN_PARSER = os.path.join(COMPANY_COMPONENTS, "markdown-parser.ts")
 MARKDOWN_VIEW = os.path.join(COMPANY_COMPONENTS, "markdown.tsx")
 TEAM_GRID = os.path.join(COMPANY_COMPONENTS, "team-grid.tsx")
+# 1.3.0: the card count beside the /team title.
+TEAM_COUNT = os.path.join(COMPANY_COMPONENTS, "team-count.tsx")
 MARKDOWN_TESTS = os.path.join(HERE, "markdown.test.mts")
 # 1.2.0: the loader's rule, executed under node against stubs.
 LOADER_TESTS = os.path.join(HERE, "load-legal-doc.test.mts")
@@ -131,11 +133,12 @@ class TestCorporateNextjs(unittest.TestCase):
     def test_identity_and_version(self):
         self.assertEqual(self.manifest["name"], "corporate_sdk")
         self.assertRegex(self.manifest["version"], r"^\d+\.\d+\.\d+$")
-        self.assertEqual(self.manifest["version"], "1.2.0")
+        self.assertEqual(self.manifest["version"], "1.4.1")
         self.assertIn("sdk_name = 'corporate_sdk'", read(INSTALL_PY))
         self.assertTrue(read(INSTALL_PY).startswith("# " + LICENSE_HEAD))
         # Same shape as the sibling halves: one flat installs list, no
-        # app_type persona blocks, and never the home SDK.
+        # app_type persona blocks, no home_sdk claim of its own (1.4.0: the
+        # "home" block applies only where a shell flags corporate_sdk home).
         for key in ("installs", "dependencies", "devDependencies", "integrations", "requires", "_comment"):
             self.assertIn(key, self.manifest)
         self.assertNotIn("app_type", self.manifest)
@@ -221,14 +224,15 @@ class TestCorporateNextjs(unittest.TestCase):
         self.assertIn("base_sdk >= 1.47.0", comment["about"])
         self.assertIn("base_sdk >= 1.45.0", comment["about"])
         # Every other prerequisite names who installs it too.
-        for req in requires:
+        for req in requires | set(self.manifest.get("home", {}).get("requires", [])):
             self.assertIn(req, comment, f"{req} has no owner comment")
             self.assertRegex(comment[req], r"^(installed by \w+ >= \d+\.\d+\.\d+|host shell)")
 
     def test_every_import_of_a_base_or_host_file_is_a_declared_prerequisite(self):
-        installed = {e["to"] for e in self.manifest["installs"]}
+        home = self.manifest.get("home", {})
+        installed = {e["to"] for e in self.manifest["installs"] + home.get("installs", [])}
         installed_dirs = {t for t in installed if not t.endswith((".ts", ".tsx"))}
-        declared = set(self.manifest["requires"])
+        declared = set(self.manifest["requires"]) | set(home.get("requires", []))
         for path in template_files():
             for target in re.findall(r'from "@/([^"]+)"', read(path)):
                 candidates = {target, target + ".ts", target + ".tsx"}
@@ -328,7 +332,10 @@ class TestCorporateNextjs(unittest.TestCase):
         for path in template_files():
             body = code_of(path).lower()
             rel = os.path.relpath(path, SDK_ROOT)
-            for word in ("demo", "sample", "example", "lorem", "https://", "http://", "rokct.ai", "supacharge"):
+            # 1.4.0: the one origin a local-data site links to is WhatsApp's
+            # chat link, built from the number in data/site.json.
+            body = body.replace('`https://wa.me/${digits}`', "")
+            for word in ("demo", "sample", "example", "lorem", "https://", "http://", "rokct.ai", "supacharge", "south river", "southriver", "musina"):
                 self.assertNotIn(word, body, f"{rel} carries {word}")
             self.assertIn(LICENSE_HEAD, read(path), f"{rel} has no licence header")
 
@@ -350,6 +357,26 @@ class TestCorporateNextjs(unittest.TestCase):
         body = code_of(ABOUT_PAGE)
         for word in ("platformCall", "getPublicTerm", "notFound"):
             self.assertNotIn(word, body)
+
+    def test_team_title_carries_the_card_count(self):
+        """1.3.0 (Ray, 2026-10-03: "Team [45]"): the badge sits in the h1,
+        starts from the members the page draws and adds what each section
+        declares - never a literal number."""
+        pairs = {(e["from"], e["to"]) for e in self.manifest["installs"]}
+        self.assertIn(("templates/components/custom/company/team-count.tsx",
+                       "components/custom/company/team-count.tsx"), pairs)
+        page = code_of(TEAM_PAGE)
+        h1 = re.search(r"<h1[^>]*>(.*?)</h1>", page, re.S).group(1)
+        self.assertIn("{COMPANY_PAGES.team.label}", h1)
+        self.assertIn("<TeamCount members={members.length} />", h1)
+        badge = code_of(TEAM_COUNT)
+        self.assertRegex(badge, re.compile(r"""^\s*["']use client["'];""", re.M))
+        self.assertIn('closest("[data-team-page]")', badge)
+        self.assertIn('querySelectorAll("[data-team-count]")', badge)
+        self.assertIn("members +", badge)
+        self.assertIn("data-team-count-badge={count}", badge)
+        self.assertIn("hidden={count === 0}", badge)
+        self.assertNotRegex(badge, r"useState\(\d")
 
     def test_team_page_reads_the_folder_and_the_slot(self):
         src = read(TEAM_PAGE)
@@ -601,6 +628,121 @@ class TestCorporateNextjs(unittest.TestCase):
         for line in changelog.splitlines():
             if line.startswith("#") and line != "# Changelog":
                 self.assertRegex(line, r"^## \d+\.\d+\.\d+$", line)
+
+
+
+
+class TestLocalSiteHome(unittest.TestCase):
+    """1.4.0 (Ray, 2026-10-31: "corporate can be home sdk"; corporate_sdk is
+    the home of every "data": "local" site): the "home" block renders the
+    whole page from the shell's data/ folder and names no client."""
+
+    SITE = os.path.join(TEMPLATES, "components", "custom", "site")
+
+    def setUp(self):
+        self.manifest = load_manifest()
+        self.home = self.manifest["home"]
+
+    def test_home_block_owns_the_root_and_the_site_parts(self):
+        pairs = {(e["from"], e["to"]) for e in self.home["installs"]}
+        self.assertIn(("templates/app/site-home/page.tsx", "app/page.tsx"), pairs)
+        self.assertIn(("templates/components/custom/site", "components/custom/site"), pairs)
+        for entry in self.home["installs"]:
+            self.assertTrue(os.path.exists(os.path.join(SDK_ROOT, entry["from"])), entry["from"])
+        top = {e["to"] for e in self.manifest["installs"]}
+        self.assertNotIn("app/page.tsx", top, "the root page is only ever the home block's")
+        self.assertEqual(self.home["site_data"]["requires"], ["theme", "site", "sections"])
+
+    def test_home_block_fills_every_landing_registry(self):
+        lines = [(i["target"], i["replacement"]) for i in self.home["integrations"]]
+        targets = [t for t, _ in lines]
+        for reg in ("hero-copy", "hero-form", "header-menu", "site-metadata", "plans-query"):
+            self.assertEqual(targets.count(f"components/custom/landing/{reg}.ts"), 1, reg)
+        sections = [r for t, r in lines if t.endswith("page-sections.ts")]
+        self.assertIn("site-theme-section", sections[0])
+        self.assertIn("site-footer-section", sections[-1])
+        slots = [r for r in sections if "site-slots" in r]
+        self.assertEqual(len(slots), 12)
+        for i, line in enumerate(slots):
+            self.assertIn(f"m.slot({i})", line)
+            self.assertIn(f'site-section-{i + 1:02d}', line)
+        with open(os.path.join(self.SITE, "site-slots.tsx"), encoding="utf-8") as f:
+            self.assertIn("export const SITE_SLOTS = 12;", f.read())
+
+    def test_section_library_covers_the_data_types(self):
+        src = read(os.path.join(self.SITE, "site-sections.tsx"))
+        for t in ("intro", "steps", "pricing", "gallery", "facts", "order", "contact"):
+            self.assertIn(f'case "{t}":', src)
+        self.assertIn("SiteHeroForm", read(os.path.join(self.SITE, "site-hero-form.tsx")))
+
+    def test_entry_modules_are_server_safe(self):
+        directive = re.compile(r"""^\s*["']use client["'];?\s*$""", re.M)
+        for name in ("site-theme-section.tsx", "site-slots.tsx", "site-sections.tsx", "site-footer-section.tsx",
+                     "site-hero-copy.ts", "site-header-menu.ts", "site-metadata.ts", "site-plans-query.ts",
+                     "site-source.ts", "site-theme.ts", "site-art.tsx"):
+            self.assertIsNone(directive.search(code_of(os.path.join(self.SITE, name))), name)
+        for name in ("site-hero-form.tsx", "site-order-form.client.tsx", "site-theme.client.tsx"):
+            self.assertRegex(read(os.path.join(self.SITE, name)), directive, name)
+
+    def test_the_client_form_never_imports_the_data_reader(self):
+        for name in ("site-hero-form.tsx", "site-order-form.client.tsx", "site-theme.client.tsx"):
+            src = read(os.path.join(self.SITE, name))
+            self.assertNotIn("site-source", src, name)
+            self.assertNotIn("read-site-data", src, name)
+            self.assertNotIn("site-data/generated", src, name)
+
+
+class TestSiteCredit(unittest.TestCase):
+    """1.4.1: a local-data site's footer ends with base_sdk 1.54.0's site
+    credit, `© <year> <site name> · Built with ♥ by ROKCT` (Ray,
+    2026-10-31), the name from data/site.json - never the legal entity."""
+
+    FOOTER = os.path.join(TEMPLATES, "components", "custom", "site", "site-footer-section.tsx")
+    EXAMPLE_SITE = os.path.join(SDK_ROOT, "docs", "examples", "demo-bakery", "data", "site.json")
+
+    def test_footer_names_the_site_not_the_company(self):
+        code = code_of(self.FOOTER)
+        self.assertIn("config={{ ...FOOTER_CHROME, siteName: site?.name, links: legalFooterLinks(terms) }}", code)
+        self.assertNotIn("copyrightHolder", code)
+        self.assertNotIn("LEGAL_COMPANY_NAME", code)
+        self.assertNotIn("footer?.legal", code)
+        self.assertNotIn("©", code)
+        notes = load_manifest()["_comment"]["about"]
+        self.assertIn("floor base_sdk >= 1.54.0 (siteName)", notes)
+        head = read(os.path.join(SDK_ROOT, "CHANGELOG.md")).split("## 1.4.0")[0]
+        self.assertIn("## 1.4.1", head)
+        self.assertIn("Built with", head)
+
+    def test_company_and_legal_frames_name_no_holder(self):
+        for name in (("company", "company-frame.tsx"), ("legal", "legal-frame.tsx")):
+            code = code_of(os.path.join(TEMPLATES, "components", "custom", *name))
+            with self.subTest(name=name[1]):
+                self.assertIn("<FooterChromeRow config={config} />", code)
+                self.assertNotIn("copyrightHolder", code)
+                self.assertNotIn("LEGAL_COMPANY_NAME", code)
+
+    def test_credit_line_for_the_example_site(self):
+        """Executes base_sdk's site-credit rules for the demo record's name
+        (skips when no base_sdk >= 1.54.0 checkout is reachable; set
+        ROKCT_BASE_SDK to its nextjs root)."""
+        base = os.environ.get("ROKCT_BASE_SDK") or os.path.abspath(
+            os.path.join(SDK_ROOT, os.pardir, os.pardir, os.pardir, "core", "base", "nextjs"))
+        rules = os.path.join(base, "templates", "components", "custom", "landing", "site-credit.ts")
+        node = shutil.which("node")
+        if not os.path.isfile(rules) or not node:
+            raise unittest.SkipTest("base_sdk >= 1.54.0 site-credit.ts or node not reachable")
+        with open(self.EXAMPLE_SITE, encoding="utf-8") as f:
+            name = json.load(f)["name"]
+        with tempfile.TemporaryDirectory() as tmp:
+            shutil.copy(rules, os.path.join(tmp, "site-credit.ts"))
+            probe = os.path.join(tmp, "probe.mts")
+            with open(probe, "w", encoding="utf-8") as f:
+                f.write("import { siteCreditLine } from './site-credit.ts';\n"
+                        f"console.log(siteCreditLine({json.dumps(name)}, {{ year: 2026 }}));\n")
+            run = subprocess.run([node, "--experimental-strip-types", "--no-warnings", probe],
+                                 capture_output=True, text=True, timeout=60, cwd=tmp)
+        self.assertEqual(run.returncode, 0, run.stderr)
+        self.assertEqual(run.stdout.strip(), "\u00a9 2026 Example Bakehouse \u00b7 Built with \u2665 by ROKCT")
 
 
 if __name__ == "__main__":

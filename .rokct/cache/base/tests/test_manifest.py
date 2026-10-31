@@ -158,6 +158,25 @@ BACK_TO_TOP = os.path.join(SDK_ROOT, "templates", "components", "custom", "back-
 BACK_TO_TOP_RULES = os.path.join(LANDING, "back-to-top.ts")
 BACK_TO_TOP_TESTS = os.path.join(HERE, "back-to-top.test.mts")
 LANDING_CONTENT = os.path.join(SDK_ROOT, "templates", "components", "custom", "landing-content.tsx")
+# base_sdk 1.54.0: the site credit (Ray, 2026-10-31: "all site will be
+# copyright sitename then built with love (as heart) by ROKCT"), pure rules
+# beside the server-safe component every footer draws its last line with.
+SITE_CREDIT = os.path.join(SDK_ROOT, "templates", "components", "custom", "site-credit.tsx")
+SITE_CREDIT_RULES = os.path.join(LANDING, "site-credit.ts")
+SITE_CREDIT_TESTS = os.path.join(HERE, "site-credit.test.mts")
+# base_sdk 1.55.0: site shots - every site serves its own pictures of its
+# first screen at /site-shots/, read from its repo's site-shots branch.
+SITE_SHOTS_RULES = os.path.join(LANDING, "site-shots.ts")
+SITE_SHOTS_ROUTE = os.path.join(SDK_ROOT, "templates", "app", "site-shots", "[file]", "route.ts")
+SITE_SHOTS_TESTS = os.path.join(HERE, "site-shots.test.mts")
+SITE_SHOTS_INSTALLS = {
+    "templates/components/custom/landing/site-shots.ts": "components/custom/landing/site-shots.ts",
+    "templates/app/site-shots": "app/site-shots",
+}
+SITE_CREDIT_INSTALLS = {
+    "templates/components/custom/site-credit.tsx": "components/custom/site-credit.tsx",
+    "templates/components/custom/landing/site-credit.ts": "components/custom/landing/site-credit.ts",
+}
 BACK_TO_TOP_INSTALLS = {
     "templates/components/custom/back-to-top.tsx": "components/custom/back-to-top.tsx",
     "templates/components/custom/landing/back-to-top.ts": "components/custom/landing/back-to-top.ts",
@@ -258,6 +277,7 @@ SITE_DATA_DIR = os.path.join(SDK_ROOT, "templates", "lib", "site-data")
 SITE_DATA_INSTALLS = {
     "templates/lib/site-data/kinds.ts": "lib/site-data/kinds.ts",
     "templates/lib/site-data/validate.mjs": "lib/site-data/validate.mjs",
+    "templates/lib/site-data/validate-site.mjs": "lib/site-data/validate-site.mjs",
     "templates/lib/site-data/generate.mjs": "lib/site-data/generate.mjs",
     "templates/lib/site-data/generated.ts": "lib/site-data/generated.ts",
     "templates/lib/site-data/read-site-data.ts": "lib/site-data/read-site-data.ts",
@@ -267,6 +287,8 @@ SITE_DATA_INSTALLS = {
 }
 SITE_DATA_TESTS = os.path.join(HERE, "site-data.test.mts")
 SITE_DATA_FIXTURE = os.path.join(HERE, "fixtures", "site-data", "acme")
+SITE_PAGE_TESTS = os.path.join(HERE, "site-page.test.mts")
+SITE_PAGE_FIXTURE = os.path.join(HERE, "fixtures", "site-data", "site-page")
 SITE_DATA_DOC = os.path.join(SDK_ROOT, "docs", "site-data.md")
 
 # What the theme-provider stage stands in for `react` and `next-themes`: the
@@ -874,6 +896,31 @@ class TestManifest(unittest.TestCase):
         self.assertIsNotNone(passed, run.stdout)
         self.assertGreaterEqual(int(passed.group(1)), 23)
 
+    def test_site_page_behaviour_under_node(self):
+        """tests/site-page.test.mts (1.53.0), run in place: the site-page
+        kinds' validators, the cross-kind rule, the home block's required
+        kinds and the generator against tests/fixtures/site-data/site-page."""
+        node = shutil.which("node")
+        self.assertIsNotNone(node, "node (22.6+) is needed to execute the site-page suite")
+        self.assertTrue(os.path.isdir(SITE_PAGE_FIXTURE))
+        run = subprocess.run(
+            [node, "--experimental-strip-types", "--no-warnings", "--test", SITE_PAGE_TESTS],
+            capture_output=True, text=True, timeout=180, cwd=HERE,
+        )
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertRegex(run.stdout, re.compile(r"^# fail 0$", re.M), run.stdout)
+        passed = re.search(r"^# pass (\d+)$", run.stdout, re.M)
+        self.assertIsNotNone(passed, run.stdout)
+        self.assertGreaterEqual(int(passed.group(1)), 12)
+
+    def test_site_page_fixture_names_no_real_thing(self):
+        """The site-page fixture is a made-up bakery: no brand, nobody real."""
+        for root, _, files in os.walk(SITE_PAGE_FIXTURE):
+            for name in files:
+                text = read(os.path.join(root, name)).lower()
+                for word in ("rokct", "supacharge", "south river", "southriver", "musina", "lorem"):
+                    self.assertNotIn(word, text, f"{name} carries {word}")
+
     def test_fixture_data_folder_names_no_real_thing(self):
         """The fixture data/ is acme.school's: no brand, nobody real."""
         for root, _, files in os.walk(SITE_DATA_FIXTURE):
@@ -1189,7 +1236,7 @@ class TestRegistryMarkers(unittest.TestCase):
         self.assertEqual(src.count("description: entry.description,"), 1)
         partials = read(os.path.join(SDK_ROOT, "templates", "components", "custom", "header-menu.tsx"))
         self.assertIn("function DesktopMegaMenu(", partials)
-        self.assertIn("const MENU_ICONS: Record<HeaderMenuIcon, LucideIcon>", partials)
+        self.assertIn("const MENU_ICONS: Record<HeaderMenuIcon, RemixiconComponentType>", partials)
         self.assertIn("{groups.length > 0 && <DesktopMegaMenu groups={groups} megaLabel={megaLabel} />}", partials)
         self.assertNotIn("function DesktopGroup(", partials)
         for hard_coded in ("yellow-", "zinc-", "gray-", "#0a0a0a"):
@@ -1265,8 +1312,8 @@ class TestRegistryMarkers(unittest.TestCase):
         self.assertIn("<HeaderBrand collapsed={collapsed} />", header)
         # The chevron and the fading nav wrapper exist only for a collapsing brand.
         self.assertIn("{collapse ? (", header)
-        self.assertIn("<ChevronRight", header)
-        self.assertRegex(header, r"import \{[^}]*\bChevronRight\b[^}]*\} from \"lucide-react\";")
+        self.assertIn("<RiArrowRightSLine", header)
+        self.assertRegex(header, r"import \{[^}]*\bRiArrowRightSLine\b[^}]*\} from \"@remixicon/react\";")
         code = LINE_COMMENT_RE.sub("", BLOCK_COMMENT_RE.sub("", header))
         for hard_coded in ("yellow-", "zinc-", "gray-", "#0a0a0a", "#4f46e5"):
             self.assertNotIn(hard_coded, code, f"header.tsx paints a hard-coded colour: {hard_coded}")
@@ -1548,7 +1595,7 @@ class TestRegistryMarkers(unittest.TestCase):
     def test_header_menu_action_carries_an_icon(self):
         # base_sdk 1.20.0 (Ray, 2026-09-09: rokct "lost its chrome icon"):
         # an action may name a glyph from the same closed set as an item,
-        # drawn before the label in both layouts; "chrome" is lucide's own
+        # drawn before the label in both layouts; "chrome" is Remixicon's own
         # mark. An action without one renders the label alone, as before.
         src = read(os.path.join(LANDING, "header-menu.ts"))
         action = src[src.index("export interface HeaderMenuAction {"):]
@@ -1559,8 +1606,8 @@ class TestRegistryMarkers(unittest.TestCase):
         self.assertEqual(src.count("icon?: HeaderMenuIcon;"), 2)
         self.assertIn('| "chrome";', src)
         partials = read(os.path.join(SDK_ROOT, "templates", "components", "custom", "header-menu.tsx"))
-        self.assertIn("  chrome: Chrome,", partials)
-        self.assertRegex(partials, r"import \{[^}]*\bChrome\b[^}]*\} from \"lucide-react\";")
+        self.assertIn("  chrome: RiChromeLine,", partials)
+        self.assertRegex(partials, r"import \{[^}]*\bRiChromeLine\b[^}]*\} from \"@remixicon/react\";")
         actions = partials[partials.index("export function HeaderMenuActions("):partials.index("export interface HeaderMenuRowProps")]
         # With an icon it is drawn before the label; without one the guard
         # leaves the label alone - one content node used by both the
@@ -1697,6 +1744,10 @@ class TestRegistryMarkers(unittest.TestCase):
         "www.gnu.org",
         "twitter.com", "linkedin.com", "instagram.com", "facebook.com",
         "tenant-a.rokct.ai", "example.app", "tenant.localhost",
+        # 1.55.0: where a shell's own site-shots branch is read from, server
+        # side only (app/site-shots/[file]/route.ts). It is the shell's own
+        # repo, not a placeholder asset, and no browser ever loads from it.
+        "raw.githubusercontent.com",
     }
 
     def test_no_base_default_references_a_third_party_cdn(self):
@@ -1740,7 +1791,7 @@ class TestRegistryMarkers(unittest.TestCase):
         self.assertIn("{badges.length > 0 && (", hero)
         self.assertIn("{badges.map((badge) => (", hero)
         self.assertNotIn("{hero.badges.map(", hero)
-        self.assertIn('import { Chrome } from "lucide-react";', hero)
+        self.assertIn('import { RiChromeLine } from "@remixicon/react";', hero)
         self.assertIn('if (icon === "chrome") {', hero)
 
     # -- 1.23.0: the network strip ------------------------------------------
@@ -2523,7 +2574,7 @@ class TestRegistryMarkers(unittest.TestCase):
         # The row sits between the strip and the copyright line.
         self.assertLess(footer.index('{networkStrip && <NetworkStrip surface="footer" />}'),
                         footer.index("{groups.length > 0 && ("))
-        self.assertLess(footer.index("{groups.length > 0 && ("), footer.index("© Copyright {year}"))
+        self.assertLess(footer.index("{groups.length > 0 && ("), footer.index("<SiteCredit"))
         # Still generic: no product, brand, host or copy.
         body = LINE_COMMENT_RE.sub("", BLOCK_COMMENT_RE.sub("", footer + config))
         for word in ("rokct.ai", "supacharge", "Privacy", "Terms of", "https://", "demo", "sample", "lorem"):
@@ -3021,7 +3072,7 @@ class TestRegistryMarkers(unittest.TestCase):
         # beside the link groups, both above the copyright line.
         self.assertLess(footer.index("<InstallOffer downloads={downloads}"), footer.index("<DownloadButtons downloads={downloads} />"))
         self.assertLess(footer.index('aria-label="Footer links"'), footer.index("aria-label={labels.downloads}"))
-        self.assertLess(footer.index("aria-label={labels.downloads}"), footer.index("© Copyright {year}"))
+        self.assertLess(footer.index("aria-label={labels.downloads}"), footer.index("<SiteCredit"))
         glyphs = read(PLATFORM_GLYPHS)
         for needle in (
             'import Image from "next/image";',
@@ -3312,7 +3363,7 @@ class TestRegistryMarkers(unittest.TestCase):
         self.assertTrue(button.lstrip().startswith("/*"), "licence header first")
         self.assertIn('"use client";', button)
         self.assertLess(button.index('"use client";'), button.index("import React"))
-        self.assertIn('import { ArrowUp } from "lucide-react";', button)
+        self.assertIn('import { RiArrowUpLine } from "@remixicon/react";', button)
         for needle in (
             "export function BackToTop({",
             "export interface BackToTopProps {",
@@ -3337,7 +3388,7 @@ class TestRegistryMarkers(unittest.TestCase):
             "      tabIndex={visible ? 0 : -1}",
             '      data-back-to-top={visible ? "shown" : "hidden"}',
             '${visible ? "opacity-100" : "pointer-events-none opacity-0"}',
-            '<ArrowUp className="h-5 w-5" aria-hidden="true" />',
+            '<RiArrowUpLine className="h-5 w-5" aria-hidden="true" />',
             "export default BackToTop;",
         ):
             self.assertIn(needle, button, needle)
@@ -3423,7 +3474,7 @@ class TestRegistryMarkers(unittest.TestCase):
     def test_back_to_top_type_checks_under_tsc(self):
         """The component and its rules under tsc, strict and
         isolatedModules with `jsx: preserve`, against a stub of the react
-        hooks and event it uses and of lucide-react's ArrowUp, with the
+        hooks and event it uses and of @remixicon/react's RiArrowUpLine, with the
         `@/` import pointed at the stage. Skips when no tsc is reachable."""
         tsc = os.environ.get("ROKCT_TSC") or shutil.which("tsc")
         if not tsc or not os.path.exists(tsc):
@@ -3441,8 +3492,8 @@ declare module "react" {
   const React: { useState: typeof useState; useEffect: typeof useEffect };
   export default React;
 }
-declare module "lucide-react" {
-  export function ArrowUp(props: { className?: string; "aria-hidden"?: boolean | "true" | "false" }): JSX.Element;
+declare module "@remixicon/react" {
+  export function RiArrowUpLine(props: { className?: string; "aria-hidden"?: boolean | "true" | "false" }): JSX.Element;
 }
 """
         with tempfile.TemporaryDirectory() as tmp:
@@ -3611,6 +3662,156 @@ declare module "@/components/custom/landing/brand-marks" {
                 [tsc, "-p", tmp], capture_output=True, text=True, timeout=300, cwd=tmp,
             )
         self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+
+class TestSiteCredit(unittest.TestCase):
+    """1.54.0: every site's footer reads `© <year> <site name> · Built with
+    ♥ by ROKCT` (Ray, 2026-10-31), the site's own name - never the legal
+    entity - and the heart an image named `love`."""
+
+    def test_site_credit_is_installed_and_drawn_by_the_footer_row(self):
+        manifest = json.loads(read(MANIFEST))
+        self.assertGreaterEqual(tuple(int(p) for p in manifest["version"].split(".")), (1, 54, 0))
+        installs = {e["from"]: e["to"] for e in manifest["installs"]}
+        for src, dst in SITE_CREDIT_INSTALLS.items():
+            self.assertEqual(installs.get(src), dst, src)
+            self.assertTrue(os.path.isfile(os.path.join(SDK_ROOT, src)), src)
+        credit = read(SITE_CREDIT)
+        self.assertTrue(credit.lstrip().startswith("/*"), "licence header first")
+        self.assertNotIn('"use client"', credit, "server-safe: a server footer imports it too")
+        for needle in (
+            'import { PLATFORM_NAME } from "@/app/config/platform";',
+            'from "@/components/custom/landing/site-credit";',
+            "export interface SiteCreditProps {",
+            "export function SiteCredit({",
+            "  siteName = PLATFORM_NAME,",
+            "  separator = SITE_CREDIT_SEPARATOR,",
+            "const copyright = siteCopyright(siteName, year);",
+            '{copyright && <span data-site-credit-copyright="">{copyright}</span>}',
+            '{copyright && <span aria-hidden="true">{separator}</span>}',
+            '<span role="img" aria-label={words.love} className={heartClassName}>',
+            "{SITE_CREDIT_HEART}",
+            "{words.by} {SITE_CREDIT_MAKER}",
+            "export default SiteCredit;",
+        ):
+            self.assertIn(needle, credit, needle)
+        code = LINE_COMMENT_RE.sub("", BLOCK_COMMENT_RE.sub("", credit))
+        self.assertNotIn("LEGAL_COMPANY_NAME", code)
+        self.assertNotRegex(code, re.compile(r"#[0-9a-fA-F]{3,8}\b"), "no colour is named")
+        self.assertNotRegex(code, re.compile(r"\btext-(xs|sm|base|lg)\b"), "the footer owns the type")
+        rules = read(SITE_CREDIT_RULES)
+        for needle in (
+            'export const SITE_CREDIT_MAKER = "ROKCT";',
+            'export const SITE_CREDIT_HEART = "\u2665";',
+            'export const SITE_CREDIT_SEPARATOR = " \u00b7 ";',
+            '  builtWith: "Built with",',
+            '  love: "love",',
+            '  by: "by",',
+            "export function resolveCreditYear(",
+            "export function siteCopyright(",
+            "export function siteCreditText(",
+            "export function siteCreditLine(",
+        ):
+            self.assertIn(needle, rules, needle)
+        # The row draws the credit, naming config.siteName else PLATFORM_NAME
+        # (the component's default) - never the copyright holder.
+        footer = read(FOOTER_CHROME)
+        footer_code = LINE_COMMENT_RE.sub("", BLOCK_COMMENT_RE.sub("", footer))
+        self.assertIn('import { SiteCredit } from "@/components/custom/site-credit";', footer)
+        self.assertIn("const siteName = config.siteName?.trim() || undefined;", footer)
+        self.assertIn("siteName={siteName}", footer)
+        self.assertIn("year={config.copyrightYear}", footer)
+        self.assertIn("separator={config.creditSeparator}", footer)
+        self.assertEqual(footer_code.count("<SiteCredit"), 1)
+        self.assertNotIn("copyrightHolder", footer_code)
+        self.assertNotIn("© Copyright", footer_code)
+        config = read(FOOTER_CHROME_CONFIG)
+        self.assertIn("  siteName?: string;", config)
+        self.assertIn("  copyrightHolder?: string;", config)
+        self.assertIn("  creditSeparator?: string;", config)
+        self.assertIn("@deprecated since 1.54.0", config)
+        self.assertNotIn("NEXT_PUBLIC_COPYRIGHT_HOLDER", LINE_COMMENT_RE.sub("", BLOCK_COMMENT_RE.sub("", config)))
+
+    def test_site_credit_rules_under_node(self):
+        """The rules executed (tests/site-credit.test.mts): the words, the
+        year, `© 2026 Polaris · Built with ♥ by ROKCT`."""
+        node = shutil.which("node")
+        self.assertIsNotNone(node, "node (22.6+) is needed to execute site-credit.ts")
+        with tempfile.TemporaryDirectory() as tmp:
+            staged = read(SITE_CREDIT_RULES)
+            self.assertNotIn('from "@/', staged, "site-credit.ts imports nothing")
+            with open(os.path.join(tmp, "site-credit.ts"), "w", encoding="utf-8") as f:
+                f.write(staged)
+            shutil.copy(SITE_CREDIT_TESTS, os.path.join(tmp, "site-credit.test.mts"))
+            run = subprocess.run(
+                [node, "--experimental-strip-types", "--no-warnings", "--test",
+                 os.path.join(tmp, "site-credit.test.mts")],
+                capture_output=True, text=True, timeout=120, cwd=tmp,
+            )
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertRegex(run.stdout, re.compile(r"^# fail 0$", re.M), run.stdout)
+        passed = re.search(r"^# pass (\d+)$", run.stdout, re.M)
+        self.assertIsNotNone(passed, run.stdout)
+        self.assertGreaterEqual(int(passed.group(1)), 12)
+
+
+class TestSiteShots(unittest.TestCase):
+    """1.55.0: every site serves its own pictures of its first screen at
+    /site-shots/, read from the shell repo's site-shots branch, checked, and
+    kept: a failed regeneration throws so the last good picture stays."""
+
+    def test_installed(self):
+        manifest = json.loads(read(MANIFEST))
+        self.assertGreaterEqual(tuple(int(p) for p in manifest["version"].split(".")), (1, 55, 0))
+        self.assertIn("_comment_version_1_55_0", manifest)
+        installs = {e["from"]: e["to"] for e in manifest["installs"]}
+        for src, dst in SITE_SHOTS_INSTALLS.items():
+            self.assertEqual(installs.get(src), dst, src)
+            self.assertTrue(os.path.exists(os.path.join(SDK_ROOT, src)), src)
+        head = read(os.path.join(SDK_ROOT, "CHANGELOG.md")).split("## 1.54.0")[0]
+        self.assertIn("## 1.55.0", head)
+
+    def test_route(self):
+        route = read(SITE_SHOTS_ROUTE)
+        self.assertTrue(route.lstrip().startswith("/*"), "licence header first")
+        for needle in (
+            "export const revalidate = 3600;",
+            "export const dynamicParams = false;",
+            "return siteShotPaths().map((file) => ({ file }));",
+            "{ params }: { params: Promise<{ file: string }> }",
+            "const { file } = await params;",
+            "const repo = resolveSiteShotsRepo(process.env);",
+            "parseSiteShotsManifest(JSON.parse(new TextDecoder().decode(raw)), repo)",
+            "checkSiteShot(file, await readRaw(repo, `${manifest.dir}/${file}`), manifest)",
+            "next: { revalidate: SITE_SHOTS_REVALIDATE_SECONDS },",
+            'if (process.env.NEXT_PHASE === "phase-production-build") {',
+            "status: 404",
+            "throw error;",
+        ):
+            self.assertIn(needle, route, needle)
+        rules = read(SITE_SHOTS_RULES)
+        self.assertTrue(rules.lstrip().startswith("/*"), "licence header first")
+        self.assertNotIn('from "next', rules, "pure: no Next import")
+        self.assertIn('export const SITE_SHOTS_BRANCH = "site-shots";', rules)
+        self.assertIn("export const SITE_SHOTS_REVALIDATE_SECONDS = 3600;", rules)
+
+    def test_rules_run(self):
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("node not on PATH")
+        with tempfile.TemporaryDirectory() as tmp:
+            shutil.copy(SITE_SHOTS_RULES, os.path.join(tmp, "site-shots.ts"))
+            shutil.copy(SITE_SHOTS_TESTS, os.path.join(tmp, "site-shots.test.mts"))
+            run = subprocess.run(
+                [node, "--experimental-strip-types", "--no-warnings", "--test",
+                 os.path.join(tmp, "site-shots.test.mts")],
+                capture_output=True, text=True, timeout=120, cwd=tmp,
+            )
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertRegex(run.stdout, re.compile(r"^# fail 0$", re.M), run.stdout)
+        passed = re.search(r"^# pass (\d+)$", run.stdout, re.M)
+        self.assertIsNotNone(passed, run.stdout)
+        self.assertGreaterEqual(int(passed.group(1)), 10)
+
 
 if __name__ == "__main__":
     unittest.main()

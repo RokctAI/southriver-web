@@ -4,7 +4,7 @@
   "_data_comment": "South River is a no-backend shell: \"local\" makes every composed SDK read the host-owned data/ folder (theme, team, stockists, products, about, legal) through base_sdk's server-only reader and hides base's backend-only surface. See data/README.md and base/nextjs/docs/site-data.md in RokctAI/core.",
   "version": "1.0.0",
   "description": "Active Next.js SDK list for the southriver-web shell (composed by The-Rokct-Protocol core/utils/nextjs/sdk_composer.py)",
-  "_comment": "Mirror of the registry template core/utils/frappe/composer/southriver-web.json in RokctAI/The-Rokct-Protocol (@ 3c4fae2d1dee7d7af7781095ee6cd246eaa7423b), re-pinned by `scripts/compose.sh refresh` from the SDK repos; .rokct/lock.json records the same pins plus each SDK's commit and cache content hash. Registry templates are canonical: every compose re-materializes this file from the template and carries the shell-owned \"data\" key through. This committed copy is the offline record of the shell's composition floor (SDK_ECOSYSTEM.md hard invariant 9). Change the registry template first, then mirror it here.",
+  "_comment": "The shell's own composition. South River is a client site, and the protocol registry holds products, not clients (Ray, 2026-10-31: no per-client compose templates), so .rokct/config/app_type names no registry template and this committed file IS the composition: `scripts/compose.sh refresh` re-pins it from the SDK repos and leaves it as committed; .rokct/lock.json records the same pins plus each SDK's commit and cache content hash. The kernel (telemetry_sdk, base_sdk) and corporate_sdk as the home SDK - the home of every local-data site, which draws the whole page from data/. No auth_sdk: there is no backend to sign in to.",
   "sdks": [
     {
       "name": "telemetry_sdk",
@@ -14,7 +14,7 @@
       "path": "../core/telemetry/nextjs",
       "ref": "main",
       "sha256": "318d20eb7123ffaa549618d06b4530dfce5df9ba0b07df2328c0c6e1738e36c4",
-      "version": "1.2.0",
+      "version": "1.2.2",
       "home_sdk": false,
       "_sha256_comment": "SHA-256 of telemetry/nextjs/install.py at core@557517e, re-pinned by `scripts/compose.sh refresh`; required by the composer's unpinned-installer gate.",
       "_comment": "Mandatory in every Next.js composition (SDK_ECOSYSTEM.md hard invariant 9): the delivery-policy seam owner, always first."
@@ -27,7 +27,7 @@
       "path": "../core/base/nextjs",
       "ref": "main",
       "sha256": "b6c434a1c05611d29f1018f68b9423383f7ecfbf9cc1efe74825ba6c4df98fff",
-      "version": "1.38.0",
+      "version": "1.53.0",
       "home_sdk": false,
       "_sha256_comment": "SHA-256 of base/nextjs/install.py at core@557517e, re-pinned by `scripts/compose.sh refresh`; required by the composer's unpinned-installer gate.",
       "_comment": "The platform kernel: app/services/base, the landing host and its registries, the admin and manager shells, and (1.35.0+) the lib/site-data reader and generate.mjs bundler behind this shell's local data mode. Every other Next.js SDK 'requires' files it installs."
@@ -40,10 +40,10 @@
       "path": "../corporate/corporate/nextjs",
       "ref": "main",
       "sha256": "6e03485fd03617ea1e175adc50354a91af25e213908371fa3581083d8aa7d4ba",
-      "version": "1.1.0",
-      "home_sdk": false,
+      "version": "1.4.0",
+      "home_sdk": true,
       "_sha256_comment": "SHA-256 of corporate/nextjs/install.py at corporate@1d28d71, re-pinned by `scripts/compose.sh refresh`; required by the composer's unpinned-installer gate.",
-      "_comment": "The company pages: app/legal and app/legal/[id] (the published legal documents), app/about and app/team, with their renderers under components/custom/legal and components/custom/company. In local data mode they read data/about.md, data/team.json and data/legal/*.md through base_sdk's site-data reader. Listed directly after base_sdk (no auth_sdk in this template); never home."
+      "_comment": "The home SDK (corporate_sdk >= 1.4.0, the home of every local-data site): its manifest's \"home\" block owns app/page.tsx (a redirect to /landing) and fills base_sdk's landing registries from data/ - theme.json, site.json, sections.json, pricing.json, order.json and site.css; plus, as everywhere, the company pages (app/legal, app/about, app/team) from data/. Listed directly after base_sdk."
     }
   ]
 }

@@ -1,5 +1,147 @@
 # Changelog
 
+## 1.55.0
+
+* feat(site-shots): every site serves its own pictures of its first screen
+  (Ray, 2026-10-31: the ROKCT studio's picture of each client site comes
+  from that site's latest good build, served by the site itself). Each
+  shell repo's "Site shots" workflow builds main, photographs the first
+  screen at 1440 and 390 wide in light and dark, runs a health gate, and
+  only on a pass commits `manifest.json` and `shots/<commit>/*.webp` to
+  the orphan `site-shots` branch. New `app/site-shots/[file]/route.ts`
+  serves `/site-shots/manifest.json` and the six
+  `/site-shots/<desktop|option|phone>-<light|dark>.webp` from that branch
+  (raw.githubusercontent.com). The repo is `SITE_SHOTS_REPO`, else the one
+  Vercel built from (`VERCEL_GIT_REPO_OWNER` / `VERCEL_GIT_REPO_SLUG`).
+* Each path is static and regenerated at most hourly. A regeneration
+  that fails (the branch is unreachable, the manifest is malformed or
+  names another repo, an image does not match its entry) throws, and Next
+  keeps serving the last good response. At build time a failure answers
+  404 until the first good regeneration.
+* New pure rules `components/custom/landing/site-shots.ts`
+  (`SITE_SHOT_FILES`, `resolveSiteShotsRepo`, `siteShotsRawUrl`,
+  `parseSiteShotsManifest`, `webpSize`, `checkSiteShot`,
+  `siteShotHeaders`). hosting_sdk >= 1.6.0 applies the same checks to a
+  client's `/site-shots/` for the studio page.
+* test: `tests/site-shots.test.mts` (run by test_manifest.py);
+  `TestSiteShots` checks the installs and the route.
+
+## 1.54.0
+
+* feat(footer): the site credit (Ray, 2026-10-31: "all site will be
+  copyright sitename then built with love (as heart) by ROKCT"). Every
+  site's footer now ends `© <year> <site name> · Built with ♥ by ROKCT`:
+  the SITE's own name, never the legal entity (Polaris read "© Copyright
+  2026 - ROKCT INTELLIGENCE (PTY) LTD"; it now reads "© 2026 Polaris ·
+  Built with ♥ by ROKCT"). New `components/custom/site-credit.tsx`
+  (`SiteCredit`: server-safe, `siteName` defaulting to the host's
+  `PLATFORM_NAME`, `year` defaulting to the current one, the footer's own
+  `separator` and type `className`, the heart a `role="img"` named `love`)
+  and its pure rules `components/custom/landing/site-credit.ts`
+  (`siteCopyright`, `siteCreditText`, `siteCreditLine`,
+  `resolveCreditYear`). A home SDK footer that draws its own markup imports
+  `SiteCredit` from `@/components/custom/site-credit`.
+* feat(footer-chrome): `FooterChromeRow` draws the credit in place of
+  `© Copyright <year> - <holder>`, naming `config.siteName`, else
+  `PLATFORM_NAME`; the credit is always drawn (a nameless site carries the
+  credit alone). `FooterChromeConfig` gains `siteName` and
+  `creditSeparator`; `copyrightHolder` is optional, deprecated and no
+  longer drawn, and `FOOTER_CHROME_CONFIG` no longer reads
+  `NEXT_PUBLIC_COPYRIGHT_HOLDER`.
+* docs(site-data): `site.json` `footer.legal` stays valid, but the credit
+  names the site's `name`, so no shipped footer draws it any more.
+* test: `tests/site-credit.test.mts` (run by test_manifest.py) drives the
+  rules; `TestSiteCredit` checks the installs, the component and the row.
+
+## 1.53.0
+
+* feat(site-data): a local-data site's whole page is data (Ray, 2026-10-31:
+  one shared site renderer, every client from data, no SDK per client).
+  New kinds, each validated down to the field by the new
+  `lib/site-data/validate-site.mjs` (installed beside `validate.mjs`):
+  * `site` (`data/site.json`): name, type wordmark, motto, place, since,
+    WhatsApp number, header logo and action, metadata, footer links, line
+    and `legal` (the copyright holder, else the shell's LEGAL_COMPANY_NAME);
+  * `sections` (`data/sections.json`): the page top to bottom, from a closed
+    library of section types (hero, intro, steps, pricing, gallery, facts,
+    order, contact), each with its fields, a layout `variant` and a `tone`;
+  * `pricing` (`data/pricing.json`): price tiers (with the quantity each
+    starts at, for the order form);
+  * `order` (`data/order.json`): the WhatsApp order form's fields, message
+    lines and label preview;
+  * `css` (`data/site.css`): the site's own stylesheet, plain CSS (no tags,
+    no `@import`).
+  `theme.json` gains `palette` / `paletteDark` (named tokens, hex) and
+  `fonts` (a display and a text face from a small allowed set, and the
+  display voice: weight, italic, capitals). Cross-kind rules fail the build
+  too: a page needs `site.json`; a pricing or order section needs its file;
+  anything that opens WhatsApp needs the number. base renders none of it -
+  corporate_sdk, the home SDK of every local-data site, does.
+* feat(site-data): `generate.mjs` also enforces the HOME SDK's
+  `home.site_data.requires` in a local build (the home recorded in
+  `.rokct/cache/install_state.json`, else the one `composer.json` flags).
+* feat(landing): `HeroConfig.formData` (optional, never read by base): plain
+  data a home SDK's server-loaded hero copy hands to its client hero form.
+* test: `tests/site-page.test.mts` (run by test_manifest.py) drives the new
+  validators, the cross-kind rule, the home block's required kinds and the
+  generator against `tests/fixtures/site-data/site-page/`, a made-up bakery.
+
+## 1.52.1
+
+* fix: `components/ui/select.tsx` is prettier-formatted (its icon import is
+  wrapped). The fleet linter reformatted it in every app that tracks it, and
+  the next compose put the long line back (supacharge-web a0e95f6, #82).
+  Ray asked for that fix at source; the installer banner's double blank line
+  is fixed in the protocol.
+
+## 1.52.0
+
+* fix(seo): `buildSiteMetadata()` no longer sets `canonical: "/"` and
+  `og:url` "/" on every page. A layout's `alternates` is inherited by every
+  page below it, so /about, /login and the rest all declared themselves
+  copies of `/`, which in an lms or agent shell is itself a redirect to
+  /landing. A new `path` option (and a second `buildPageMetadata()`
+  argument) sets the canonical and `og:url`; the landing page passes
+  `/landing`. Pages that pass no path carry no canonical. Existing callers
+  keep compiling unchanged.
+
+## 1.51.0
+
+* feat: the 25 shadcn primitives every host carried as an identical copy now
+  ship as templates (`templates/components/ui/` -> `components/ui/`): alert,
+  avatar, badge, breadcrumb, button, calendar, card, collapsible, dialog,
+  dropdown-menu, input, label, popover, progress, radio-group, scroll-area,
+  select, separator, sheet, sidebar, skeleton, switch, table, tabs, tooltip.
+  The ones listed under `requires` leave it. `textarea.tsx` and
+  `components/custom/theme-toggle.tsx` stay host-owned because hosts customise
+  them. Hosts can drop their own copies after a compose refresh.
+
+## 1.50.1
+
+* fix(icons): every `lucide-react` icon moves to its `@remixicon/react`
+  equivalent (one icon set across the fleet). The manifest depends on
+  `@remixicon/react` `^4.6.0` instead of `lucide-react`. Icons only.
+
+## 1.50.0
+
+* feat: admin nav Finance section gains **Customer Subscriptions**
+  (`nav.admin.customer_subscriptions`, `/admin/finance/customer-subscriptions`)
+  next to Shop Subscriptions. The page ships in the loyalty SDK.
+
+## 1.49.1
+
+* fix: `platformCall` unwraps the Frappe `message` envelope by key presence,
+  not truthiness. An empty list, `0`, `false` or `null` result now comes back
+  as itself instead of as `{message: ...}`, so `.length`/`.map` on an empty
+  page no longer crash.
+
+## 1.49.0
+
+* fix: admin FAQ form writes `active` (the FAQ doctype field) instead of
+  `is_active`. `getCareerCategories`, `getPaymentMethods` and
+  `getSocialSettings` now have backend functions. `getGallery` still has none
+  in core.
+
 ## 1.48.0
 
 * The landing hero, two faults visible on every composed storefront and a

@@ -1,0 +1,48 @@
+/*
+ * South River's own touches on top of corporate_sdk's site stylesheet: the
+ * exact shadcn tokens of the printed-label palette (the shared stylesheet
+ * derives close values from data/theme.json; these are the hand-set ones),
+ * and the composition table's symbol grey.
+ */
+.cs-site {
+  --background: 15 43% 97%;
+  --foreground: 347 17% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 347 17% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 347 17% 10%;
+  --primary: 353 100% 43%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 12 41% 94%;
+  --secondary-foreground: 347 17% 10%;
+  --muted: 12 41% 94%;
+  --muted-foreground: 355 9% 39%;
+  --accent: 12 41% 94%;
+  --accent-foreground: 347 17% 10%;
+  --border: 12 39% 89%;
+  --input: 12 39% 89%;
+  --ring: 353 100% 43%;
+}
+html.dark .cs-site,
+html.cs-site.dark {
+  --background: 353 24% 6%;
+  --foreground: 8 50% 95%;
+  --card: 355 19% 10%;
+  --card-foreground: 8 50% 95%;
+  --popover: 355 19% 10%;
+  --popover-foreground: 8 50% 95%;
+  --primary: 353 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 355 22% 15%;
+  --secondary-foreground: 8 50% 95%;
+  --muted: 355 22% 15%;
+  --muted-foreground: 0 15% 74%;
+  --accent: 355 22% 15%;
+  --accent-foreground: 8 50% 95%;
+  --border: 354 21% 19%;
+  --input: 354 21% 19%;
+  --ring: 353 100% 50%;
+}
+.cs-comp dt span {
+  color: #8a7778;
+}
