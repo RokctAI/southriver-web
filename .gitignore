@@ -126,6 +126,7 @@ next-env.d.ts
 /components/custom/hero.tsx
 /components/custom/install-offer.tsx
 /components/custom/landing-content.tsx
+/components/custom/landing/back-to-top-style.ts
 /components/custom/landing/back-to-top.ts
 /components/custom/landing/brand-marks.ts
 /components/custom/landing/download-platform.ts
@@ -158,6 +159,7 @@ next-env.d.ts
 /components/custom/nav/nav-user.tsx
 /components/custom/nav/team-switcher.tsx
 /components/custom/network-strip.tsx
+/components/custom/site-back-to-top.ts
 /components/custom/site-credit.tsx
 /components/custom/site-frame.tsx
 /components/custom/site-theme.tsx
