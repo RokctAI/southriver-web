@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "repo": "RokctAI/southriver-web",
+  "commit": "e4b65df60394652349e490850fd6d4e8e2474732",
+  "taken_at": "2026-10-31T17:12:12Z",
+  "dir": "shots/e4b65df60394652349e490850fd6d4e8e2474732",
+  "files": {
+    "desktop-light.webp": {
+      "width": 1200,
+      "height": 833,
+      "bytes": 57636,
+      "sha256": "148e408dec9105c502f2085f0c184f9e69a589a3a14c79069bae1de0e0d9fe81"
+    },
+    "desktop-dark.webp": {
+      "width": 1200,
+      "height": 833,
+      "bytes": 56656,
+      "sha256": "6cabe57ba3c6020c30b2b2b045e37b1cfac2109dfd8a7597c93c8bd9d9d491eb"
+    },
+    "option-light.webp": {
+      "width": 800,
+      "height": 500,
+      "bytes": 32822,
+      "sha256": "bee98b0969570ab3824d75d9a9c3c5dcaa1552609d55762f67bf6f17a389ef72"
+    },
+    "option-dark.webp": {
+      "width": 800,
+      "height": 500,
+      "bytes": 32376,
+      "sha256": "8fe054f9e99e38acc1282a1ce00fbdb935616ebde61a1b739e75046b1bfab70a"
+    },
+    "phone-light.webp": {
+      "width": 560,
+      "height": 1149,
+      "bytes": 55364,
+      "sha256": "5157e2f7789253251981f9b4baa02a5e3f68ec298e4fdaa1afe29911f5b28f72"
+    },
+    "phone-dark.webp": {
+      "width": 560,
+      "height": 1149,
+      "bytes": 54764,
+      "sha256": "1ff5797e31b14a638c032887c599aa06e28a8f0ffc47b8047ab66b5648ed30c3"
+    }
+  }
+}
