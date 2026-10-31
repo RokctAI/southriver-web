@@ -111,3 +111,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+/*
+ * The platform scrollbar (base_sdk app/styles/rokct-scroll.css, imported by
+ * the root layout so every route has it), in South River's red. The thumb follows the
+ * --primary token; `html:root` outranks the SDK's `:root` defaults whichever
+ * stylesheet Next.js emits last.
+ */
+html:root {
+  --rokct-scroll-thumb: hsl(var(--primary));
+  --rokct-scroll-thumb-hover: hsl(353 100% 35%);
+}
