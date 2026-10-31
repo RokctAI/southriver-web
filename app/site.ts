@@ -41,4 +41,5 @@ export const APP_TYPE = "southriver-web";
 /** The product's name: the fallback when NEXT_PUBLIC_SITE_NAME is unset. */
 export const PRODUCT_NAME = "South River";
 
-export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME?.trim() || PRODUCT_NAME;
+export const SITE_NAME =
+  process.env.NEXT_PUBLIC_SITE_NAME?.trim() || PRODUCT_NAME;
