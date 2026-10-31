@@ -9,18 +9,32 @@
       "lede": "Still water for shops, offices, weddings and events, with your name on the label. Send us your logo; we print the label, fill the bottles and deliver the cases.",
       "cta": { "label": "Order on WhatsApp", "href": "whatsapp" },
       "secondary": { "label": "See prices", "href": "#pricing" },
-      "facts": ["Alkaline, pH 8", "Reverse-osmosis purified", "Bottled in Musina since 2021"],
+      "facts": [
+        "Alkaline, pH 8",
+        "Reverse-osmosis purified",
+        "Bottled in Musina since 2021"
+      ],
       "tag": { "price": "R150", "text": "a case of 500 ml, from 10 cases" },
       "art": {
         "back": {
           "kind": "bottle",
           "size": "1.25 L",
-          "label": { "bg": "#d9001b", "name": "South River", "art": "/brand/south-river-label.svg" },
+          "label": {
+            "bg": "#d9001b",
+            "name": "South River",
+            "art": "/brand/south-river-label.svg"
+          },
           "cap": "#d9001b"
         },
         "front": {
           "kind": "bottle",
-          "label": { "bg": "#ffffff", "fg": "#1d1416", "name": "Your logo", "sub": "Still water · 500 ml", "footer": "Bottled by South River" }
+          "label": {
+            "bg": "#ffffff",
+            "fg": "#1d1416",
+            "name": "Your logo",
+            "sub": "Still water · 500 ml",
+            "footer": "Bottled by South River"
+          }
         }
       }
     },
@@ -29,7 +43,10 @@
       "id": "since",
       "year": "Since 2021",
       "text": "South River has bottled water in Musina, at the top of Limpopo. The feed is municipal water, cleaned by reverse osmosis and bottled alkaline, at pH 8. Now the same water can carry your name.",
-      "stamp": { "lines": ["Alkaline", "Musina", "Since 2021"], "center": "pH 8" }
+      "stamp": {
+        "lines": ["Alkaline", "Musina", "Since 2021"],
+        "center": "pH 8"
+      }
     },
     {
       "type": "steps",
@@ -39,9 +56,21 @@
       "eyebrow": "How private label works",
       "heading": "Three steps from your logo to a case on the counter.",
       "steps": [
-        { "title": "Send your logo", "text": "WhatsApp us your logo or artwork and the number of cases you need. A plain name in your colours works too.", "icon": "upload" },
-        { "title": "We make the label", "text": "We set your logo on a 500 ml label, show you a proof, and print it once you say yes.", "icon": "label" },
-        { "title": "We fill and deliver", "text": "The bottles are filled, labelled and packed in cases in Musina, then delivered to you.", "icon": "truck" }
+        {
+          "title": "Send your logo",
+          "text": "WhatsApp us your logo or artwork and the number of cases you need. A plain name in your colours works too.",
+          "icon": "upload"
+        },
+        {
+          "title": "We make the label",
+          "text": "We set your logo on a 500 ml label, show you a proof, and print it once you say yes.",
+          "icon": "label"
+        },
+        {
+          "title": "We fill and deliver",
+          "text": "The bottles are filled, labelled and packed in cases in Musina, then delivered to you.",
+          "icon": "truck"
+        }
       ]
     },
     {
@@ -58,7 +87,11 @@
         "art": {
           "kind": "bottle",
           "size": "1.25 L",
-          "label": { "bg": "#d9001b", "name": "South River", "art": "/brand/south-river-label.svg" },
+          "label": {
+            "bg": "#d9001b",
+            "name": "South River",
+            "art": "/brand/south-river-label.svg"
+          },
           "cap": "#d9001b"
         }
       }
@@ -76,22 +109,62 @@
         {
           "title": "Shops and spazas",
           "text": "Your shop's name on the cold-drink shelf, at a case price that leaves room for margin.",
-          "art": { "kind": "bottle", "label": { "bg": "#ffd23f", "fg": "#2a1a00", "name": "Your shop", "sub": "Still water · 500 ml", "footer": "Bottled by South River" }, "cap": "#ffd23f" }
+          "art": {
+            "kind": "bottle",
+            "label": {
+              "bg": "#ffd23f",
+              "fg": "#2a1a00",
+              "name": "Your shop",
+              "sub": "Still water · 500 ml",
+              "footer": "Bottled by South River"
+            },
+            "cap": "#ffd23f"
+          }
         },
         {
           "title": "Offices",
           "text": "Branded water on the boardroom table and at reception, delivered by the case.",
-          "art": { "kind": "bottle", "label": { "bg": "#1d2433", "fg": "#ffffff", "name": "Your firm", "sub": "Still water · 500 ml", "footer": "Bottled by South River" }, "cap": "#1d2433" }
+          "art": {
+            "kind": "bottle",
+            "label": {
+              "bg": "#1d2433",
+              "fg": "#ffffff",
+              "name": "Your firm",
+              "sub": "Still water · 500 ml",
+              "footer": "Bottled by South River"
+            },
+            "cap": "#1d2433"
+          }
         },
         {
           "title": "Weddings",
           "text": "The couple's names and the date on every bottle on every table.",
-          "art": { "kind": "bottle", "label": { "bg": "#f7ece6", "fg": "#6a3b2e", "name": "Thabo & Naledi", "sub": "14 · 02 · 2027", "footer": "Bottled by South River" }, "cap": "#b88a5a" }
+          "art": {
+            "kind": "bottle",
+            "label": {
+              "bg": "#f7ece6",
+              "fg": "#6a3b2e",
+              "name": "Thabo & Naledi",
+              "sub": "14 · 02 · 2027",
+              "footer": "Bottled by South River"
+            },
+            "cap": "#b88a5a"
+          }
         },
         {
           "title": "Events",
           "text": "A sponsor's or an organiser's mark for the marathon, the festival or the church camp.",
-          "art": { "kind": "bottle", "label": { "bg": "#13866f", "fg": "#ffffff", "name": "Your event", "sub": "Still water · 500 ml", "footer": "Bottled by South River" }, "cap": "#13866f" }
+          "art": {
+            "kind": "bottle",
+            "label": {
+              "bg": "#13866f",
+              "fg": "#ffffff",
+              "name": "Your event",
+              "sub": "Still water · 500 ml",
+              "footer": "Bottled by South River"
+            },
+            "cap": "#13866f"
+          }
         }
       ]
     },

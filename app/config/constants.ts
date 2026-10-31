@@ -20,7 +20,8 @@
 import { SITE_NAME } from "@/app/site";
 
 export const PLATFORM_NAME = SITE_NAME;
-export const LEGAL_COMPANY_NAME = "BLACK WEALTH INSTITUTE (PTY) LTD, trading as South River";
+export const LEGAL_COMPANY_NAME =
+  "BLACK WEALTH INSTITUTE (PTY) LTD, trading as South River";
 
 /**
  * UI Configuration for the "Use Voucher" banner.

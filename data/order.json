@@ -1,11 +1,18 @@
 {
   "intro": "Hi South River, I would like a private-label quote.",
   "fields": {
-    "business": { "label": "Business or event name", "placeholder": "e.g. Mapungubwe Guest House" },
+    "business": {
+      "label": "Business or event name",
+      "placeholder": "e.g. Mapungubwe Guest House"
+    },
     "quantity": { "label": "Cases wanted", "placeholder": "10" },
     "phone": { "label": "Your WhatsApp number", "placeholder": "07x xxx xxxx" },
     "area": { "label": "Delivery area", "placeholder": "Town or suburb" },
-    "file": { "label": "Your logo (optional, we will also ask for it on WhatsApp)", "placeholder": "PNG, JPG, SVG or PDF", "button": "Choose file" }
+    "file": {
+      "label": "Your logo (optional, we will also ask for it on WhatsApp)",
+      "placeholder": "PNG, JPG, SVG or PDF",
+      "button": "Choose file"
+    }
   },
   "message": {
     "business": "Business/event: {value}",
@@ -21,6 +28,11 @@
   "preview": {
     "heading": "Label preview",
     "placeholderName": "Your logo",
-    "label": { "bg": "#ffffff", "fg": "#1d1416", "sub": "Still water · 500 ml", "footer": "Bottled by South River" }
+    "label": {
+      "bg": "#ffffff",
+      "fg": "#1d1416",
+      "sub": "Still water · 500 ml",
+      "footer": "Bottled by South River"
+    }
   }
 }
