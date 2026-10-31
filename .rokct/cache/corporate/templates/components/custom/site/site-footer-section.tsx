@@ -18,11 +18,14 @@
 // A local-data site's footer (order 95, frame): the wordmark (data/site.json
 // `wordmark`, else the name), the motto and the place line, the links
 // (`footer.links`, else one per section with a nav label) and base's chrome
-// row with the shell's published legal links.
+// row with the shell's published legal links. The row ends with base_sdk
+// 1.54.0's site credit, `© <year> <site name> · Built with ♥ by ROKCT`
+// (Ray, 2026-10-31: "all site will be copyright sitename then built with
+// love (as heart) by ROKCT"): the name is data/site.json `name`, never the
+// legal entity, so `footer.legal` is not drawn (1.4.1).
 import React from "react";
 import Link from "next/link";
 
-import { LEGAL_COMPANY_NAME } from "@/app/config/constants";
 import { listPublicTerms } from "@/app/actions/base/legal";
 import { FooterChromeRow } from "@/components/custom/footer-chrome";
 import type { FooterChromeConfig } from "@/components/custom/landing/footer-chrome-config";
@@ -36,7 +39,6 @@ import { isDataSite, siteKind, siteNav } from "./site-source";
 export const SITE_FOOTER_VERSION = "1.0.0";
 
 const FOOTER_CHROME: FooterChromeConfig = {
-  copyrightHolder: LEGAL_COMPANY_NAME,
   version: process.env.NEXT_PUBLIC_APP_VERSION || SITE_FOOTER_VERSION,
   statusColors: {
     operational: "var(--cs-ok)",
@@ -73,7 +75,7 @@ export async function SiteFooter({ id }: { id?: string }) {
             ))}
           </nav>
         </div>
-        <FooterChromeRow config={{ ...FOOTER_CHROME, copyrightHolder: site?.footer?.legal || LEGAL_COMPANY_NAME, links: legalFooterLinks(terms) }} className="border-t border-[var(--cs-sub)] pt-6" />
+        <FooterChromeRow config={{ ...FOOTER_CHROME, siteName: site?.name, links: legalFooterLinks(terms) }} className="border-t border-[var(--cs-sub)] pt-6" />
       </div>
     </footer>
   );

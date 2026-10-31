@@ -158,6 +158,25 @@ BACK_TO_TOP = os.path.join(SDK_ROOT, "templates", "components", "custom", "back-
 BACK_TO_TOP_RULES = os.path.join(LANDING, "back-to-top.ts")
 BACK_TO_TOP_TESTS = os.path.join(HERE, "back-to-top.test.mts")
 LANDING_CONTENT = os.path.join(SDK_ROOT, "templates", "components", "custom", "landing-content.tsx")
+# base_sdk 1.54.0: the site credit (Ray, 2026-10-31: "all site will be
+# copyright sitename then built with love (as heart) by ROKCT"), pure rules
+# beside the server-safe component every footer draws its last line with.
+SITE_CREDIT = os.path.join(SDK_ROOT, "templates", "components", "custom", "site-credit.tsx")
+SITE_CREDIT_RULES = os.path.join(LANDING, "site-credit.ts")
+SITE_CREDIT_TESTS = os.path.join(HERE, "site-credit.test.mts")
+# base_sdk 1.55.0: site shots - every site serves its own pictures of its
+# first screen at /site-shots/, read from its repo's site-shots branch.
+SITE_SHOTS_RULES = os.path.join(LANDING, "site-shots.ts")
+SITE_SHOTS_ROUTE = os.path.join(SDK_ROOT, "templates", "app", "site-shots", "[file]", "route.ts")
+SITE_SHOTS_TESTS = os.path.join(HERE, "site-shots.test.mts")
+SITE_SHOTS_INSTALLS = {
+    "templates/components/custom/landing/site-shots.ts": "components/custom/landing/site-shots.ts",
+    "templates/app/site-shots": "app/site-shots",
+}
+SITE_CREDIT_INSTALLS = {
+    "templates/components/custom/site-credit.tsx": "components/custom/site-credit.tsx",
+    "templates/components/custom/landing/site-credit.ts": "components/custom/landing/site-credit.ts",
+}
 BACK_TO_TOP_INSTALLS = {
     "templates/components/custom/back-to-top.tsx": "components/custom/back-to-top.tsx",
     "templates/components/custom/landing/back-to-top.ts": "components/custom/landing/back-to-top.ts",
@@ -1725,6 +1744,10 @@ class TestRegistryMarkers(unittest.TestCase):
         "www.gnu.org",
         "twitter.com", "linkedin.com", "instagram.com", "facebook.com",
         "tenant-a.rokct.ai", "example.app", "tenant.localhost",
+        # 1.55.0: where a shell's own site-shots branch is read from, server
+        # side only (app/site-shots/[file]/route.ts). It is the shell's own
+        # repo, not a placeholder asset, and no browser ever loads from it.
+        "raw.githubusercontent.com",
     }
 
     def test_no_base_default_references_a_third_party_cdn(self):
@@ -2551,7 +2574,7 @@ class TestRegistryMarkers(unittest.TestCase):
         # The row sits between the strip and the copyright line.
         self.assertLess(footer.index('{networkStrip && <NetworkStrip surface="footer" />}'),
                         footer.index("{groups.length > 0 && ("))
-        self.assertLess(footer.index("{groups.length > 0 && ("), footer.index("© Copyright {year}"))
+        self.assertLess(footer.index("{groups.length > 0 && ("), footer.index("<SiteCredit"))
         # Still generic: no product, brand, host or copy.
         body = LINE_COMMENT_RE.sub("", BLOCK_COMMENT_RE.sub("", footer + config))
         for word in ("rokct.ai", "supacharge", "Privacy", "Terms of", "https://", "demo", "sample", "lorem"):
@@ -3049,7 +3072,7 @@ class TestRegistryMarkers(unittest.TestCase):
         # beside the link groups, both above the copyright line.
         self.assertLess(footer.index("<InstallOffer downloads={downloads}"), footer.index("<DownloadButtons downloads={downloads} />"))
         self.assertLess(footer.index('aria-label="Footer links"'), footer.index("aria-label={labels.downloads}"))
-        self.assertLess(footer.index("aria-label={labels.downloads}"), footer.index("© Copyright {year}"))
+        self.assertLess(footer.index("aria-label={labels.downloads}"), footer.index("<SiteCredit"))
         glyphs = read(PLATFORM_GLYPHS)
         for needle in (
             'import Image from "next/image";',
@@ -3639,6 +3662,156 @@ declare module "@/components/custom/landing/brand-marks" {
                 [tsc, "-p", tmp], capture_output=True, text=True, timeout=300, cwd=tmp,
             )
         self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+
+class TestSiteCredit(unittest.TestCase):
+    """1.54.0: every site's footer reads `© <year> <site name> · Built with
+    ♥ by ROKCT` (Ray, 2026-10-31), the site's own name - never the legal
+    entity - and the heart an image named `love`."""
+
+    def test_site_credit_is_installed_and_drawn_by_the_footer_row(self):
+        manifest = json.loads(read(MANIFEST))
+        self.assertGreaterEqual(tuple(int(p) for p in manifest["version"].split(".")), (1, 54, 0))
+        installs = {e["from"]: e["to"] for e in manifest["installs"]}
+        for src, dst in SITE_CREDIT_INSTALLS.items():
+            self.assertEqual(installs.get(src), dst, src)
+            self.assertTrue(os.path.isfile(os.path.join(SDK_ROOT, src)), src)
+        credit = read(SITE_CREDIT)
+        self.assertTrue(credit.lstrip().startswith("/*"), "licence header first")
+        self.assertNotIn('"use client"', credit, "server-safe: a server footer imports it too")
+        for needle in (
+            'import { PLATFORM_NAME } from "@/app/config/platform";',
+            'from "@/components/custom/landing/site-credit";',
+            "export interface SiteCreditProps {",
+            "export function SiteCredit({",
+            "  siteName = PLATFORM_NAME,",
+            "  separator = SITE_CREDIT_SEPARATOR,",
+            "const copyright = siteCopyright(siteName, year);",
+            '{copyright && <span data-site-credit-copyright="">{copyright}</span>}',
+            '{copyright && <span aria-hidden="true">{separator}</span>}',
+            '<span role="img" aria-label={words.love} className={heartClassName}>',
+            "{SITE_CREDIT_HEART}",
+            "{words.by} {SITE_CREDIT_MAKER}",
+            "export default SiteCredit;",
+        ):
+            self.assertIn(needle, credit, needle)
+        code = LINE_COMMENT_RE.sub("", BLOCK_COMMENT_RE.sub("", credit))
+        self.assertNotIn("LEGAL_COMPANY_NAME", code)
+        self.assertNotRegex(code, re.compile(r"#[0-9a-fA-F]{3,8}\b"), "no colour is named")
+        self.assertNotRegex(code, re.compile(r"\btext-(xs|sm|base|lg)\b"), "the footer owns the type")
+        rules = read(SITE_CREDIT_RULES)
+        for needle in (
+            'export const SITE_CREDIT_MAKER = "ROKCT";',
+            'export const SITE_CREDIT_HEART = "\u2665";',
+            'export const SITE_CREDIT_SEPARATOR = " \u00b7 ";',
+            '  builtWith: "Built with",',
+            '  love: "love",',
+            '  by: "by",',
+            "export function resolveCreditYear(",
+            "export function siteCopyright(",
+            "export function siteCreditText(",
+            "export function siteCreditLine(",
+        ):
+            self.assertIn(needle, rules, needle)
+        # The row draws the credit, naming config.siteName else PLATFORM_NAME
+        # (the component's default) - never the copyright holder.
+        footer = read(FOOTER_CHROME)
+        footer_code = LINE_COMMENT_RE.sub("", BLOCK_COMMENT_RE.sub("", footer))
+        self.assertIn('import { SiteCredit } from "@/components/custom/site-credit";', footer)
+        self.assertIn("const siteName = config.siteName?.trim() || undefined;", footer)
+        self.assertIn("siteName={siteName}", footer)
+        self.assertIn("year={config.copyrightYear}", footer)
+        self.assertIn("separator={config.creditSeparator}", footer)
+        self.assertEqual(footer_code.count("<SiteCredit"), 1)
+        self.assertNotIn("copyrightHolder", footer_code)
+        self.assertNotIn("© Copyright", footer_code)
+        config = read(FOOTER_CHROME_CONFIG)
+        self.assertIn("  siteName?: string;", config)
+        self.assertIn("  copyrightHolder?: string;", config)
+        self.assertIn("  creditSeparator?: string;", config)
+        self.assertIn("@deprecated since 1.54.0", config)
+        self.assertNotIn("NEXT_PUBLIC_COPYRIGHT_HOLDER", LINE_COMMENT_RE.sub("", BLOCK_COMMENT_RE.sub("", config)))
+
+    def test_site_credit_rules_under_node(self):
+        """The rules executed (tests/site-credit.test.mts): the words, the
+        year, `© 2026 Polaris · Built with ♥ by ROKCT`."""
+        node = shutil.which("node")
+        self.assertIsNotNone(node, "node (22.6+) is needed to execute site-credit.ts")
+        with tempfile.TemporaryDirectory() as tmp:
+            staged = read(SITE_CREDIT_RULES)
+            self.assertNotIn('from "@/', staged, "site-credit.ts imports nothing")
+            with open(os.path.join(tmp, "site-credit.ts"), "w", encoding="utf-8") as f:
+                f.write(staged)
+            shutil.copy(SITE_CREDIT_TESTS, os.path.join(tmp, "site-credit.test.mts"))
+            run = subprocess.run(
+                [node, "--experimental-strip-types", "--no-warnings", "--test",
+                 os.path.join(tmp, "site-credit.test.mts")],
+                capture_output=True, text=True, timeout=120, cwd=tmp,
+            )
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertRegex(run.stdout, re.compile(r"^# fail 0$", re.M), run.stdout)
+        passed = re.search(r"^# pass (\d+)$", run.stdout, re.M)
+        self.assertIsNotNone(passed, run.stdout)
+        self.assertGreaterEqual(int(passed.group(1)), 12)
+
+
+class TestSiteShots(unittest.TestCase):
+    """1.55.0: every site serves its own pictures of its first screen at
+    /site-shots/, read from the shell repo's site-shots branch, checked, and
+    kept: a failed regeneration throws so the last good picture stays."""
+
+    def test_installed(self):
+        manifest = json.loads(read(MANIFEST))
+        self.assertGreaterEqual(tuple(int(p) for p in manifest["version"].split(".")), (1, 55, 0))
+        self.assertIn("_comment_version_1_55_0", manifest)
+        installs = {e["from"]: e["to"] for e in manifest["installs"]}
+        for src, dst in SITE_SHOTS_INSTALLS.items():
+            self.assertEqual(installs.get(src), dst, src)
+            self.assertTrue(os.path.exists(os.path.join(SDK_ROOT, src)), src)
+        head = read(os.path.join(SDK_ROOT, "CHANGELOG.md")).split("## 1.54.0")[0]
+        self.assertIn("## 1.55.0", head)
+
+    def test_route(self):
+        route = read(SITE_SHOTS_ROUTE)
+        self.assertTrue(route.lstrip().startswith("/*"), "licence header first")
+        for needle in (
+            "export const revalidate = 3600;",
+            "export const dynamicParams = false;",
+            "return siteShotPaths().map((file) => ({ file }));",
+            "{ params }: { params: Promise<{ file: string }> }",
+            "const { file } = await params;",
+            "const repo = resolveSiteShotsRepo(process.env);",
+            "parseSiteShotsManifest(JSON.parse(new TextDecoder().decode(raw)), repo)",
+            "checkSiteShot(file, await readRaw(repo, `${manifest.dir}/${file}`), manifest)",
+            "next: { revalidate: SITE_SHOTS_REVALIDATE_SECONDS },",
+            'if (process.env.NEXT_PHASE === "phase-production-build") {',
+            "status: 404",
+            "throw error;",
+        ):
+            self.assertIn(needle, route, needle)
+        rules = read(SITE_SHOTS_RULES)
+        self.assertTrue(rules.lstrip().startswith("/*"), "licence header first")
+        self.assertNotIn('from "next', rules, "pure: no Next import")
+        self.assertIn('export const SITE_SHOTS_BRANCH = "site-shots";', rules)
+        self.assertIn("export const SITE_SHOTS_REVALIDATE_SECONDS = 3600;", rules)
+
+    def test_rules_run(self):
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("node not on PATH")
+        with tempfile.TemporaryDirectory() as tmp:
+            shutil.copy(SITE_SHOTS_RULES, os.path.join(tmp, "site-shots.ts"))
+            shutil.copy(SITE_SHOTS_TESTS, os.path.join(tmp, "site-shots.test.mts"))
+            run = subprocess.run(
+                [node, "--experimental-strip-types", "--no-warnings", "--test",
+                 os.path.join(tmp, "site-shots.test.mts")],
+                capture_output=True, text=True, timeout=120, cwd=tmp,
+            )
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertRegex(run.stdout, re.compile(r"^# fail 0$", re.M), run.stdout)
+        passed = re.search(r"^# pass (\d+)$", run.stdout, re.M)
+        self.assertIsNotNone(passed, run.stdout)
+        self.assertGreaterEqual(int(passed.group(1)), 10)
+
 
 if __name__ == "__main__":
     unittest.main()

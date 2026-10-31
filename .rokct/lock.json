@@ -4,7 +4,7 @@
   "app_type": "southriver-web",
   "protocol": {
     "git": "https://github.com/RokctAI/The-Rokct-Protocol",
-    "ref": "9972173bb42e437aefda38d100971c6707ac56f3",
+    "ref": "239ef107fb0557b249662ccff61d0f3f7c3dd7a2",
     "vendored": ".rokct/cache/_composer",
     "files": {
       "sdk_composer.py": "bc6ba6cbea6a470de4afd34d55606d1022cfedace14031010f63ccd38cc63d03",
@@ -19,7 +19,7 @@
       "git": "https://github.com/RokctAI/core",
       "path": "../core/telemetry/nextjs",
       "ref": "main",
-      "commit": "1556c27347789f24f88da909d8dcf193b58a0f7a",
+      "commit": "a3ef8432a6a022cbc6d5d6e336451eef89618c81",
       "version": "1.2.2",
       "install_py_sha256": "318d20eb7123ffaa549618d06b4530dfce5df9ba0b07df2328c0c6e1738e36c4",
       "content_sha256": "97652d52df5b1f4fada6bfb41793a47df1b90cc5343aaf317139683cd75db1c1"
@@ -31,10 +31,10 @@
       "git": "https://github.com/RokctAI/core",
       "path": "../core/base/nextjs",
       "ref": "main",
-      "commit": "1556c27347789f24f88da909d8dcf193b58a0f7a",
-      "version": "1.53.0",
+      "commit": "a3ef8432a6a022cbc6d5d6e336451eef89618c81",
+      "version": "1.55.0",
       "install_py_sha256": "b6c434a1c05611d29f1018f68b9423383f7ecfbf9cc1efe74825ba6c4df98fff",
-      "content_sha256": "bb0ec234b7a186c7d251822451bcf5afeb1273efb715a3557ac15f9b407c1cbc"
+      "content_sha256": "84afbf602f15676e3ea240931e0fff082f2e7d6c9aeb5c9cc5a8c8a25dafd011"
     },
     {
       "name": "corporate_sdk",
@@ -43,10 +43,10 @@
       "git": "https://github.com/RokctAI/corporate",
       "path": "../corporate/corporate/nextjs",
       "ref": "main",
-      "commit": "3ef4351e80565697501737d2334150516b0dc398",
-      "version": "1.4.0",
+      "commit": "b53646a17e25fcae92ee860f9edbf87a20a72eb1",
+      "version": "1.4.1",
       "install_py_sha256": "6e03485fd03617ea1e175adc50354a91af25e213908371fa3581083d8aa7d4ba",
-      "content_sha256": "a6ac82d0d199deedc46c85c5042b573921bf713365afd9304c96153801b567f6"
+      "content_sha256": "05677a88a7274d1f17638158daf65b7eae16227b4c6383697d063764c3aa15af"
     }
   ]
 }

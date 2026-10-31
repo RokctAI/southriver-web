@@ -133,7 +133,7 @@ class TestCorporateNextjs(unittest.TestCase):
     def test_identity_and_version(self):
         self.assertEqual(self.manifest["name"], "corporate_sdk")
         self.assertRegex(self.manifest["version"], r"^\d+\.\d+\.\d+$")
-        self.assertEqual(self.manifest["version"], "1.4.0")
+        self.assertEqual(self.manifest["version"], "1.4.1")
         self.assertIn("sdk_name = 'corporate_sdk'", read(INSTALL_PY))
         self.assertTrue(read(INSTALL_PY).startswith("# " + LICENSE_HEAD))
         # Same shape as the sibling halves: one flat installs list, no
@@ -690,6 +690,59 @@ class TestLocalSiteHome(unittest.TestCase):
             self.assertNotIn("site-source", src, name)
             self.assertNotIn("read-site-data", src, name)
             self.assertNotIn("site-data/generated", src, name)
+
+
+class TestSiteCredit(unittest.TestCase):
+    """1.4.1: a local-data site's footer ends with base_sdk 1.54.0's site
+    credit, `© <year> <site name> · Built with ♥ by ROKCT` (Ray,
+    2026-10-31), the name from data/site.json - never the legal entity."""
+
+    FOOTER = os.path.join(TEMPLATES, "components", "custom", "site", "site-footer-section.tsx")
+    EXAMPLE_SITE = os.path.join(SDK_ROOT, "docs", "examples", "demo-bakery", "data", "site.json")
+
+    def test_footer_names_the_site_not_the_company(self):
+        code = code_of(self.FOOTER)
+        self.assertIn("config={{ ...FOOTER_CHROME, siteName: site?.name, links: legalFooterLinks(terms) }}", code)
+        self.assertNotIn("copyrightHolder", code)
+        self.assertNotIn("LEGAL_COMPANY_NAME", code)
+        self.assertNotIn("footer?.legal", code)
+        self.assertNotIn("©", code)
+        notes = load_manifest()["_comment"]["about"]
+        self.assertIn("floor base_sdk >= 1.54.0 (siteName)", notes)
+        head = read(os.path.join(SDK_ROOT, "CHANGELOG.md")).split("## 1.4.0")[0]
+        self.assertIn("## 1.4.1", head)
+        self.assertIn("Built with", head)
+
+    def test_company_and_legal_frames_name_no_holder(self):
+        for name in (("company", "company-frame.tsx"), ("legal", "legal-frame.tsx")):
+            code = code_of(os.path.join(TEMPLATES, "components", "custom", *name))
+            with self.subTest(name=name[1]):
+                self.assertIn("<FooterChromeRow config={config} />", code)
+                self.assertNotIn("copyrightHolder", code)
+                self.assertNotIn("LEGAL_COMPANY_NAME", code)
+
+    def test_credit_line_for_the_example_site(self):
+        """Executes base_sdk's site-credit rules for the demo record's name
+        (skips when no base_sdk >= 1.54.0 checkout is reachable; set
+        ROKCT_BASE_SDK to its nextjs root)."""
+        base = os.environ.get("ROKCT_BASE_SDK") or os.path.abspath(
+            os.path.join(SDK_ROOT, os.pardir, os.pardir, os.pardir, "core", "base", "nextjs"))
+        rules = os.path.join(base, "templates", "components", "custom", "landing", "site-credit.ts")
+        node = shutil.which("node")
+        if not os.path.isfile(rules) or not node:
+            raise unittest.SkipTest("base_sdk >= 1.54.0 site-credit.ts or node not reachable")
+        with open(self.EXAMPLE_SITE, encoding="utf-8") as f:
+            name = json.load(f)["name"]
+        with tempfile.TemporaryDirectory() as tmp:
+            shutil.copy(rules, os.path.join(tmp, "site-credit.ts"))
+            probe = os.path.join(tmp, "probe.mts")
+            with open(probe, "w", encoding="utf-8") as f:
+                f.write("import { siteCreditLine } from './site-credit.ts';\n"
+                        f"console.log(siteCreditLine({json.dumps(name)}, {{ year: 2026 }}));\n")
+            run = subprocess.run([node, "--experimental-strip-types", "--no-warnings", probe],
+                                 capture_output=True, text=True, timeout=60, cwd=tmp)
+        self.assertEqual(run.returncode, 0, run.stderr)
+        self.assertEqual(run.stdout.strip(), "\u00a9 2026 Example Bakehouse \u00b7 Built with \u2665 by ROKCT")
 
 
 if __name__ == "__main__":

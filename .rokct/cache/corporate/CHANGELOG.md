@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.4.1
+
+* A local-data site's footer ends with base_sdk 1.54.0's site credit,
+  `© <year> <site name> · Built with ♥ by ROKCT` (Ray, 2026-10-31: "all
+  site will be copyright sitename then built with love (as heart) by
+  ROKCT"), the name being `data/site.json` `name` - "© 2026 South River ·
+  Built with ♥ by ROKCT" - instead of "© Copyright <year> - <holder>" with
+  `footer.legal` or `LEGAL_COMPANY_NAME`. `site-footer-section.tsx` passes
+  `siteName` and no `copyrightHolder`, and no longer imports
+  `LEGAL_COMPANY_NAME`; `footer.legal` is no longer drawn. The company and
+  legal frames (`CompanyFrame`, `LegalFrame`) are unchanged: they pass
+  base's default config, whose row now names the host's `PLATFORM_NAME`.
+  Floor: base_sdk >= 1.54.0 (`FooterChromeConfig.siteName`).
+
 ## 1.4.0
 
 * corporate_sdk is the home SDK of every local-data site (Ray, 2026-10-31:

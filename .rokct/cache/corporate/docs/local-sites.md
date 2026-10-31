@@ -42,7 +42,7 @@ by base's hero host through the hero copy and form lines.
    | File | What it holds |
    | --- | --- |
    | `theme.json` | `primary`, `palette` / `paletteDark` (named tokens: paper, card, ink, brand, highlight, heroTop and the rest), `fonts` (display and text face from the allowed set, display weight, italic, capitals) |
-   | `site.json` | name, wordmark, motto, place, since, WhatsApp number, header logo and action, metadata, footer line, links and legal holder |
+   | `site.json` | name, wordmark, motto, place, since, WhatsApp number, header logo and action, metadata, footer line and links (the footer ends `© <year> <name> · Built with ♥ by ROKCT`; `footer.legal` is no longer drawn) |
    | `sections.json` | the page top to bottom: hero, intro, steps, pricing, gallery, facts, order, contact; each with a layout `variant` and a `tone` |
    | `pricing.json` | price tiers, needed when a pricing section is on the page |
    | `order.json` | the WhatsApp order form, needed when an order section is on the page |
