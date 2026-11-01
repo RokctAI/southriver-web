@@ -498,3 +498,79 @@ describe("theme.json backToTop", () => {
     assert.deepEqual(validateSiteData("theme", { primary: "#0a7", backToTop: true }), ["backToTop must be an object"]);
   });
 });
+
+// base_sdk 1.57.0: the order form goes by email.
+import { orderChannels, orderEmailAddress, orderMailto } from "../templates/lib/site-data/order-email.ts";
+import { validateSite as validateSiteEmail, checkSitePage } from "../templates/lib/site-data/validate-site.mjs";
+
+describe("order email", () => { it("order email: override, declared domain, then host", () => {
+  assert.equal(orderEmailAddress({ email: { orders: "shop@x.co.za" } }, "y.com"), "shop@x.co.za");
+  assert.equal(orderEmailAddress({ email: { domain: "x.co.za" } }, "y.com"), "orders@x.co.za");
+  assert.equal(orderEmailAddress({}, "www.southriver.co.za:3000"), "orders@southriver.co.za");
+  assert.equal(orderEmailAddress({}), null);
+  assert.match(orderMailto("a@b.co", { subject: "S s", text: "a: b" }), /^mailto:a@b\.co\?subject=S%20s&body=a%3A%20b$/);
+});
+
+it("site.json email is validated", () => {
+  const base = { name: "X", metadata: { title: "t", description: "d" } };
+  const bad = validateSiteEmail({ ...base, email: { orders: "nope", domain: "no spaces" } });
+  assert.equal(bad.length, 2);
+  assert.deepEqual(validateSiteEmail({ ...base, email: { orders: "o@x.co" } }), []);
+});
+  it("orderVia: whatsapp or both need a WhatsApp number", () => {
+    const sections = { sections: [{ type: "order" }] };
+    const site = (via?: string) => ({ name: "X", email: via ? { orderVia: via } : {} });
+    assert.deepEqual(checkSitePage({ sections, site: site(), order: {} }), []);
+    assert.deepEqual(orderChannels({}), ["email"]);
+    assert.deepEqual(orderChannels({ whatsapp: { number: "1", display: "1" } }), ["email", "whatsapp"]);
+    assert.deepEqual(orderChannels({ whatsapp: { number: "1", display: "1" }, email: { orderVia: "email" } }), ["email"]);
+    assert.equal(checkSitePage({ sections, site: site("both"), order: {} }).length, 1);
+    assert.equal(validateSiteEmail({ name: "X", metadata: { title: "t", description: "d" }, email: { orderVia: "sms" } }).length, 1);
+  });
+});
+
+// base_sdk 1.59.0: the fields the approved South River render needs.
+import { priceAmount, validatePricing as validatePricingRender, validateSections as validateSectionsRender } from "../templates/lib/site-data/validate-site.mjs";
+
+describe("render fields (1.59.0)", () => {
+  const meta = { title: "t", description: "d" };
+  const bottle = { kind: "bottle", label: { bg: "#ffffff", name: "Your logo" } };
+
+  it("site.json header.wordmark and footer.logo", () => {
+    assert.deepEqual(validateSiteEmail({ name: "X", metadata: meta, header: { logo: "/brand/logo.svg", wordmark: false }, footer: { logo: "/brand/logo.svg" } }), []);
+    const bad = validateSiteEmail({ name: "X", metadata: meta, header: { wordmark: "no" }, footer: { logo: "logo.svg" } });
+    assert.equal(bad.length, 2);
+  });
+
+  it("a bottle's labels roll", () => {
+    const hero = (labels: unknown) => ({ sections: [{ type: "hero", lines: ["a"], art: { front: { ...bottle, labels } } }] });
+    assert.deepEqual(validateSectionsRender(hero([{ bg: "#13866f", name: "Marula Lodge" }])), []);
+    assert.equal(validateSectionsRender(hero([{ name: "no bg" }])).length, 1);
+    assert.equal(validateSectionsRender(hero("one")).length, 1);
+    assert.deepEqual(validateSectionsRender(hero([{ bg: "#1d2d4f", name: "Kgosi", mark: "K" }])), []);
+    assert.equal(validateSectionsRender(hero([{ bg: "#1d2d4f", name: "Kgosi", mark: "KGO" }])).length, 1);
+  });
+
+  it("pricing: perCase, fine, art and slider", () => {
+    const ok = {
+      perCase: 24,
+      tiers: [
+        { name: "Under 10", price: "R180", fine: { strong: "24 bottles", text: " of 500 ml to a case, {each} a bottle." }, art: bottle },
+        { name: "10 or more", price: "R150", slider: { min: 10, max: 60, label: "Cases", count: "{n} cases · {units} bottles", total: "Total", breakdown: "{n} × {price} · {each} a bottle" } },
+      ],
+    };
+    assert.deepEqual(validatePricingRender(ok), []);
+    const { perCase: _drop, ...noCase } = ok;
+    assert.equal(validatePricingRender(noCase).length, 2);
+    assert.equal(validatePricingRender({ tiers: [{ name: "a", price: "Ask us", slider: { min: 1, max: 5, label: "n" } }] }).length, 1);
+    assert.equal(validatePricingRender({ tiers: [{ name: "a", price: "R1", slider: { min: 5, max: 5, label: "n" } }] }).length, 1);
+    assert.equal(validatePricingRender({ tiers: [{ name: "a", price: "R1", slider: { max: 5, label: "n" } }] }).length, 1);
+    assert.equal(validatePricingRender({ tiers: [{ name: "a", price: "R1", fine: { strong: "x" } }] }).length, 1);
+  });
+
+  it("priceAmount", () => {
+    assert.equal(priceAmount("R150"), 150);
+    assert.equal(priceAmount("R1,500.50"), 1500.5);
+    assert.equal(priceAmount("Ask"), null);
+  });
+});

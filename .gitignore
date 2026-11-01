@@ -119,6 +119,7 @@ next-env.d.ts
 /components/custom/company/team-count.tsx
 /components/custom/company/team-grid.tsx
 /components/custom/download-buttons.tsx
+/components/custom/flip-card.tsx
 /components/custom/footer-chrome.tsx
 /components/custom/header-menu.tsx
 /components/custom/header.tsx
@@ -183,6 +184,8 @@ next-env.d.ts
 /components/custom/site/site-metadata.ts
 /components/custom/site/site-order-form.client.tsx
 /components/custom/site/site-plans-query.ts
+/components/custom/site/site-price.ts
+/components/custom/site/site-pricing-slider.client.tsx
 /components/custom/site/site-sections.tsx
 /components/custom/site/site-slots.tsx
 /components/custom/site/site-source.ts
@@ -197,6 +200,7 @@ next-env.d.ts
 /lib/site-data/generate.mjs
 /lib/site-data/generated.ts
 /lib/site-data/kinds.ts
+/lib/site-data/order-email.ts
 /lib/site-data/read-site-data.ts
 /lib/site-data/site-theme.ts
 /lib/site-data/validate-site.mjs

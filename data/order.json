@@ -1,17 +1,33 @@
 {
   "intro": "Hi South River, I would like a private-label quote.",
   "fields": {
-    "business": { "label": "Business or event name", "placeholder": "e.g. Mapungubwe Guest House" },
-    "quantity": { "label": "Cases wanted", "placeholder": "10" },
-    "phone": { "label": "Your WhatsApp number", "placeholder": "07x xxx xxxx" },
-    "area": { "label": "Delivery area", "placeholder": "Town or suburb" },
-    "file": { "label": "Your logo (optional, we will also ask for it on WhatsApp)", "placeholder": "PNG, JPG, SVG or PDF", "button": "Choose file" }
+    "business": {
+      "label": "Business or event name",
+      "placeholder": "e.g. Mapungubwe Guest House"
+    },
+    "quantity": {
+      "label": "Cases wanted",
+      "placeholder": "10"
+    },
+    "phone": {
+      "label": "Your WhatsApp number",
+      "placeholder": "07x xxx xxxx"
+    },
+    "area": {
+      "label": "Deliver to (we deliver nationwide)",
+      "placeholder": "Any town in South Africa"
+    },
+    "file": {
+      "label": "Your logo (optional, we will also ask for it on WhatsApp)",
+      "placeholder": "PNG, JPG, SVG or PDF",
+      "button": "Choose file"
+    }
   },
   "message": {
     "business": "Business/event: {value}",
-    "quantity": "Cases of 500 ml: {value}",
+    "quantity": "Cases of 24 × 500 ml: {value}",
     "quantityPrice": " ({price} a case)",
-    "area": "Delivery area: {value}",
+    "area": "Deliver to: {value}",
     "phone": "My WhatsApp: {value}",
     "fileSent": "Logo file: {file} (I will send it here)",
     "fileLater": "I will send my logo here."
@@ -21,6 +37,11 @@
   "preview": {
     "heading": "Label preview",
     "placeholderName": "Your logo",
-    "label": { "bg": "#ffffff", "fg": "#1d1416", "sub": "Still water · 500 ml", "footer": "Bottled by South River" }
+    "label": {
+      "bg": "#ffffff",
+      "fg": "#1d1416",
+      "sub": "Still water · 500 ml",
+      "footer": "Bottled by South River"
+    }
   }
 }

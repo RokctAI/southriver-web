@@ -1,21 +1,44 @@
 {
+  "perCase": 24,
   "tiers": [
     {
-      "name": "Ten cases or more",
+      "name": "Under 10 cases",
+      "price": "R180",
+      "unit": "per case",
+      "detail": "The same bottles and label for a small first order or a single function.",
+      "fine": {
+        "strong": "24 bottles",
+        "text": " of 500 ml to a case, {each} a bottle."
+      },
+      "art": {
+        "kind": "bottle",
+        "label": {
+          "bg": "#d9001b",
+          "fg": "#ffffff",
+          "name": "Your logo",
+          "sub": "Still water · 500 ml",
+          "footer": "Bottled by South River"
+        }
+      },
+      "minQty": 1,
+      "previewNote": "a case of 24, under 10 cases"
+    },
+    {
+      "name": "10 cases or more",
       "price": "R150",
       "unit": "per case",
       "detail": "500 ml bottles with your label. The price for most offices, shops and events.",
       "best": true,
+      "slider": {
+        "min": 10,
+        "max": 60,
+        "label": "Cases",
+        "count": "{n} cases · {units} bottles",
+        "total": "Total",
+        "breakdown": "{n} × {price} · {each} a bottle"
+      },
       "minQty": 10,
-      "previewNote": "a case, 10 or more"
-    },
-    {
-      "name": "Fewer than ten cases",
-      "price": "R180",
-      "unit": "per case",
-      "detail": "The same bottles and label for a small first order or a single function.",
-      "minQty": 1,
-      "previewNote": "a case, under 10 cases"
+      "previewNote": "a case of 24, 10 or more"
     }
   ],
   "ctaLabel": "Order on WhatsApp",

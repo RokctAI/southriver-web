@@ -7,20 +7,69 @@
       "lines": ["Your brand", "on every", "bottle."],
       "accentLine": 2,
       "lede": "Still water for shops, offices, weddings and events, with your name on the label. Send us your logo; we print the label, fill the bottles and deliver the cases.",
-      "cta": { "label": "Order on WhatsApp", "href": "whatsapp" },
-      "secondary": { "label": "See prices", "href": "#pricing" },
-      "facts": ["Alkaline, pH 8", "Reverse-osmosis purified", "Bottled in Musina since 2021"],
-      "tag": { "price": "R150", "text": "a case of 500 ml, from 10 cases" },
+      "cta": {
+        "label": "Order on WhatsApp",
+        "href": "whatsapp"
+      },
+      "secondary": {
+        "label": "See prices",
+        "href": "#pricing"
+      },
+      "facts": [
+        "Alkaline, pH 8",
+        "Reverse-osmosis purified",
+        "Delivered nationwide across South Africa"
+      ],
+      "tag": {
+        "price": "R150",
+        "text": "a case of 24 × 500 ml, from 10 cases"
+      },
       "art": {
         "back": {
           "kind": "bottle",
           "size": "1.25 L",
-          "label": { "bg": "#d9001b", "name": "South River", "art": "/brand/south-river-label.svg" },
+          "label": {
+            "bg": "#d9001b",
+            "name": "South River",
+            "art": "/brand/south-river-label.svg"
+          },
           "cap": "#d9001b"
         },
         "front": {
           "kind": "bottle",
-          "label": { "bg": "#ffffff", "fg": "#1d1416", "name": "Your logo", "sub": "Still water · 500 ml", "footer": "Bottled by South River" }
+          "label": {
+            "bg": "#24694a",
+            "fg": "#ffffff",
+            "mark": "M",
+            "name": "Marula Lodge",
+            "sub": "Still water · 500 ml",
+            "footer": "Bottled by South River"
+          },
+          "labels": [
+            {
+              "bg": "#1d2f4f",
+              "fg": "#ffffff",
+              "mark": "K",
+              "name": "Kgosi Attorneys",
+              "sub": "Still water · 500 ml",
+              "footer": "Bottled by South River"
+            },
+            {
+              "bg": "#ffffff",
+              "fg": "#1d1416",
+              "name": "Your logo",
+              "sub": "Still water · 500 ml",
+              "footer": "Bottled by South River"
+            },
+            {
+              "bg": "#5b2a86",
+              "fg": "#ffffff",
+              "mark": "N",
+              "name": "Nala Events",
+              "sub": "Still water · 500 ml",
+              "footer": "Bottled by South River"
+            }
+          ]
         }
       }
     },
@@ -28,8 +77,11 @@
       "type": "intro",
       "id": "since",
       "year": "Since 2021",
-      "text": "South River has bottled water in Musina, at the top of Limpopo. The feed is municipal water, cleaned by reverse osmosis and bottled alkaline, at pH 8. Now the same water can carry your name.",
-      "stamp": { "lines": ["Alkaline", "Musina", "Since 2021"], "center": "pH 8" }
+      "text": "South River has bottled water and delivered it nationwide, across South Africa. The feed is municipal water, cleaned by reverse osmosis and bottled alkaline, at pH 8. Now the same water can carry your name.",
+      "stamp": {
+        "lines": ["Alkaline", "Nationwide", "Since 2021"],
+        "center": "pH 8"
+      }
     },
     {
       "type": "steps",
@@ -39,9 +91,21 @@
       "eyebrow": "How private label works",
       "heading": "Three steps from your logo to a case on the counter.",
       "steps": [
-        { "title": "Send your logo", "text": "WhatsApp us your logo or artwork and the number of cases you need. A plain name in your colours works too.", "icon": "upload" },
-        { "title": "We make the label", "text": "We set your logo on a 500 ml label, show you a proof, and print it once you say yes.", "icon": "label" },
-        { "title": "We fill and deliver", "text": "The bottles are filled, labelled and packed in cases in Musina, then delivered to you.", "icon": "truck" }
+        {
+          "title": "Send your logo",
+          "text": "WhatsApp us your logo or artwork and the number of cases you need. A plain name in your colours works too.",
+          "icon": "upload"
+        },
+        {
+          "title": "We make the label",
+          "text": "We set your logo on a 500 ml label, show you a proof, and print it once you say yes.",
+          "icon": "label"
+        },
+        {
+          "title": "We fill and deliver",
+          "text": "The bottles are filled, labelled and packed in cases, then delivered to you, anywhere in South Africa.",
+          "icon": "truck"
+        }
       ]
     },
     {
@@ -50,7 +114,7 @@
       "nav": "Pricing",
       "eyebrow": "Private-label pricing",
       "heading": "One price for a case. Less when you order ten.",
-      "note": "Prices per case of 500 ml bottles, label included. Delivery is quoted for your area on WhatsApp.",
+      "note": "Prices per case of 24 × 500 ml bottles, label included. We deliver nationwide across South Africa; delivery is quoted on WhatsApp.",
       "own": {
         "eyebrow": "Under our own label",
         "heading": "South River 1.25 litre.",
@@ -58,7 +122,11 @@
         "art": {
           "kind": "bottle",
           "size": "1.25 L",
-          "label": { "bg": "#d9001b", "name": "South River", "art": "/brand/south-river-label.svg" },
+          "label": {
+            "bg": "#d9001b",
+            "name": "South River",
+            "art": "/brand/south-river-label.svg"
+          },
           "cap": "#d9001b"
         }
       }
@@ -76,22 +144,62 @@
         {
           "title": "Shops and spazas",
           "text": "Your shop's name on the cold-drink shelf, at a case price that leaves room for margin.",
-          "art": { "kind": "bottle", "label": { "bg": "#ffd23f", "fg": "#2a1a00", "name": "Your shop", "sub": "Still water · 500 ml", "footer": "Bottled by South River" }, "cap": "#ffd23f" }
+          "art": {
+            "kind": "bottle",
+            "label": {
+              "bg": "#ffd23f",
+              "fg": "#2a1a00",
+              "name": "Your shop",
+              "sub": "Still water · 500 ml",
+              "footer": "Bottled by South River"
+            },
+            "cap": "#ffd23f"
+          }
         },
         {
           "title": "Offices",
           "text": "Branded water on the boardroom table and at reception, delivered by the case.",
-          "art": { "kind": "bottle", "label": { "bg": "#1d2433", "fg": "#ffffff", "name": "Your firm", "sub": "Still water · 500 ml", "footer": "Bottled by South River" }, "cap": "#1d2433" }
+          "art": {
+            "kind": "bottle",
+            "label": {
+              "bg": "#1d2433",
+              "fg": "#ffffff",
+              "name": "Your firm",
+              "sub": "Still water · 500 ml",
+              "footer": "Bottled by South River"
+            },
+            "cap": "#1d2433"
+          }
         },
         {
           "title": "Weddings",
           "text": "The couple's names and the date on every bottle on every table.",
-          "art": { "kind": "bottle", "label": { "bg": "#f7ece6", "fg": "#6a3b2e", "name": "Thabo & Naledi", "sub": "14 · 02 · 2027", "footer": "Bottled by South River" }, "cap": "#b88a5a" }
+          "art": {
+            "kind": "bottle",
+            "label": {
+              "bg": "#f7ece6",
+              "fg": "#6a3b2e",
+              "name": "Thabo & Naledi",
+              "sub": "14 · 02 · 2027",
+              "footer": "Bottled by South River"
+            },
+            "cap": "#b88a5a"
+          }
         },
         {
           "title": "Events",
           "text": "A sponsor's or an organiser's mark for the marathon, the festival or the church camp.",
-          "art": { "kind": "bottle", "label": { "bg": "#13866f", "fg": "#ffffff", "name": "Your event", "sub": "Still water · 500 ml", "footer": "Bottled by South River" }, "cap": "#13866f" }
+          "art": {
+            "kind": "bottle",
+            "label": {
+              "bg": "#13866f",
+              "fg": "#ffffff",
+              "name": "Your event",
+              "sub": "Still water · 500 ml",
+              "footer": "Bottled by South River"
+            },
+            "cap": "#13866f"
+          }
         }
       ]
     },
@@ -103,33 +211,95 @@
       "tone": "brand",
       "eyebrow": "The water",
       "heading": "Alkaline, cleaned by reverse osmosis.",
-      "blurb": "The feed is Musina's municipal supply. It goes through reverse-osmosis membranes that take out most of the dissolved solids, and is bottled alkaline, at pH 8, with a clean, light taste.",
+      "blurb": "The feed is the municipal supply. It goes through reverse-osmosis membranes that take out most of the dissolved solids, and is bottled alkaline, at pH 8, with a clean, light taste.",
       "stats": [
-        { "label": "pH", "value": "8.1" },
-        { "label": "TDS, mg/ℓ", "value": "83" }
+        {
+          "label": "pH",
+          "value": "8.1"
+        },
+        {
+          "label": "TDS, mg/ℓ",
+          "value": "83"
+        }
       ],
       "table": {
         "heading": "Composition in mg per litre",
         "note": "As printed on the South River label.",
         "rows": [
-          { "name": "Calcium", "symbol": "Ca", "value": "10" },
-          { "name": "Magnesium", "symbol": "Mg", "value": "10" },
-          { "name": "Sodium", "symbol": "Na", "value": "3" },
-          { "name": "Potassium", "symbol": "K", "value": "1" },
-          { "name": "Chloride", "symbol": "Cl", "value": "2" },
-          { "name": "Sulphate", "symbol": "SO₄", "value": "4" },
-          { "name": "Alkalinity", "symbol": "as CaCO₃", "value": "65" },
-          { "name": "Nitrate", "symbol": "as N", "value": "1" },
-          { "name": "Fluoride", "symbol": "as F", "value": "<0.1" },
-          { "name": "Iron", "symbol": "as Fe", "value": "<0.1" },
-          { "name": "Aluminium", "symbol": "as Al", "value": "<0.3" }
+          {
+            "name": "Calcium",
+            "symbol": "Ca",
+            "value": "10"
+          },
+          {
+            "name": "Magnesium",
+            "symbol": "Mg",
+            "value": "10"
+          },
+          {
+            "name": "Sodium",
+            "symbol": "Na",
+            "value": "3"
+          },
+          {
+            "name": "Potassium",
+            "symbol": "K",
+            "value": "1"
+          },
+          {
+            "name": "Chloride",
+            "symbol": "Cl",
+            "value": "2"
+          },
+          {
+            "name": "Sulphate",
+            "symbol": "SO₄",
+            "value": "4"
+          },
+          {
+            "name": "Alkalinity",
+            "symbol": "as CaCO₃",
+            "value": "65"
+          },
+          {
+            "name": "Nitrate",
+            "symbol": "as N",
+            "value": "1"
+          },
+          {
+            "name": "Fluoride",
+            "symbol": "as F",
+            "value": "<0.1"
+          },
+          {
+            "name": "Iron",
+            "symbol": "as Fe",
+            "value": "<0.1"
+          },
+          {
+            "name": "Aluminium",
+            "symbol": "as Al",
+            "value": "<0.3"
+          }
         ]
       },
       "chain": [
-        { "label": "Feed", "value": "Municipal supply" },
-        { "label": "Treatment", "value": "Reverse osmosis" },
-        { "label": "Result", "value": "Alkaline, pH 8" },
-        { "label": "Bottled", "value": "Musina, since 2021" }
+        {
+          "label": "Feed",
+          "value": "Municipal supply"
+        },
+        {
+          "label": "Treatment",
+          "value": "Reverse osmosis"
+        },
+        {
+          "label": "Result",
+          "value": "Alkaline, pH 8"
+        },
+        {
+          "label": "Delivered",
+          "value": "Nationwide, since 2021"
+        }
       ]
     },
     {
@@ -138,7 +308,7 @@
       "nav": "Order",
       "eyebrow": "Order",
       "heading": "Tell us about your order.",
-      "blurb": "Fill in what you know and the form opens WhatsApp with the details already typed. We reply with a label proof and a delivery quote."
+      "blurb": "Fill in what you know and the form opens WhatsApp with the details already typed. We reply with a label proof and a delivery quote. We deliver nationwide across South Africa."
     },
     {
       "type": "contact",
@@ -149,8 +319,11 @@
       "eyebrow": "Contact",
       "heading": "WhatsApp us.",
       "blurb": "Orders, label proofs and delivery quotes all happen on WhatsApp. The same number is the careline on every South River bottle.",
-      "note": "Based in Musina, Limpopo. Message us for delivery times to your area.",
-      "card": { "label": "WhatsApp", "action": "Open a chat" }
+      "note": "We deliver nationwide across South Africa. Message us for delivery times.",
+      "card": {
+        "label": "WhatsApp",
+        "action": "Open a chat"
+      }
     }
   ]
 }

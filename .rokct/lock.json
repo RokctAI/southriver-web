@@ -4,11 +4,11 @@
   "app_type": "southriver-web",
   "protocol": {
     "git": "https://github.com/RokctAI/The-Rokct-Protocol",
-    "ref": "239ef107fb0557b249662ccff61d0f3f7c3dd7a2",
+    "ref": "31acbe20c4dfb025cbe2feac1a99a0e314e92cfa",
     "vendored": ".rokct/cache/_composer",
     "files": {
       "sdk_composer.py": "bc6ba6cbea6a470de4afd34d55606d1022cfedace14031010f63ccd38cc63d03",
-      "sdk_installer_base.py": "2bf31221ae0a4bc2a108854e12d08c5a54b5f3c7af8de2d5ed973075328a6e10"
+      "sdk_installer_base.py": "b72703da9e18bbecaac21e829c6a8123f0127e78c77be2be762cd7e769f11e5f"
     }
   },
   "sdks": [
@@ -18,8 +18,8 @@
       "cache": ".rokct/cache/telemetry",
       "git": "https://github.com/RokctAI/core",
       "path": "../core/telemetry/nextjs",
-      "ref": "main",
-      "commit": "0590178149aa68d51a7590c668bd30e33e8200ee",
+      "ref": "claude/project-thread-3o3tuh-southriver-render",
+      "commit": "07af1880723fc26650462f72c8c10a0e9e964c5f",
       "version": "1.2.2",
       "install_py_sha256": "318d20eb7123ffaa549618d06b4530dfce5df9ba0b07df2328c0c6e1738e36c4",
       "content_sha256": "97652d52df5b1f4fada6bfb41793a47df1b90cc5343aaf317139683cd75db1c1"
@@ -30,11 +30,11 @@
       "cache": ".rokct/cache/base",
       "git": "https://github.com/RokctAI/core",
       "path": "../core/base/nextjs",
-      "ref": "main",
-      "commit": "0590178149aa68d51a7590c668bd30e33e8200ee",
-      "version": "1.56.0",
+      "ref": "claude/project-thread-3o3tuh-southriver-render",
+      "commit": "07af1880723fc26650462f72c8c10a0e9e964c5f",
+      "version": "1.59.0",
       "install_py_sha256": "b6c434a1c05611d29f1018f68b9423383f7ecfbf9cc1efe74825ba6c4df98fff",
-      "content_sha256": "8f235d6124a5ce0ea1cf367baa34c4ac0c31d60c6c347ef8102e56eef861e683"
+      "content_sha256": "6912f1636973a2f5b2513315ea1c936aa41edc7fadd89142d89e901f1786b490"
     },
     {
       "name": "corporate_sdk",
@@ -42,11 +42,11 @@
       "cache": ".rokct/cache/corporate",
       "git": "https://github.com/RokctAI/corporate",
       "path": "../corporate/corporate/nextjs",
-      "ref": "main",
-      "commit": "a5aea4a064cb76a2245dbd814389445fe056cd3f",
-      "version": "1.4.2",
+      "ref": "claude/project-thread-3o3tuh-southriver-render",
+      "commit": "238539cacaf68331f4269578eeb3ee6626b1243f",
+      "version": "1.5.0",
       "install_py_sha256": "6e03485fd03617ea1e175adc50354a91af25e213908371fa3581083d8aa7d4ba",
-      "content_sha256": "420e27eb0e9bfde2b5bb34da1b018d7d175133c9cf7776d031fabecfb957be3d"
+      "content_sha256": "4f10951fd68754301fa6a60e413279a6a4066149ac248673d30773bad5ea17ab"
     }
   ]
 }

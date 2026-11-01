@@ -278,7 +278,7 @@ export function validateSite(value) {
   const problems = [];
   if (!isPlainObject(value)) return ['the file must be a JSON object with a "name" and "metadata"'];
   const c = checker(problems);
-  c.only("", value, ["name", "wordmark", "motto", "place", "since", "whatsapp", "header", "metadata", "footer"]);
+  c.only("", value, ["name", "wordmark", "motto", "place", "since", "whatsapp", "email", "header", "metadata", "footer"]);
   c.str("name", value.name, true);
   if (c.object("wordmark", value.wordmark)) {
     c.only("wordmark", value.wordmark, ["lead", "mark", "rest"]);
@@ -296,9 +296,23 @@ export function validateSite(value) {
     }
     c.str("whatsapp.display", value.whatsapp.display, true);
   }
+  if (c.object("email", value.email)) {
+    c.only("email", value.email, ["orders", "domain", "orderVia"]);
+    if (c.str("email.orders", value.email.orders) && value.email.orders !== undefined && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email.orders)) {
+      problems.push('email.orders must be an email address such as "orders@example.com"');
+    }
+    if (c.str("email.domain", value.email.domain) && value.email.domain !== undefined && !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/i.test(value.email.domain)) {
+      problems.push('email.domain must be a bare domain such as "example.com"');
+    }
+  }
+  if (value.email?.orderVia !== undefined && !["email", "whatsapp", "both"].includes(value.email.orderVia)) {
+    problems.push('email.orderVia must be "email", "whatsapp" or "both"');
+  }
   if (c.object("header", value.header)) {
-    c.only("header", value.header, ["logo", "action"]);
+    c.only("header", value.header, ["logo", "wordmark", "action"]);
     if (value.header.logo !== undefined && value.header.logo !== "none" && value.header.logo !== "auto") c.path("header.logo", value.header.logo);
+    // 1.59.0: false when the header logo image already spells the name.
+    c.bool("header.wordmark", value.header.wordmark);
     c.link("header.action", value.header.action);
   }
   if (c.object("metadata", value.metadata, true)) {
@@ -313,7 +327,9 @@ export function validateSite(value) {
     c.path("metadata.icon", m.icon);
   }
   if (c.object("footer", value.footer)) {
-    c.only("footer", value.footer, ["links", "line", "legal"]);
+    c.only("footer", value.footer, ["links", "line", "legal", "logo"]);
+    // 1.59.0: the footer draws this image in place of the type wordmark.
+    c.path("footer.logo", value.footer.logo);
     c.list("footer.links", value.footer.links, (at, l) => c.link(at, l, true));
     c.str("footer.line", value.footer.line);
     c.str("footer.legal", value.footer.legal);
@@ -328,9 +344,11 @@ export function validateSite(value) {
 
 function checkLabel(c, problems, at, v, required = false, needsFace = true) {
   if (!c.object(at, v, required)) return;
-  c.only(at, v, ["bg", "fg", "name", "sub", "footer", "art"]);
+  c.only(at, v, ["bg", "fg", "name", "sub", "footer", "art", "mark"]);
   c.hex(`${at}.bg`, v.bg, true);
   c.hex(`${at}.fg`, v.fg);
+  // 1.59.0: a monogram of one or two characters, drawn in a ring above the name.
+  if (c.str(`${at}.mark`, v.mark) && v.mark !== undefined && [...v.mark].length > 2) problems.push(`${at}.mark must be one or two characters`);
   c.str(`${at}.name`, v.name);
   c.str(`${at}.sub`, v.sub);
   c.str(`${at}.footer`, v.footer);
@@ -342,9 +360,11 @@ function checkArt(c, problems, at, v, required = false) {
   if (!c.object(at, v, required)) return;
   c.oneOf(`${at}.kind`, v.kind, ["bottle", "image"], true);
   if (v.kind === "bottle") {
-    c.only(at, v, ["kind", "size", "label", "cap"]);
+    c.only(at, v, ["kind", "size", "label", "labels", "cap"]);
     c.oneOf(`${at}.size`, v.size, BOTTLE_SIZES);
     checkLabel(c, problems, `${at}.label`, v.label, true);
+    // 1.59.0: more labels the bottle rolls through after `label`.
+    c.list(`${at}.labels`, v.labels, (here, l) => checkLabel(c, problems, here, l, true));
     c.hex(`${at}.cap`, v.cap);
   } else if (v.kind === "image") {
     c.only(at, v, ["kind", "src", "alt", "width", "height"]);
@@ -507,16 +527,28 @@ export function validateSections(value) {
 
 // ---------------------------------------------------------------- pricing --
 
-/** `data/pricing.json`: `{ tiers: [{ name, price, unit?, detail?, best?, minQty?, previewNote? }], ctaLabel?, bestLabel? }`. */
+/** The first number in a price ("R150" -> 150, "R1,500.50" -> 1500.5), or null. */
+export function priceAmount(price) {
+  const m = typeof price === "string" ? price.match(/[0-9][0-9,]*(\.[0-9]+)?/) : null;
+  return m ? Number(m[0].replace(/,/g, "")) : null;
+}
+
+/**
+ * `data/pricing.json`: `{ tiers: [{ name, price, unit?, detail?, best?, minQty?, previewNote?, fine?, art?, slider? }], perCase?, ctaLabel?, bestLabel? }`.
+ * 1.59.0: `perCase` (units in one case), a tier's `fine` line, its `art`
+ * (drawn in the card) and its `slider` (a quantity range with a running
+ * total). Templates may use `{n}`, `{units}`, `{price}`, `{each}` and `{total}`.
+ */
 export function validatePricing(value) {
   const problems = [];
   if (!isPlainObject(value)) return ['the file must be a JSON object with a "tiers" array'];
   const c = checker(problems);
-  c.only("", value, ["tiers", "ctaLabel", "bestLabel"]);
+  c.only("", value, ["tiers", "perCase", "ctaLabel", "bestLabel"]);
+  c.int("perCase", value.perCase, 1);
   if (!Array.isArray(value.tiers) || value.tiers.length === 0) problems.push("tiers must be a non-empty array");
   else {
     c.list("tiers", value.tiers, (at, t) => {
-      c.only(at, t, ["name", "price", "unit", "detail", "best", "minQty", "previewNote"]);
+      c.only(at, t, ["name", "price", "unit", "detail", "best", "minQty", "previewNote", "fine", "art", "slider"]);
       c.str(`${at}.name`, t.name, true);
       c.str(`${at}.price`, t.price, true);
       c.str(`${at}.unit`, t.unit);
@@ -524,6 +556,28 @@ export function validatePricing(value) {
       c.bool(`${at}.best`, t.best);
       c.int(`${at}.minQty`, t.minQty, 0);
       c.str(`${at}.previewNote`, t.previewNote);
+      if (c.object(`${at}.fine`, t.fine)) {
+        c.only(`${at}.fine`, t.fine, ["strong", "text"]);
+        c.str(`${at}.fine.strong`, t.fine.strong);
+        c.str(`${at}.fine.text`, t.fine.text, true);
+      }
+      checkArt(c, problems, `${at}.art`, t.art);
+      if (c.object(`${at}.slider`, t.slider)) {
+        const sl = t.slider;
+        c.only(`${at}.slider`, sl, ["min", "max", "step", "label", "count", "total", "breakdown"]);
+        c.int(`${at}.slider.min`, sl.min, 1);
+        c.int(`${at}.slider.max`, sl.max, 1);
+        c.int(`${at}.slider.step`, sl.step, 1);
+        if (sl.min === undefined || sl.max === undefined) problems.push(`${at}.slider needs min and max`);
+        else if (Number.isInteger(sl.min) && Number.isInteger(sl.max) && sl.max <= sl.min) problems.push(`${at}.slider.max must be above min`);
+        c.str(`${at}.slider.label`, sl.label, true);
+        c.str(`${at}.slider.count`, sl.count);
+        c.str(`${at}.slider.total`, sl.total);
+        c.str(`${at}.slider.breakdown`, sl.breakdown);
+        if (typeof t.price === "string" && priceAmount(t.price) === null) problems.push(`${at}.price needs a number for the slider's total`);
+      }
+      const words = JSON.stringify([t.fine, t.slider]);
+      if (value.perCase === undefined && /\{(units|each)\}/.test(words)) problems.push(`${at} uses {units} or {each} but the file declares no perCase`);
     });
   }
   c.str("ctaLabel", value.ctaLabel);
@@ -602,7 +656,10 @@ export function checkSitePage(files) {
   if (files.site === undefined) problems.push("data/sections.json needs data/site.json (the site's name, metadata and contact)");
   if (types.has("pricing") && files.pricing === undefined) problems.push("data/sections.json has a pricing section but data/pricing.json is missing");
   if (types.has("order") && files.order === undefined) problems.push("data/sections.json has an order section but data/order.json is missing");
-  const needsWhatsApp = types.has("order") || types.has("pricing") || types.has("contact") || JSON.stringify(sections).includes('"href":"whatsapp"');
+  // The order form goes by email (1.57.0), so it no longer needs the WhatsApp number.
+  // Unset orderVia offers every channel the site has (a site without a WhatsApp number offers email only), so only an explicit choice needs the number.
+  const via = files.site?.email?.orderVia;
+  const needsWhatsApp = (types.has("order") && (via === "whatsapp" || via === "both")) || types.has("pricing") || types.has("contact") || JSON.stringify(sections).includes('"href":"whatsapp"');
   if (needsWhatsApp && files.site !== undefined && files.site.whatsapp === undefined) {
     problems.push("data/sections.json opens WhatsApp (an order, pricing or contact section, or a \"whatsapp\" link) but data/site.json has no whatsapp number");
   }

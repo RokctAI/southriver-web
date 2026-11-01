@@ -1,5 +1,74 @@
 # Changelog
 
+## 1.59.0
+
+* feat(site-data): the schema behind the South River render Ray approved
+  (Ray, 2026-11-01: "south river site doesnt have what we discussed
+  yet"). Every field is optional, so existing data/ folders validate
+  unchanged; corporate_sdk >= 1.5.0 draws them.
+  * `data/site.json`: `header.wordmark` (`false` when the `header.logo`
+    image already spells the name, so the header draws the image alone)
+    and `footer.logo` (a public path the footer draws in place of the type
+    wordmark).
+  * A bottle art's `labels`: more labels the bottle rolls through after
+    `label`, one at a time.
+  * A label's `mark`: a monogram of one or two characters, drawn in a
+    ring above the name.
+  * `data/pricing.json`: `perCase` (units in one case, such as 24
+    bottles) and, per tier, `fine` (`{ strong?, text }`, a small line under
+    `detail`), `art` (a picture drawn in the card) and `slider`
+    (`{ min, max, step?, label, count?, total?, breakdown? }`, a quantity
+    range with a running total). The words are templates over `{n}`,
+    `{units}`, `{price}`, `{each}` and `{total}`; `{units}` or `{each}`
+    without `perCase` fails, and so does a slider on a price with no
+    number in it.
+  * `priceAmount(price)` (`validate-site.mjs`): the first number in a
+    price string, `"R1,500"` -> 1500.
+* test: `tests/site-data.test.mts` "render fields (1.59.0)".
+
+## 1.58.1
+
+* style: `components/custom/theme-provider.tsx` is prettier-formatted (the
+  `ThemeProvider` signature is wrapped). The fleet linter reformatted it in
+  every shell that tracks it, and the next compose put the long line back
+  (hosting#29). Formatting only, no logic change.
+
+## 1.58.0
+
+* feat(flip-card): the flip card every shell shares. New
+  `components/custom/flip-card.tsx` (`FlipCard`, `useMediaQuery`,
+  `stopFlip`) is lms_sdk's `LmsFlipCard`, the Supacharge tutor and plan
+  card flip, moved here so other shells turn a card the same way (Ray,
+  2026-10-31: the studio portfolio card flips "exactly like the
+  Supacharge tutor card"). Click, tap, Enter or Space turns it; a fine
+  pointer also turns it on hover unless a click pinned it; Escape turns
+  it back; reduced motion crossfades instead of rotating; the hidden face
+  is `inert` and `aria-hidden`.
+* The defaults behave as LmsFlipCard did. New optional props: `layout`
+  (`"stack"`: both faces share one grid cell, so the card is as tall as
+  its taller face), `hoverDelayMs` (hover-intent), `onFlip(flipped,
+  cause)` (every turn, by press or hover) and `ringClassName` (the focus
+  ring; the default is the shell's `ring` token, so no colour is named
+  here).
+* lms_sdk >= 1.41.0 re-exports it from `landing/lms-flip-card.tsx`;
+  hosting_sdk >= 1.8.0 draws the studio portfolio card with it.
+* test: `TestFlipCard` in `tests/test_manifest.py`.
+
+## 1.57.0
+
+* feat(site-data): a site's order form goes by email, not WhatsApp (Ray,
+  2026-10-31: "orders@sitedomain"). `data/site.json` gains an optional
+  `email: { orders?, domain? }`; the address is `email.orders` if set,
+  else orders@`email.domain`, else orders@ the site's own host
+  (`templates/lib/site-data/order-email.ts`: `orderEmailAddress`,
+  `orderEmailMessage`, `orderMailto`). An order section no longer
+  requires a WhatsApp number; pricing and contact sections still do.
+  Every site offers all its channels by default (email, plus WhatsApp when
+  it has a number; `orderChannels`). `email.orderVia` (`"email"`,
+  `"whatsapp"`, `"both"`) narrows it; WhatsApp or both needs the number.
+  Backward compatible: existing site.json files validate unchanged.
+  The host's mail transport and its credentials are env secrets, set by Ray.
+
 ## 1.56.0
 
 * feat(back-to-top): the "Back to top" button is on every page of every
