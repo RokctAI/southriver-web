@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "repo": "RokctAI/southriver-web",
-  "commit": "c22a45dd4a923e4ab955dcf630c7f0041806adbc",
-  "taken_at": "2026-11-01T10:07:13Z",
-  "dir": "shots/c22a45dd4a923e4ab955dcf630c7f0041806adbc",
+  "commit": "fc4dbfc00f62dea69b7939ef71378790527e9d31",
+  "taken_at": "2026-11-01T10:33:39Z",
+  "dir": "shots/fc4dbfc00f62dea69b7939ef71378790527e9d31",
   "files": {
     "desktop-light.webp": {
       "width": 1200,
@@ -14,20 +14,20 @@
     "desktop-dark.webp": {
       "width": 1200,
       "height": 833,
-      "bytes": 56364,
-      "sha256": "d010d22210c64ba354ff8c05280a5c7ac531f0f41b81218328a95ec354e37b6d"
+      "bytes": 56368,
+      "sha256": "b925da1c4af45ec49ee1f4974de68ae84aaa72dd71e4a0d5ea48f6c4f6df9664"
     },
     "option-light.webp": {
       "width": 800,
       "height": 500,
-      "bytes": 32040,
-      "sha256": "8e042f50596633998289e32cc35a85af9f84537c3bce1ea1a18fbb6a9fe20d08"
+      "bytes": 32038,
+      "sha256": "b3925f336a712c427379cea66d8338d269f5ac3e8d01c9ceb4e919f195123e75"
     },
     "option-dark.webp": {
       "width": 800,
       "height": 500,
-      "bytes": 32316,
-      "sha256": "7215fa1f2008ca167a39bab93785e460fcc3b41ff7bd25ce54fb0eb6f079bde5"
+      "bytes": 32308,
+      "sha256": "594195d346dddf60ed9f32b4dc155eb47c12c4c822d98c8efec8e8e8c0f12ec8"
     },
     "phone-light.webp": {
       "width": 560,
