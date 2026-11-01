@@ -13,7 +13,14 @@
     "title": "South River: private-label bottled water, Musina",
     "tagline": "Your brand on every bottle",
     "description": "Private-label 500 ml bottled water for shops, offices, weddings and events: your logo on South River's alkaline, reverse-osmosis water, bottled in Musina since 2021. R150 a case from ten cases. Order on WhatsApp.",
-    "keywords": ["private label water", "branded bottled water", "Musina", "Limpopo", "alkaline water", "event water"],
+    "keywords": [
+      "private label water",
+      "branded bottled water",
+      "Musina",
+      "Limpopo",
+      "alkaline water",
+      "event water"
+    ],
     "themeColor": "#d9001b",
     "locale": "en_ZA"
   },
