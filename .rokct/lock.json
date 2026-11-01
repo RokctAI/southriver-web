@@ -18,8 +18,8 @@
       "cache": ".rokct/cache/telemetry",
       "git": "https://github.com/RokctAI/core",
       "path": "../core/telemetry/nextjs",
-      "ref": "claude/project-thread-3o3tuh-southriver-render",
-      "commit": "07af1880723fc26650462f72c8c10a0e9e964c5f",
+      "ref": "main",
+      "commit": "7bb8d65fddf502565c79e22bf5bb77c7734172c0",
       "version": "1.2.2",
       "install_py_sha256": "318d20eb7123ffaa549618d06b4530dfce5df9ba0b07df2328c0c6e1738e36c4",
       "content_sha256": "97652d52df5b1f4fada6bfb41793a47df1b90cc5343aaf317139683cd75db1c1"
@@ -30,8 +30,8 @@
       "cache": ".rokct/cache/base",
       "git": "https://github.com/RokctAI/core",
       "path": "../core/base/nextjs",
-      "ref": "claude/project-thread-3o3tuh-southriver-render",
-      "commit": "07af1880723fc26650462f72c8c10a0e9e964c5f",
+      "ref": "main",
+      "commit": "7bb8d65fddf502565c79e22bf5bb77c7734172c0",
       "version": "1.59.0",
       "install_py_sha256": "b6c434a1c05611d29f1018f68b9423383f7ecfbf9cc1efe74825ba6c4df98fff",
       "content_sha256": "6912f1636973a2f5b2513315ea1c936aa41edc7fadd89142d89e901f1786b490"
@@ -42,8 +42,8 @@
       "cache": ".rokct/cache/corporate",
       "git": "https://github.com/RokctAI/corporate",
       "path": "../corporate/corporate/nextjs",
-      "ref": "claude/project-thread-3o3tuh-southriver-render",
-      "commit": "238539cacaf68331f4269578eeb3ee6626b1243f",
+      "ref": "main",
+      "commit": "6f0fc852cdfef1d8c3ffc256f08fbe4fb7f23844",
       "version": "1.5.0",
       "install_py_sha256": "6e03485fd03617ea1e175adc50354a91af25e213908371fa3581083d8aa7d4ba",
       "content_sha256": "4f10951fd68754301fa6a60e413279a6a4066149ac248673d30773bad5ea17ab"
