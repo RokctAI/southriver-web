@@ -1,45 +1,45 @@
 {
   "schema": 1,
   "repo": "RokctAI/southriver-web",
-  "commit": "5fa1c3e6ed06cf8395d1c77587d0cf6b01121bc9",
-  "taken_at": "2026-10-31T17:42:38Z",
-  "dir": "shots/5fa1c3e6ed06cf8395d1c77587d0cf6b01121bc9",
+  "commit": "47f40ffa265868fce30c5687bff2051aca1f2f3e",
+  "taken_at": "2026-11-01T09:49:35Z",
+  "dir": "shots/47f40ffa265868fce30c5687bff2051aca1f2f3e",
   "files": {
     "desktop-light.webp": {
       "width": 1200,
       "height": 833,
-      "bytes": 57630,
-      "sha256": "8f4da91a6d4b761985d878865a16d4a45ed4665dfecd798e2f9cb146dd413fd1"
+      "bytes": 57200,
+      "sha256": "44ba7b163ef40f3b256661833386e4cb6c0fb308a83cc0b96255b01ab2761562"
     },
     "desktop-dark.webp": {
       "width": 1200,
       "height": 833,
-      "bytes": 56672,
-      "sha256": "7845ade02c2fc7ebb3e1f676e6b7d0be82479ed76a04ea6da81b566864ee8558"
+      "bytes": 56368,
+      "sha256": "b925da1c4af45ec49ee1f4974de68ae84aaa72dd71e4a0d5ea48f6c4f6df9664"
     },
     "option-light.webp": {
       "width": 800,
       "height": 500,
-      "bytes": 32814,
-      "sha256": "f4c93249759dc8a30d9c578830d31eb225e1ae7baed122bd1d1dffe79bddd069"
+      "bytes": 32038,
+      "sha256": "b3925f336a712c427379cea66d8338d269f5ac3e8d01c9ceb4e919f195123e75"
     },
     "option-dark.webp": {
       "width": 800,
       "height": 500,
-      "bytes": 32368,
-      "sha256": "a3e41f08cddfc860548912a51056ed6581378b0d38ffd61e4b8ce6c8344330bd"
+      "bytes": 32308,
+      "sha256": "594195d346dddf60ed9f32b4dc155eb47c12c4c822d98c8efec8e8e8c0f12ec8"
     },
     "phone-light.webp": {
       "width": 560,
       "height": 1149,
-      "bytes": 55364,
-      "sha256": "5157e2f7789253251981f9b4baa02a5e3f68ec298e4fdaa1afe29911f5b28f72"
+      "bytes": 55256,
+      "sha256": "b1b5bd66f34914388151442c8a287cd90e636325b53747d89e94d5dc43e7b1d5"
     },
     "phone-dark.webp": {
       "width": 560,
       "height": 1149,
-      "bytes": 54764,
-      "sha256": "1ff5797e31b14a638c032887c599aa06e28a8f0ffc47b8047ab66b5648ed30c3"
+      "bytes": 54430,
+      "sha256": "fa45e2a722401177ca85f8b223250704f11a6e72fc9fdbd51b52f3413ba905ab"
     }
   }
 }
