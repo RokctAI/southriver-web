@@ -46,3 +46,10 @@ html.cs-site.dark {
 .cs-comp dt span {
   color: #8a7778;
 }
+/* The header draws the two-line SOUTH RIVER logo alone (site.json
+   header.wordmark is false), at the height of the render, not in base's
+   32px icon square. */
+header img[src="/brand/south-river-logo.svg"] {
+  width: auto;
+  height: 2.6rem;
+}

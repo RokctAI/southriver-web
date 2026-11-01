@@ -11,17 +11,20 @@ later); how a client is added is `corporate/nextjs/docs/local-sites.md` in
 
 ## What is here
 
-| file            | what it holds                                                                                                     |
-| --------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `theme.json`    | the red-label palette (light and dark), Montserrat 900 italic capitals for display and Figtree for text           |
-| `site.json`     | the name, the SOUTH ® RIVER wordmark, motto, the WhatsApp number, header action, page metadata and footer line   |
-| `sections.json` | the page top to bottom: poster hero with the two bottles, since 2021, how it works, pricing, who it is for, the water (pH and the label's composition table), the order form and contact |
-| `pricing.json`  | R150 a case from ten cases, R180 under ten                                                                        |
-| `order.json`    | the WhatsApp order form: fields, the message it types and the label preview                                      |
-| `site.css`      | the last mile: South River's exact shadcn colour triplets and one table colour                                   |
+| file            | what it holds                                                                                                                                                                                                                             |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `theme.json`    | the red-label palette (light and dark), Montserrat 900 italic capitals for display and Figtree for text                                                                                                                                   |
+| `site.json`     | the name, the two-line SOUTH RIVER logo in the header and footer, motto, the WhatsApp number, header action, page metadata and footer line                                                                                                |
+| `sections.json` | the page top to bottom: poster hero with the two bottles (the front one rolls through four sample labels), since 2021, how it works, pricing, who it is for, the water (pH and the label's composition table), the order form and contact |
+| `pricing.json`  | R180 a case under ten cases (with its bottle), R150 from ten (with the 10 to 60 case slider); 24 bottles to a case                                                                                                                        |
+| `order.json`    | the WhatsApp order form: fields, the message it types and the label preview                                                                                                                                                               |
+| `site.css`      | the last mile: South River's exact shadcn colour triplets and one table colour                                                                                                                                                            |
 
 The own label on the 1.25 L bottle is `public/brand/south-river-label.svg`,
-with its text outlined so it draws without web fonts.
+with its text outlined so it draws without web fonts. The logo itself
+(white, Montserrat ExtraBold Italic outlines) is
+`public/brand/south-river-logo.svg`: the header draws it as is, the footer
+masks it to the brand red. `site.css` sizes it in the header.
 
 ## Rules
 

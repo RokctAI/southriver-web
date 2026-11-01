@@ -5,9 +5,18 @@
       "label": "Business or event name",
       "placeholder": "e.g. Mapungubwe Guest House"
     },
-    "quantity": { "label": "Cases wanted", "placeholder": "10" },
-    "phone": { "label": "Your WhatsApp number", "placeholder": "07x xxx xxxx" },
-    "area": { "label": "Delivery area", "placeholder": "Town or suburb" },
+    "quantity": {
+      "label": "Cases wanted",
+      "placeholder": "10"
+    },
+    "phone": {
+      "label": "Your WhatsApp number",
+      "placeholder": "07x xxx xxxx"
+    },
+    "area": {
+      "label": "Deliver to (we deliver nationwide)",
+      "placeholder": "Any town in South Africa"
+    },
     "file": {
       "label": "Your logo (optional, we will also ask for it on WhatsApp)",
       "placeholder": "PNG, JPG, SVG or PDF",
@@ -16,9 +25,9 @@
   },
   "message": {
     "business": "Business/event: {value}",
-    "quantity": "Cases of 500 ml: {value}",
+    "quantity": "Cases of 24 × 500 ml: {value}",
     "quantityPrice": " ({price} a case)",
-    "area": "Delivery area: {value}",
+    "area": "Deliver to: {value}",
     "phone": "My WhatsApp: {value}",
     "fileSent": "Logo file: {file} (I will send it here)",
     "fileLater": "I will send my logo here."

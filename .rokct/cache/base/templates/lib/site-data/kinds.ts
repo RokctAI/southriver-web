@@ -237,6 +237,9 @@ export interface SiteDataLink {
 }
 
 /** `data/site.json` (1.53.0): a local-data site's identity. */
+/** How the order form is sent: unset (default) offers every channel the site has: email, plus WhatsApp when site.whatsapp is set. "email" or "whatsapp" turns the other off; "both" requires site.whatsapp. */
+export type SiteOrderVia = "email" | "whatsapp" | "both";
+
 export interface SiteIdentity {
   name: string;
   /** The wordmark as type: a heavy `lead` (with an optional `mark` such as "®") over a light `rest`. */
@@ -246,7 +249,13 @@ export interface SiteIdentity {
   since?: string;
   /** `number`: international digits ("27150006069"); `display`: as printed ("015 000 6069"). */
   whatsapp?: { number: string; display: string };
-  header?: { logo?: "none" | "auto" | (string & {}); action?: SiteDataLink };
+  /**
+   * (1.57.0) Where the order form goes. `orders` overrides the address;
+   * without it the address is orders@`domain`, or orders@ the site's own host.
+   */
+  email?: { orders?: string; domain?: string; orderVia?: SiteOrderVia };
+  /** `wordmark` (1.59.0): false when the `logo` image already spells the name, so the header draws the image alone. */
+  header?: { logo?: "none" | "auto" | (string & {}); wordmark?: boolean; action?: SiteDataLink };
   metadata: {
     title: string;
     tagline?: string;
@@ -262,8 +271,9 @@ export interface SiteIdentity {
    * under the motto, and `legal`, the legal holder. Since 1.54.0 the
    * footer's copyright line is the site credit, which names the site
    * (`name`), so no shipped footer draws `legal`; it stays valid data.
+   * `logo` (1.59.0): an image the footer draws in place of the type wordmark.
    */
-  footer?: { links?: SiteDataLink[]; line?: string; legal?: string };
+  footer?: { links?: SiteDataLink[]; line?: string; legal?: string; logo?: string };
 }
 
 /** A label on a bottle: drawn from `name`/`sub`, or an `art` image (a public SVG/PNG) laid on the label. */
@@ -274,11 +284,20 @@ export interface SiteLabel {
   sub?: string;
   footer?: string;
   art?: string;
+  /** (1.59.0) A monogram of one or two characters, drawn in a ring above the name. */
+  mark?: string;
 }
 
 /** A section's picture (1.53.0): the drawn bottle wearing a label, or the site's own image file. */
 export type SiteArt =
-  | { kind: "bottle"; size?: "500 ml" | "1.25 L"; label: SiteLabel; cap?: string }
+  | {
+      kind: "bottle";
+      size?: "500 ml" | "1.25 L";
+      label: SiteLabel;
+      /** (1.59.0) More labels the bottle rolls through after `label`, one at a time. */
+      labels?: SiteLabel[];
+      cap?: string;
+    }
   | { kind: "image"; src: string; alt: string; width?: number; height?: number };
 
 export type SiteSectionTone = "paper" | "alt" | "ink" | "brand";
@@ -398,11 +417,36 @@ export interface SitePriceTier {
   minQty?: number;
   /** The line under the price in the order form's preview. */
   previewNote?: string;
+  /** (1.59.0) A small line under `detail`; `strong` is drawn bold before `text`. */
+  fine?: { strong?: string; text: string };
+  /** (1.59.0) A picture drawn in the card beside its words, the card's full height. */
+  art?: SiteArt;
+  /** (1.59.0) A quantity range with a running total; see SitePriceSlider. */
+  slider?: SitePriceSlider;
+}
+
+/**
+ * (1.59.0) A tier's quantity slider, `min` to `max` (`step`, default 1).
+ * `count`, `breakdown` and `total` are templates over `{n}` (the quantity),
+ * `{units}` (n x perCase), `{price}` (the tier's price), `{each}` (price /
+ * perCase) and `{total}` (n x price); `label` names the range and `total`
+ * names the running total.
+ */
+export interface SitePriceSlider {
+  min: number;
+  max: number;
+  step?: number;
+  label: string;
+  count?: string;
+  total?: string;
+  breakdown?: string;
 }
 
 /** `data/pricing.json` (1.53.0). */
 export interface SitePricing {
   tiers: SitePriceTier[];
+  /** (1.59.0) Units in one case (24 bottles), for `{units}` and `{each}` in a tier's words. */
+  perCase?: number;
   ctaLabel?: string;
   bestLabel?: string;
 }
@@ -413,7 +457,7 @@ export interface SiteOrderField {
   button?: string;
 }
 
-/** `data/order.json` (1.53.0): the WhatsApp order form; see validate-site.mjs validateOrder. */
+/** `data/order.json` (1.53.0): the order form, sent by email (see order-email.ts); see validate-site.mjs validateOrder. */
 export interface SiteOrder {
   intro: string;
   fields: {
