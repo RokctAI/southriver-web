@@ -577,6 +577,118 @@
   transform-origin: top;
   animation-name: cs-run-trail;
 }
+/* 1.6.0: the water is alive. The surface laps across the neck and stays
+   level as the bottle tilts (a stage sets --cs-level against its own
+   rotation), caustics shimmer, the lens line breathes and bubbles rise. */
+.cs-water-level,
+.cs-slosh {
+  transform-box: view-box;
+}
+.cs-water-level {
+  transform: rotate(var(--cs-level, 0deg));
+}
+.cs-slosh {
+  animation: cs-slosh 6.4s ease-in-out infinite;
+}
+@keyframes cs-slosh {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-0.8px) rotate(1.4deg);
+  }
+  65% {
+    transform: translateY(0.6px) rotate(-1.1deg);
+  }
+}
+.cs-wave {
+  animation: cs-wave 3.2s linear infinite;
+}
+.cs-wave-back {
+  animation-duration: 5.1s;
+  animation-direction: reverse;
+}
+@keyframes cs-wave {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-22px);
+  }
+}
+.cs-caustic {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cs-caustic 7s ease-in-out infinite;
+  opacity: 0.4;
+}
+@keyframes cs-caustic {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateX(-6px) scaleY(0.7);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translateX(6px) scaleY(1.3);
+  }
+}
+.cs-lens {
+  animation: cs-lens 5.5s ease-in-out infinite;
+}
+@keyframes cs-lens {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+.cs-pool {
+  animation: cs-pool 6s ease-in-out infinite;
+}
+@keyframes cs-pool {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+.cs-bubble {
+  animation: cs-bubble 15s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite both;
+}
+@keyframes cs-bubble {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  8% {
+    opacity: 0.9;
+  }
+  30% {
+    transform: translate(2.5px, calc(var(--cs-rise) * 0.3));
+  }
+  60% {
+    transform: translate(-2px, calc(var(--cs-rise) * 0.6));
+  }
+  92% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(1px, var(--cs-rise));
+  }
+}
+.cs-hero-stage .main {
+  --cs-level: 5.5deg;
+}
+.cs-hero-stage .back {
+  --cs-level: -5.25deg;
+}
 /* 1.5.0: a bottle's label roll (keyframes per bottle, in its own <style>). */
 .cs-roll-face {
   transform-box: view-box;
@@ -589,11 +701,31 @@
   .cs-drop,
   .cs-run,
   .cs-run-trail,
-  .cs-roll-face {
+  .cs-roll-face,
+  .cs-slosh,
+  .cs-wave,
+  .cs-caustic,
+  .cs-lens,
+  .cs-pool,
+  .cs-bubble {
     animation: none !important;
   }
   .cs-roll-face {
     transform: none;
+  }
+  /* The water holds one still frame: calm, with the bubbles caught part-way up. */
+  .cs-bubble {
+    opacity: 0.85;
+    transform: translateY(calc(var(--cs-rise) * var(--cs-at)));
+  }
+  .cs-caustic {
+    opacity: 0.45;
+  }
+  .cs-hero-stage .main {
+    --cs-level: 6deg;
+  }
+  .cs-hero-stage .back {
+    --cs-level: -5deg;
   }
   .cs-roll-next {
     display: none;
