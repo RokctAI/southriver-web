@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.7.1
+
+* **The pricing section's own sizes are whole again** (Ray: the South River
+  "Our water. Three sizes." block was cut off). `.cs-own` clips with
+  `overflow: hidden`, and the sizes row inherited the flush-art
+  `margin-bottom: -24px`, so the captions under the bottles were cut at
+  every width; on a phone the row's true-scale widths were wider than the
+  column, which pushed the 500 ml past the card's edge and widened the
+  text column so the lede ran out of the card. `site.css` now gives the row
+  its own bottom padding instead of the pull-up, lets the grid columns
+  shrink (`min-width: 0`) and lets the bottles shrink together
+  (`flex: 0 1 auto`, `max-width: 100%`), keeping their relative scale. No
+  floor moves.
+
 ## 1.7.0
 
 * **The South River hero loops through the three sizes** (Ray approved the
