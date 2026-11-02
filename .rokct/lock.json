@@ -42,11 +42,11 @@
       "cache": ".rokct/cache/corporate",
       "git": "https://github.com/RokctAI/corporate",
       "path": "../corporate/corporate/nextjs",
-      "ref": "main",
-      "commit": "d6752df2c51460fba88d9c9358d5e007756c48e5",
-      "version": "1.6.0",
+      "ref": "claude/project-thread-3o3tuh-southriver-sizes",
+      "commit": "5fece3bd33c3a4040d1ac19513bdb577406e5a77",
+      "version": "1.7.0",
       "install_py_sha256": "6e03485fd03617ea1e175adc50354a91af25e213908371fa3581083d8aa7d4ba",
-      "content_sha256": "615e83ff8555bcfbc95b6879cb330ee167cd5c60dea51f281413c2e9940a094a"
+      "content_sha256": "1fb19bfdd8f24dc52101683a6766b8bea4026e8827ce59cd807a73a88a7e3ba2"
     }
   ]
 }

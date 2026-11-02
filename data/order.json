@@ -7,7 +7,7 @@
     },
     "quantity": {
       "label": "Cases wanted",
-      "placeholder": "10"
+      "placeholder": "{bestMin}"
     },
     "phone": {
       "label": "Your WhatsApp number",
@@ -25,7 +25,7 @@
   },
   "message": {
     "business": "Business/event: {value}",
-    "quantity": "Cases of 24 × 500 ml: {value}",
+    "quantity": "Cases of {perCase} × 500 ml: {value}",
     "quantityPrice": " ({price} a case)",
     "area": "Deliver to: {value}",
     "phone": "My WhatsApp: {value}",

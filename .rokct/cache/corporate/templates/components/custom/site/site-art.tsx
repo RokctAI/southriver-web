@@ -195,7 +195,7 @@ function dropPath(r: number): string {
 /** The label roll: each label holds ROLL_HOLD seconds and rolls in ROLL_TURN. */
 const ROLL_HOLD = 2.8;
 const ROLL_TURN = 1.1;
-const ROLL_STEP = ROLL_HOLD + ROLL_TURN;
+export const ROLL_STEP = ROLL_HOLD + ROLL_TURN;
 
 /**
  * The keyframes of a bottle's label roll over `n` labels. Every face scales
