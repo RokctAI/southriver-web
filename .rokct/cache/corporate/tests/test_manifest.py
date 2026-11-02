@@ -140,7 +140,7 @@ class TestCorporateNextjs(unittest.TestCase):
     def test_identity_and_version(self):
         self.assertEqual(self.manifest["name"], "corporate_sdk")
         self.assertRegex(self.manifest["version"], r"^\d+\.\d+\.\d+$")
-        self.assertEqual(self.manifest["version"], "1.7.0")
+        self.assertEqual(self.manifest["version"], "1.7.1")
         self.assertIn("sdk_name = 'corporate_sdk'", read(INSTALL_PY))
         self.assertTrue(read(INSTALL_PY).startswith("# " + LICENSE_HEAD))
         # Same shape as the sibling halves: one flat installs list, no
@@ -891,7 +891,6 @@ class TestSizesHero(unittest.TestCase):
     SITE = os.path.join(TEMPLATES, "components", "custom", "site")
 
     def test_version(self):
-        self.assertEqual(load_manifest()["version"], "1.7.0")
         head = read(CHANGELOG).split("## 1.6.0")[0]
         self.assertIn("## 1.7.0", head)
         self.assertIn("Since 1.7.0", load_manifest()["_comment"]["about"])
@@ -975,6 +974,24 @@ class TestSizesHero(unittest.TestCase):
                 continue
             for n, line in enumerate(code_of(path).splitlines(), 1):
                 self.assertIsNone(money.search(line), f"{path}:{n}: {line.strip()}")
+
+
+class TestOwnSizesFit(unittest.TestCase):
+    """1.7.1: the own block's sizes row is never clipped by its card."""
+
+    def test_version(self):
+        self.assertEqual(load_manifest()["version"], "1.7.1")
+        self.assertIn("## 1.7.1", read(CHANGELOG).split("## 1.7.0")[0])
+        self.assertIn("Since 1.7.1", load_manifest()["_comment"]["about"])
+
+    def test_row_fits_its_card(self):
+        css = read(os.path.join(TEMPLATES, "components", "custom", "site", "site.css"))
+        own = css.split(".cs-own figure.cs-own-sizes {")[1].split("}")[0]
+        self.assertIn("margin-bottom: 0;", own)
+        self.assertIn("min-width: 0;", css.split(".cs-own > * {")[1].split("}")[0])
+        size = css.split(".cs-own-size {")[1].split("}")[0]
+        self.assertIn("flex: 0 1 auto;", size)
+        self.assertIn("max-width: 100%;", css.split(".cs-own-bottle {")[1].split("}")[0])
 
 
 if __name__ == "__main__":

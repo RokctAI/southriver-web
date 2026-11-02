@@ -1586,14 +1586,27 @@
   gap: 1.25rem;
   margin: 0;
 }
+/* The row sits in .cs-own (overflow: hidden): it keeps its captions clear of
+ * the flush-art pull-up and lets the bottles shrink together when the
+ * column is narrower than their true-scale widths, so none is clipped. */
+.cs-own > * {
+  min-width: 0;
+}
+.cs-own figure.cs-own-sizes {
+  margin-bottom: 0;
+  padding: 1.25rem 0 2rem;
+}
 .cs-own-size {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.6rem;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 .cs-own-bottle {
   display: block;
+  max-width: 100%;
 }
 .cs-own-bottle > svg {
   display: block;
