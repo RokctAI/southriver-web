@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "repo": "RokctAI/southriver-web",
-  "commit": "1c15bd57b3af122b2e1c51591ef11f9f3311c647",
-  "taken_at": "2026-11-02T08:58:12Z",
-  "dir": "shots/1c15bd57b3af122b2e1c51591ef11f9f3311c647",
+  "commit": "0438da8467aa40b0dd4c2132a15ee8b9feee7082",
+  "taken_at": "2026-11-02T09:00:00Z",
+  "dir": "shots/0438da8467aa40b0dd4c2132a15ee8b9feee7082",
   "files": {
     "desktop-light.webp": {
       "width": 1200,
