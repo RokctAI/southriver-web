@@ -3,26 +3,17 @@
     {
       "name": "500 ml",
       "description": "on the go",
-      "sizes": [
-        "500 ML",
-        "500 ml"
-      ]
+      "sizes": ["500 ML", "500 ml"]
     },
     {
       "name": "1.5 L",
       "description": "for the table",
-      "sizes": [
-        "1.5 LITRES",
-        "1.5 L"
-      ]
+      "sizes": ["1.5 LITRES", "1.5 L"]
     },
     {
       "name": "5 L",
       "description": "home & office jug",
-      "sizes": [
-        "5 LITRES",
-        "5 L jug"
-      ]
+      "sizes": ["5 LITRES", "5 L jug"]
     }
   ]
 }
