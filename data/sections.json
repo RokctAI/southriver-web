@@ -4,11 +4,7 @@
       "type": "hero",
       "variant": "poster",
       "eyebrow": "Private-label bottled water",
-      "lines": [
-        "Your brand",
-        "on every",
-        "bottle."
-      ],
+      "lines": ["Your brand", "on every", "bottle."],
       "accentLine": 2,
       "lede": "Still water for shops, offices, weddings and events, with your name on the label. Send us your logo; we print the label, fill the bottles and deliver the cases.",
       "cta": {
@@ -88,11 +84,7 @@
       "year": "Since 2021",
       "text": "South River has bottled water and delivered it nationwide, across South Africa. The feed is municipal water, cleaned by reverse osmosis and bottled alkaline, at pH 8. Now the same water can carry your name.",
       "stamp": {
-        "lines": [
-          "Alkaline",
-          "Nationwide",
-          "Since 2021"
-        ],
+        "lines": ["Alkaline", "Nationwide", "Since 2021"],
         "center": "pH 8"
       }
     },
