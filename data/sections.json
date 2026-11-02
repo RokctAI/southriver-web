@@ -4,7 +4,11 @@
       "type": "hero",
       "variant": "poster",
       "eyebrow": "Private-label bottled water",
-      "lines": ["Your brand", "on every", "bottle."],
+      "lines": [
+        "Your brand",
+        "on every",
+        "bottle."
+      ],
       "accentLine": 2,
       "lede": "Still water for shops, offices, weddings and events, with your name on the label. Send us your logo; we print the label, fill the bottles and deliver the cases.",
       "cta": {
@@ -21,13 +25,12 @@
         "Delivered nationwide across South Africa"
       ],
       "tag": {
-        "price": "R150",
-        "text": "a case of 24 × 500 ml, from 10 cases"
+        "price": "{bestPrice}",
+        "text": "a case of {perCase} × 500 ml, from {bestMin} cases\nNationwide delivery"
       },
       "art": {
         "back": {
           "kind": "bottle",
-          "size": "1.25 L",
           "label": {
             "bg": "#d9001b",
             "name": "South River",
@@ -38,36 +41,42 @@
         "front": {
           "kind": "bottle",
           "label": {
-            "bg": "#24694a",
+            "bg": "#1d2f4f",
             "fg": "#ffffff",
-            "mark": "M",
-            "name": "Marula Lodge",
+            "mark": "K",
+            "name": "Kgosi Attorneys",
             "sub": "Still water · 500 ml",
             "footer": "Bottled by South River"
           },
           "labels": [
             {
-              "bg": "#1d2f4f",
-              "fg": "#ffffff",
+              "bg": "#f3e9dc",
+              "fg": "#5a3b2e",
+              "mark": "T",
+              "name": "Thandi & Sipho",
+              "sub": "14 March 2027",
+              "footer": "Bottled by South River"
+            },
+            {
+              "bg": "#2b1d14",
+              "fg": "#f1c27d",
               "mark": "K",
-              "name": "Kgosi Attorneys",
+              "name": "Kopi Corner Café",
               "sub": "Still water · 500 ml",
               "footer": "Bottled by South River"
             },
             {
-              "bg": "#ffffff",
-              "fg": "#1d1416",
-              "name": "Your logo",
+              "bg": "#111111",
+              "fg": "#c6ff3d",
+              "mark": "F",
+              "name": "Forge Fitness",
               "sub": "Still water · 500 ml",
               "footer": "Bottled by South River"
             },
             {
-              "bg": "#5b2a86",
-              "fg": "#ffffff",
-              "mark": "N",
-              "name": "Nala Events",
-              "sub": "Still water · 500 ml",
-              "footer": "Bottled by South River"
+              "bg": "#111111",
+              "name": "Supacharge",
+              "art": "/brand/labels/supacharge.svg"
             }
           ]
         }
@@ -79,7 +88,11 @@
       "year": "Since 2021",
       "text": "South River has bottled water and delivered it nationwide, across South Africa. The feed is municipal water, cleaned by reverse osmosis and bottled alkaline, at pH 8. Now the same water can carry your name.",
       "stamp": {
-        "lines": ["Alkaline", "Nationwide", "Since 2021"],
+        "lines": [
+          "Alkaline",
+          "Nationwide",
+          "Since 2021"
+        ],
         "center": "pH 8"
       }
     },
@@ -114,14 +127,13 @@
       "nav": "Pricing",
       "eyebrow": "Private-label pricing",
       "heading": "One price for a case. Less when you order ten.",
-      "note": "Prices per case of 24 × 500 ml bottles, label included. We deliver nationwide across South Africa; delivery is quoted on WhatsApp.",
+      "note": "Prices per case of {perCase} × 500 ml bottles, label included. We deliver nationwide across South Africa; delivery is quoted on WhatsApp.",
       "own": {
-        "eyebrow": "Under our own label",
-        "heading": "South River 1.25 litre.",
-        "text": "The same prepared still water in South River's red label. Ask on WhatsApp for current prices and the other sizes.",
+        "eyebrow": "South River still water",
+        "heading": "Our water. Three sizes.",
+        "text": "Alkaline, reverse-osmosis purified still water, bottled by us. Grab a 500 ml on the go, a 1.5 L for the table, or a 5 L jug for the home and office.\nAsk on WhatsApp for current prices.",
         "art": {
           "kind": "bottle",
-          "size": "1.25 L",
           "label": {
             "bg": "#d9001b",
             "name": "South River",

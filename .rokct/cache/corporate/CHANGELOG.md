@@ -1,5 +1,46 @@
 # Changelog
 
+## 1.7.0
+
+* **The South River hero loops through the three sizes** (Ray approved the
+  three-size hero render, 2026-11-02). `site-hero-form.tsx`, for a poster
+  hero whose site has a 500 ml, a 1.5 L and a 5 L in `data/products.json`,
+  a bottle art behind the hero and a pricing section with an `own` block:
+  * The server draws the **private-label scene** (the hero as it was, its
+    bottle a 500 ml, the bottle behind it the site's own 1.5 L). It holds
+    while the bottle rolls through its labels (one roll per label, so data
+    decides how long), then the private-label bottle leaves, the 1.5 L
+    straightens and shrinks into place and the 500 ml and the 5 L come in:
+    the **sizes scene**, its words from the `own` block (the heading's last
+    sentence one word a line: "Our water." / "Three" / "sizes."). It holds
+    and moves back, for ever. The timeline is `site-hero-loop.ts`, a pure
+    function of time; the client only moves the server's elements (small
+    client JS, no dependency). The loop stops while the tab is hidden or
+    the hero is off screen; with reduced motion it never starts, so the
+    private-label scene stands still with its first label.
+  * Ray: "5l and 1.5l need a bit of space in between": an 18 px gap
+    between the jug and the 1.5 L (16 px between the 1.5 L and the 500 ml),
+    at every width.
+  * **Per-size bottles** (`site-sizes-art.ts`): 500 ml, 1.5 litres and the
+    5 litre jug with its handle and curved wrap, the same PET and live water
+    as `Bottle`, each wearing the data label's art with its size words from
+    `products.json` (`sizes[0]`) set over it as text.
+  * **The tag**: each line of `tag.text` after the first is a delivery line
+    under a rule, with a truck ("Nationwide delivery"), in both heroes.
+  * **The pricing section's `own` block** draws the site's sizes side by
+    side at true scale, captioned with their names and lines
+    (`site-own-sizes.client.tsx`, a client module only so the markup is
+    drawn from a few props instead of travelling twice; server-rendered).
+* **Every price word written once** (Ray: "would love if change is one
+  place and it change that amount everywhere"). Any string in a site's
+  data may say `{perCase}`, `{bestPrice}`, `{bestMin}` or `{basePrice}`;
+  `site-source.ts` fills them from `data/pricing.json` alone
+  (`site-price.ts` `fillSiteWordsDeep`), so the hero tag, the pricing
+  cards, the order form, its WhatsApp message and the metadata print the
+  same numbers. A tier's slider starts at the tier's `minQty`.
+* test: `TestSizesHero` in `tests/test_manifest.py`, including a guard that
+  no template hard-codes a price.
+
 ## 1.6.0
 
 * **The bottle looks real and its water is alive** (Ray, 2026-11-02, of
