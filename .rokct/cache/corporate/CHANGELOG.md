@@ -1,5 +1,35 @@
 # Changelog
 
+## 1.6.0
+
+* **The bottle looks real and its water is alive** (Ray, 2026-11-02, of
+  the South River hero: "bottles have water that is not alive. and can we
+  make the bottles more realistic?"). `site-art.tsx`'s `Bottle`, so every
+  local-data site's drawn bottle, still SVG and CSS keyframes only, server
+  safe, nothing fetched:
+  * **The plastic**: a knurled cap (the knurls spaced as they turn round
+    the cylinder) on its tamper ring and its bridges, the clear support
+    ring, two ridges on the neck, three on the shoulder, the grip ribs as
+    light that fades round the sides, and a petaloid base on three feet.
+    A broad soft highlight, a sharp specular (dimmed over the label, which
+    is printed film), the shoulder's glint, a rim light down the far edge,
+    dark refraction at both edges and a fine outline that holds the bottle
+    on white cards as well as on the red hero. The label has a lit top edge
+    and a shadow under its bottom edge.
+  * **The water**: deeper towards the base; its surface laps across the
+    neck (two wave layers sliding opposite ways, a silver mirror band
+    under a white meniscus glint) and slops gently, and it stays level as
+    the hero tilts the bottle: the stage sets `--cs-level` against the
+    float's own rotation (+5.5deg front, -5.25deg back; 0 elsewhere).
+    Light caustics shimmer across the shoulder and the base, the bottle's
+    lens throws a breathing bright line down the far side, a pool of
+    light pulses on the base, and seven slow bubbles (12 to 19 s) rise
+    behind the label.
+  * **Reduced motion** holds one still frame: the surface calm, the
+    caustics at rest and the bubbles caught part-way up (`--cs-at`).
+  * The water now stands at y 76 (was 70), below the support ring.
+* test: `TestLiveWater` in `tests/test_manifest.py`.
+
 ## 1.5.0
 
 * **The South River render Ray approved, drawn from data** (Ray,

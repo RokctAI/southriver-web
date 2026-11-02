@@ -140,7 +140,7 @@ class TestCorporateNextjs(unittest.TestCase):
     def test_identity_and_version(self):
         self.assertEqual(self.manifest["name"], "corporate_sdk")
         self.assertRegex(self.manifest["version"], r"^\d+\.\d+\.\d+$")
-        self.assertEqual(self.manifest["version"], "1.5.0")
+        self.assertEqual(self.manifest["version"], "1.6.0")
         self.assertIn("sdk_name = 'corporate_sdk'", read(INSTALL_PY))
         self.assertTrue(read(INSTALL_PY).startswith("# " + LICENSE_HEAD))
         # Same shape as the sibling halves: one flat installs list, no
@@ -801,8 +801,7 @@ class TestSouthRiverRender(unittest.TestCase):
 
     SITE = os.path.join(TEMPLATES, "components", "custom", "site")
 
-    def test_version_and_floor(self):
-        self.assertEqual(load_manifest()["version"], "1.5.0")
+    def test_floor(self):
         self.assertIn("floor base_sdk >= 1.59.0", load_manifest()["_comment"]["about"])
         head = read(CHANGELOG).split("## 1.4.2")[0]
         self.assertIn("## 1.5.0", head)
@@ -850,6 +849,38 @@ class TestSouthRiverRender(unittest.TestCase):
             "10 cases · 240 bottles|10 × R150 · R6.25 a bottle|R1,500",
             "R7.50 R9,000 {each}",
         ])
+
+
+class TestLiveWater(unittest.TestCase):
+    """1.6.0: the bottle is drawn as clear PET and its water is alive - the
+    surface laps and stays level, caustics shimmer, bubbles rise - with a
+    still frame under reduced motion and nothing fetched."""
+
+    SITE = os.path.join(TEMPLATES, "components", "custom", "site")
+
+    def test_version(self):
+        self.assertEqual(load_manifest()["version"], "1.6.0")
+        head = read(CHANGELOG).split("## 1.5.0")[0]
+        self.assertIn("## 1.6.0", head)
+        self.assertIn("Since 1.6.0", load_manifest()["_comment"]["about"])
+
+    def test_bottle_parts(self):
+        art = code_of(os.path.join(self.SITE, "site-art.tsx"))
+        for needle in ("wavePath(", "BUBBLES", "CAUSTICS", "cs-water-level", "cs-slosh", "cs-wave",
+                       "cs-caustic", "cs-bubble", "cs-lens", "--cs-rise", "--cs-at", "knurls", "-refract", "-spec"):
+            self.assertIn(needle, art)
+        # Still server safe: no hooks, no browser APIs, no client directive.
+        for banned in ("use client", "useEffect", "useState", "requestAnimationFrame", "<canvas", "<video"):
+            self.assertNotIn(banned, art)
+
+    def test_motion_and_reduced_motion(self):
+        css = read(os.path.join(self.SITE, "site.css"))
+        for frames in ("@keyframes cs-slosh", "@keyframes cs-wave", "@keyframes cs-caustic", "@keyframes cs-bubble"):
+            self.assertIn(frames, css)
+        self.assertIn("--cs-level: 5.5deg", css)
+        reduced = css.split("@media (prefers-reduced-motion: reduce)")[1].split("/* ---")[0]
+        for needle in (".cs-slosh", ".cs-wave", ".cs-caustic", ".cs-lens", ".cs-pool", ".cs-bubble", "var(--cs-at)"):
+            self.assertIn(needle, reduced)
 
 
 if __name__ == "__main__":
