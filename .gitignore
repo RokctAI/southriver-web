@@ -121,6 +121,7 @@ next-env.d.ts
 /components/custom/download-buttons.tsx
 /components/custom/flip-card.tsx
 /components/custom/footer-chrome.tsx
+/components/custom/header-auth-slot.tsx
 /components/custom/header-menu.tsx
 /components/custom/header.tsx
 /components/custom/hero-view.tsx
@@ -132,6 +133,7 @@ next-env.d.ts
 /components/custom/landing/brand-marks.ts
 /components/custom/landing/download-platform.ts
 /components/custom/landing/footer-chrome-config.ts
+/components/custom/landing/header-auth.ts
 /components/custom/landing/header-menu.ts
 /components/custom/landing/hero-config.ts
 /components/custom/landing/hero-copy.ts
