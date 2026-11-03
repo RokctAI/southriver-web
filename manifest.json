@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "repo": "RokctAI/southriver-web",
-  "commit": "0438da8467aa40b0dd4c2132a15ee8b9feee7082",
-  "taken_at": "2026-11-02T09:00:00Z",
-  "dir": "shots/0438da8467aa40b0dd4c2132a15ee8b9feee7082",
+  "commit": "5df4c4734d226fb5aa10e1ef087f8c9162c49106",
+  "taken_at": "2026-11-03T09:56:01Z",
+  "dir": "shots/5df4c4734d226fb5aa10e1ef087f8c9162c49106",
   "files": {
     "desktop-light.webp": {
       "width": 1200,
@@ -26,8 +26,8 @@
     "option-dark.webp": {
       "width": 800,
       "height": 500,
-      "bytes": 34342,
-      "sha256": "9ff1c6ebd0c6270f20e5211ba8c15a0f8b71a9f829883978d04ed786e916c740"
+      "bytes": 34368,
+      "sha256": "cb6b9b5227470cc68b5aaba786ce9a3311870c0a71f78bd6ccd1a728be7b2e93"
     },
     "phone-light.webp": {
       "width": 560,
