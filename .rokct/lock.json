@@ -4,7 +4,7 @@
   "app_type": "southriver-web",
   "protocol": {
     "git": "https://github.com/RokctAI/The-Rokct-Protocol",
-    "ref": "692924e743da09c8392812e50caecd2cd49c9e87",
+    "ref": "833d36c31f67d7493c68ced9b9de0f926317cf42",
     "vendored": ".rokct/cache/_composer",
     "files": {
       "sdk_composer.py": "b437f486a72eed54418ee56bc464e3c016d83a0175d35f28adfd2a9fc37ca943",
@@ -43,10 +43,10 @@
       "git": "https://github.com/RokctAI/corporate",
       "path": "../corporate/corporate/nextjs",
       "ref": "main",
-      "commit": "b27c980fe4469a0236876ea23d0ba6f578a1463b",
-      "version": "1.7.1",
+      "commit": "ad6c82ade5eac26bcccaf068be9d3074b909df5e",
+      "version": "1.7.2",
       "install_py_sha256": "6e03485fd03617ea1e175adc50354a91af25e213908371fa3581083d8aa7d4ba",
-      "content_sha256": "33980ab80e2e0267411ac3fa4ae92266cb99ba8fed465012eec847b345ca5690"
+      "content_sha256": "5113a17a23590a9f14ab9a1b7d3fc865ee55b254b91be05590d26c674f26cecd"
     }
   ]
 }
