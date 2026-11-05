@@ -43,7 +43,7 @@
       "git": "https://github.com/RokctAI/corporate",
       "path": "../corporate/corporate/nextjs",
       "ref": "main",
-      "commit": "ad6c82ade5eac26bcccaf068be9d3074b909df5e",
+      "commit": "3d23e5ba2efa13a0b75f1063564bd8fe688e1417",
       "version": "1.7.2",
       "install_py_sha256": "6e03485fd03617ea1e175adc50354a91af25e213908371fa3581083d8aa7d4ba",
       "content_sha256": "5113a17a23590a9f14ab9a1b7d3fc865ee55b254b91be05590d26c674f26cecd"
