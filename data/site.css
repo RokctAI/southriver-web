@@ -57,7 +57,7 @@ header img[src="/brand/south-river-logo-row.svg"] {
    can be a bit transparent"). Ray, 2026-11-11: "label cant be transparent.
    also cap cant be transparent" - so only the water inside the bottle fades;
    the label and cap stay solid and the whole-bottle opacity stays at 1. */
-.cs-hero .cs-water-level {
+.cs-site .cs-water-level {
   opacity: 0.35;
 }
 /* Ray, 2026-11-11: "see prices in south river hero is not working" - the
@@ -69,17 +69,17 @@ header img[src="/brand/south-river-logo-row.svg"] {
 }
 /* Ray, 2026-11-11: "reduce level of water in the neck" - the water surface
    drops out of the neck to the shoulder; the tilt that keeps it level stays. */
-.cs-hero .cs-water-level {
+.cs-site .cs-water-level {
   transform: rotate(var(--cs-level, 0deg)) translateY(55px);
 }
 /* Ray, 2026-11-11: "the highlights fade them a bit" - the white glints,
    ridges and specular lines on the hero bottles drop to 0.2 ("reduce
    highlights"). */
-.cs-hero svg [stroke="#ffffff"],
-.cs-hero svg [stroke*="-rib)"],
-.cs-hero svg [fill*="-spec)"],
-.cs-hero svg [fill*="-glowx)"],
-.cs-hero svg rect[fill="#ffffff"]:not([x="78"]):not([x="80"]) {
+.cs-site svg:has(.cs-water-level) [stroke="#ffffff"],
+.cs-site svg:has(.cs-water-level) [stroke*="-rib)"],
+.cs-site svg:has(.cs-water-level) [fill*="-spec)"],
+.cs-site svg:has(.cs-water-level) [fill*="-glowx)"],
+.cs-site svg:has(.cs-water-level) rect[fill="#ffffff"]:not([x="78"]):not([x="80"]) {
   opacity: 0.2;
 }
 /* Ray, 2026-11-11: clearer plastic ("i expected b neck to be more redish",
@@ -87,15 +87,15 @@ header img[src="/brand/south-river-logo-row.svg"] {
    label": the plastic film and its sheen are fainter, then "my instruction was to
    avoid reducing" on the label: the long vertical glints keep full strength
    across the label only, and the rest of the bottle's glints drop to 0.15. */
-.cs-hero svg path[fill="#eef6f9"] {
+.cs-site svg:has(.cs-water-level) path[fill="#eef6f9"] {
   opacity: 0.25;
 }
-.cs-hero svg path[fill*="-sheen)"] {
+.cs-site svg:has(.cs-water-level) path[fill*="-sheen)"] {
   opacity: 0.15;
 }
-.cs-hero svg [fill*="-spec)"],
-.cs-hero svg [fill*="-glowx)"],
-.cs-hero svg rect[x="181"][fill="#ffffff"]:not([x="78"]):not([x="80"]) {
+.cs-site svg:has(.cs-water-level) [fill*="-spec)"],
+.cs-site svg:has(.cs-water-level) [fill*="-glowx)"],
+.cs-site svg:has(.cs-water-level) rect[x="181"][fill="#ffffff"]:not([x="78"]):not([x="80"]) {
   opacity: 1;
   clip-path: polygon(0 250px, 240px 250px, 240px 418px, 0 418px) view-box;
   /* Ray: "can highlights in label be the lighter shade of the label
@@ -103,8 +103,8 @@ header img[src="/brand/south-river-logo-row.svg"] {
      red on red, a light navy on navy) instead of sitting on it as white. */
   mix-blend-mode: overlay;
 }
-.cs-hero svg [stroke="#ffffff"],
-.cs-hero svg [stroke*="-rib)"] {
+.cs-site svg:has(.cs-water-level) [stroke="#ffffff"],
+.cs-site svg:has(.cs-water-level) [stroke*="-rib)"] {
   opacity: 0.15;
 }
 /* Ray, 2026-11-11: "the other label changing bottle should just spin with
