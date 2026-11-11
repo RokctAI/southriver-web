@@ -67,35 +67,6 @@ header img[src="/brand/south-river-logo-row.svg"] {
 .cs-loop-bottle * {
   pointer-events: none;
 }
-/* Ray, 2026-11-11: "the other label changing bottle should just spin with
-   label change" then "i wanted same bottle shape turning like 3d bottle" -
-   the bottle's outline stays put and its labels travel round it as if the
-   bottle turns: each label slides in from the right edge, holds, and slides
-   off the left edge, squeezed at the edges like print on a cylinder. This
-   replaces corporate_sdk's wipe for the hero's five-label bottle (5 x 3.9s;
-   a label turns in 1.1s = 5.64% and leaves at 20%). */
-@keyframes sr-label-turn {
-  0% {
-    transform: translateX(170px) scaleX(0.35);
-  }
-  5.64% {
-    transform: translateX(0) scaleX(1);
-  }
-  20% {
-    transform: translateX(0) scaleX(1);
-  }
-  25.64% {
-    transform: translateX(-170px) scaleX(0.35);
-  }
-  100% {
-    transform: translateX(-170px) scaleX(0.35);
-  }
-}
-.cs-hero .cs-roll-face {
-  animation-name: sr-label-turn !important;
-  animation-timing-function: linear !important;
-  transform-origin: 110px 0;
-}
 /* Ray, 2026-11-11: "reduce level of water in the neck" - the water surface
    drops out of the neck to the shoulder; the tilt that keeps it level stays. */
 .cs-hero .cs-water-level {
