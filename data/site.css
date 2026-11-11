@@ -79,7 +79,9 @@ header img[src="/brand/south-river-logo-row.svg"] {
 .cs-site svg:has(.cs-water-level) [stroke*="-rib)"],
 .cs-site svg:has(.cs-water-level) [fill*="-spec)"],
 .cs-site svg:has(.cs-water-level) [fill*="-glowx)"],
-.cs-site svg:has(.cs-water-level) rect[fill="#ffffff"]:not([x="78"]):not([x="80"]) {
+.cs-site
+  svg:has(.cs-water-level)
+  rect[fill="#ffffff"]:not([x="78"]):not([x="80"]) {
   opacity: 0.2;
 }
 /* Ray, 2026-11-11: clearer plastic ("i expected b neck to be more redish",
@@ -95,7 +97,9 @@ header img[src="/brand/south-river-logo-row.svg"] {
 }
 .cs-site svg:has(.cs-water-level) [fill*="-spec)"],
 .cs-site svg:has(.cs-water-level) [fill*="-glowx)"],
-.cs-site svg:has(.cs-water-level) rect[x="181"][fill="#ffffff"]:not([x="78"]):not([x="80"]) {
+.cs-site
+  svg:has(.cs-water-level)
+  rect[x="181"][fill="#ffffff"]:not([x="78"]):not([x="80"]) {
   opacity: 1;
   clip-path: polygon(0 250px, 240px 250px, 240px 418px, 0 418px) view-box;
   /* Ray: "can highlights in label be the lighter shade of the label
@@ -177,7 +181,9 @@ header img[src="/brand/south-river-logo-row.svg"] {
 }
 .cs-hero svg:has(.cs-roll-face) [fill*="-spec)"],
 .cs-hero svg:has(.cs-roll-face) [fill*="-glowx)"],
-.cs-hero svg:has(.cs-roll-face) rect[x="181"][fill="#ffffff"]:not([x="78"]):not([x="80"]) {
+.cs-hero
+  svg:has(.cs-roll-face)
+  rect[x="181"][fill="#ffffff"]:not([x="78"]):not([x="80"]) {
   --sr-glint: 1;
   animation: sr-glint-sweep 3.9s ease-in-out infinite;
 }
@@ -202,31 +208,49 @@ header img[src="/brand/south-river-logo-row.svg"] {
    d: path() keep the still outline. The foot valleys move with it. */
 @keyframes sr-base-turn {
   0.0% {
-    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q155.0 600 132.0 589.0 Q110.0 600 88.0 589.0 Q66.0 600 44.0 581.0 Q43.0 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+    d: path(
+      "M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q155.0 600 132.0 589.0 Q110.0 600 88.0 589.0 Q66.0 600 44.0 581.0 Q43.0 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z"
+    );
   }
   71.8% {
-    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q155.0 600 132.0 589.0 Q110.0 600 88.0 589.0 Q66.0 600 44.0 581.0 Q43.0 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+    d: path(
+      "M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q155.0 600 132.0 589.0 Q110.0 600 88.0 589.0 Q66.0 600 44.0 581.0 Q43.0 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z"
+    );
   }
   76.5% {
-    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q158.7 600 139.3 589.0 Q117.3 600 95.3 589.0 Q73.3 600 51.3 584.7 Q46.7 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+    d: path(
+      "M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q158.7 600 139.3 589.0 Q117.3 600 95.3 589.0 Q73.3 600 51.3 584.7 Q46.7 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z"
+    );
   }
   81.2% {
-    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q162.3 600 146.7 589.0 Q124.7 600 102.7 589.0 Q80.7 600 58.7 588.3 Q50.3 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+    d: path(
+      "M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q162.3 600 146.7 589.0 Q124.7 600 102.7 589.0 Q80.7 600 58.7 588.3 Q50.3 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z"
+    );
   }
   85.9% {
-    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q166.0 600 154.0 589.0 Q132.0 600 110.0 589.0 Q88.0 600 66.0 589.0 Q54.0 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+    d: path(
+      "M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q166.0 600 154.0 589.0 Q132.0 600 110.0 589.0 Q88.0 600 66.0 589.0 Q54.0 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z"
+    );
   }
   90.6% {
-    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q169.7 590 161.3 588.3 Q139.3 600 117.3 589.0 Q95.3 600 73.3 589.0 Q57.7 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+    d: path(
+      "M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q169.7 590 161.3 588.3 Q139.3 600 117.3 589.0 Q95.3 600 73.3 589.0 Q57.7 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z"
+    );
   }
   95.3% {
-    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q173.3 590 168.7 584.7 Q146.7 600 124.7 589.0 Q102.7 600 80.7 589.0 Q61.3 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+    d: path(
+      "M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q173.3 590 168.7 584.7 Q146.7 600 124.7 589.0 Q102.7 600 80.7 589.0 Q61.3 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z"
+    );
   }
   100.0% {
-    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q177.0 590 176.0 581.0 Q154.0 600 132.0 589.0 Q110.0 600 88.0 589.0 Q65.0 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+    d: path(
+      "M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q177.0 590 176.0 581.0 Q154.0 600 132.0 589.0 Q110.0 600 88.0 589.0 Q65.0 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z"
+    );
   }
 }
-.cs-hero svg:has(.cs-roll-face) path[d^="M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580"] {
+.cs-hero
+  svg:has(.cs-roll-face)
+  path[d^="M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580"] {
   animation: sr-base-turn 3.9s ease-in-out infinite;
 }
 @keyframes sr-feet-turn {
@@ -272,8 +296,20 @@ header img[src="/brand/south-river-logo-row.svg"] {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 40'%3E%3Cpath d='M22 38 C21 28 18 18 13 10' fill='none' stroke='%231b2a33' stroke-opacity='0.16' stroke-width='1.6'/%3E%3C/svg%3E");
   background-size: 26.4px 24px;
   background-repeat: repeat-x;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 25%,
+    #000 75%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 25%,
+    #000 75%,
+    transparent
+  );
   animation: sr-back-feet 3.9s ease-in-out infinite;
 }
 @media (prefers-reduced-motion: reduce) {
