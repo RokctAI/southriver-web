@@ -194,3 +194,90 @@ header img[src="/brand/south-river-logo-row.svg"] {
     animation: none !important;
   }
 }
+/* Ray, 2026-11-11: "the bottom line is not moving only the edges are" and
+   "thats admitting a failure in stead of retrying" - the bottle's own outline
+   turns: its scalloped base (five feet) slides round with each label turn,
+   one foot spacing per turn, so it lands where it started. Only the hero's
+   500 ml label bottle, matched by its exact outline; browsers without CSS
+   d: path() keep the still outline. The foot valleys move with it. */
+@keyframes sr-base-turn {
+  0.0% {
+    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q155.0 600 132.0 589.0 Q110.0 600 88.0 589.0 Q66.0 600 44.0 581.0 Q43.0 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+  }
+  71.8% {
+    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q155.0 600 132.0 589.0 Q110.0 600 88.0 589.0 Q66.0 600 44.0 581.0 Q43.0 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+  }
+  76.5% {
+    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q158.7 600 139.3 589.0 Q117.3 600 95.3 589.0 Q73.3 600 51.3 584.7 Q46.7 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+  }
+  81.2% {
+    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q162.3 600 146.7 589.0 Q124.7 600 102.7 589.0 Q80.7 600 58.7 588.3 Q50.3 590 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+  }
+  85.9% {
+    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q166.0 600 154.0 589.0 Q132.0 600 110.0 589.0 Q88.0 600 66.0 589.0 Q54.0 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+  }
+  90.6% {
+    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q169.7 590 161.3 588.3 Q139.3 600 117.3 589.0 Q95.3 600 73.3 589.0 Q57.7 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+  }
+  95.3% {
+    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q173.3 590 168.7 584.7 Q146.7 600 124.7 589.0 Q102.7 600 80.7 589.0 Q61.3 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+  }
+  100.0% {
+    d: path("M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580 Q177.0 590 176.0 581.0 Q154.0 600 132.0 589.0 Q110.0 600 88.0 589.0 Q65.0 600 42.0 580.0 C32 564 28 536 28 496 V164 C28 112 88 106 88 84 Z");
+  }
+}
+.cs-hero svg:has(.cs-roll-face) path[d^="M88 48 H132 V84 C132 106 192 112 192 164 V496 C192 536 188 564 178 580"] {
+  animation: sr-base-turn 3.9s ease-in-out infinite;
+}
+@keyframes sr-feet-turn {
+  0%,
+  71.8% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(44px);
+  }
+}
+.cs-hero svg:has(.cs-roll-face) path[stroke="#1b2a33"][stroke-width="1.4"] {
+  animation: sr-feet-turn 3.9s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cs-hero svg:has(.cs-roll-face) path {
+    animation: none !important;
+  }
+}
+/* Ray, 2026-11-11: "i see 3 legs so i think if its turning i would see the
+   inner side of other legs as those this side move" - through the clear
+   plastic the far side's feet show faintly and travel the opposite way
+   during each turn. The bottle art is a fixed 144 x 372 px (viewBox
+   240 x 620, so 0.6 px a unit); the band sits over the base, one foot
+   spacing (44 units = 26.4 px) a turn, so it lands where it started. */
+@keyframes sr-back-feet {
+  0%,
+  71.8% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: -26.4px;
+  }
+}
+.cs-hero .cs-loop-bottle:has(.cs-roll-face)::after {
+  content: "";
+  position: absolute;
+  left: 25px;
+  top: 330px;
+  width: 82px;
+  height: 24px;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 40'%3E%3Cpath d='M22 38 C21 28 18 18 13 10' fill='none' stroke='%231b2a33' stroke-opacity='0.16' stroke-width='1.6'/%3E%3C/svg%3E");
+  background-size: 26.4px 24px;
+  background-repeat: repeat-x;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+  animation: sr-back-feet 3.9s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cs-hero .cs-loop-bottle:has(.cs-roll-face)::after {
+    animation: none;
+  }
+}
