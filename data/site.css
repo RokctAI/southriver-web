@@ -54,11 +54,11 @@ header img[src="/brand/south-river-logo-row.svg"] {
   height: 2.2rem;
 }
 /* The hero's bottles are a bit see-through (Ray, 2026-11-02: "hero, bottles
-   can be a bit transparent"; 2026-11-11: "i asked for bottles in southriver to
-   be more transparent but it was not done", so 0.85 became 0.6);
-   corporate_sdk >= 1.7.2 reads this. */
-.cs-site {
-  --cs-hero-bottle-opacity: 0.6;
+   can be a bit transparent"). Ray, 2026-11-11: "label cant be transparent.
+   also cap cant be transparent" - so only the water inside the bottle fades;
+   the label and cap stay solid and the whole-bottle opacity stays at 1. */
+.cs-hero .cs-water-level {
+  opacity: 0.35;
 }
 /* Ray, 2026-11-11: "see prices in south river hero is not working" - the
    loop's bottle art sat over the hero buttons and took the click. The art
