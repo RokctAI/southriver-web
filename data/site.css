@@ -281,3 +281,12 @@ header img[src="/brand/south-river-logo-row.svg"] {
     animation: none;
   }
 }
+/* Ray, 2026-11-11: "i think first bottle need to be in front to solve that"
+   - the South River bottle sits in front of the label-changing bottle, so
+   its own label is never seen through the other bottle's water. */
+.cs-hero .cs-loop-bottle:has([id^="hero-1500-"]) {
+  z-index: 2;
+}
+.cs-hero .cs-loop-bottle:has(.cs-roll-face) {
+  z-index: 1;
+}
