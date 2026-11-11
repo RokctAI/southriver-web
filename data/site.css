@@ -90,3 +90,8 @@ header img[src="/brand/south-river-logo-row.svg"] {
     animation: none;
   }
 }
+/* Ray, 2026-11-11: "reduce level of water in the neck" - the water surface
+   drops out of the neck to the shoulder; the tilt that keeps it level stays. */
+.cs-hero .cs-water-level {
+  transform: rotate(var(--cs-level, 0deg)) translateY(55px);
+}
