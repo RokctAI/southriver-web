@@ -136,3 +136,61 @@ header img[src="/brand/south-river-logo-row.svg"] {
   animation-timing-function: linear !important;
   transform-origin: 110px 0;
 }
+/* Ray, 2026-11-11: "bottle is not moving ... the highlights tells us of
+   bottle is moving also water can play part" - on the label-changing bottle,
+   during each 1.1s label turn (the last 28.2% of every 3.9s), the glints
+   sweep across the bottle and come back from the other side, and the water
+   rocks, so the bottle reads as turning on its axis. */
+@keyframes sr-glint-sweep {
+  0%,
+  71.8% {
+    transform: translateX(0);
+    opacity: var(--sr-glint, 1);
+  }
+  86% {
+    transform: translateX(120px);
+    opacity: 0;
+  }
+  86.1% {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: var(--sr-glint, 1);
+  }
+}
+@keyframes sr-water-turn {
+  0%,
+  71.8% {
+    transform: rotate(var(--cs-level, 0deg)) translateY(55px);
+  }
+  80% {
+    transform: rotate(calc(var(--cs-level, 0deg) + 4deg)) translateY(55px);
+  }
+  90% {
+    transform: rotate(calc(var(--cs-level, 0deg) - 3deg)) translateY(55px);
+  }
+  100% {
+    transform: rotate(var(--cs-level, 0deg)) translateY(55px);
+  }
+}
+.cs-hero svg:has(.cs-roll-face) [fill*="-spec)"],
+.cs-hero svg:has(.cs-roll-face) [fill*="-glowx)"],
+.cs-hero svg:has(.cs-roll-face) rect[x="181"][fill="#ffffff"]:not([x="78"]):not([x="80"]) {
+  --sr-glint: 1;
+  animation: sr-glint-sweep 3.9s ease-in-out infinite;
+}
+.cs-hero svg:has(.cs-roll-face) [stroke="#ffffff"],
+.cs-hero svg:has(.cs-roll-face) [stroke*="-rib)"] {
+  --sr-glint: 0.15;
+  animation: sr-glint-sweep 3.9s ease-in-out infinite;
+}
+.cs-hero svg:has(.cs-roll-face) .cs-water-level {
+  animation: sr-water-turn 3.9s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cs-hero svg:has(.cs-roll-face) * {
+    animation: none !important;
+  }
+}
