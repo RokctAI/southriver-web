@@ -54,7 +54,16 @@ header img[src="/brand/south-river-logo-row.svg"] {
   height: 2.2rem;
 }
 /* The hero's bottles are a bit see-through (Ray, 2026-11-02: "hero, bottles
-   can be a bit transparent"); corporate_sdk >= 1.7.2 reads this. */
+   can be a bit transparent"; 2026-11-11: "i asked for bottles in southriver to
+   be more transparent but it was not done", so 0.85 became 0.6);
+   corporate_sdk >= 1.7.2 reads this. */
 .cs-site {
-  --cs-hero-bottle-opacity: 0.85;
+  --cs-hero-bottle-opacity: 0.6;
+}
+/* Ray, 2026-11-11: "see prices in south river hero is not working" - the
+   loop's bottle art sat over the hero buttons and took the click. The art
+   is decoration only, so clicks pass through it to the links underneath. */
+.cs-loop-bottle,
+.cs-loop-bottle * {
+  pointer-events: none;
 }
