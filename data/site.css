@@ -194,29 +194,3 @@ header img[src="/brand/south-river-logo-row.svg"] {
     animation: none !important;
   }
 }
-/* Ray, 2026-11-11: "that bottom part can help you do a spin effect" - the
-   petaloid base's foot valleys travel round with each label turn: they slide
-   off one side and the next feet come in from the other. */
-@keyframes sr-feet-turn {
-  0%,
-  71.8% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  86% {
-    transform: translateX(44px);
-    opacity: 0;
-  }
-  86.1% {
-    transform: translateX(-44px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-.cs-hero svg:has(.cs-roll-face) path[stroke="#1b2a33"][stroke-width="1.4"] {
-  animation: sr-feet-turn 3.9s ease-in-out infinite;
-  stroke-opacity: 0.3;
-}
