@@ -73,11 +73,12 @@ header img[src="/brand/south-river-logo-row.svg"] {
   transform: rotate(var(--cs-level, 0deg)) translateY(55px);
 }
 /* Ray, 2026-11-11: "the highlights fade them a bit" - the white glints,
-   ridges and specular lines on the hero bottles drop to about half. */
+   ridges and specular lines on the hero bottles drop to 0.2 ("reduce
+   highlights"). */
 .cs-hero svg [stroke="#ffffff"],
 .cs-hero svg [stroke*="-rib)"],
 .cs-hero svg [fill*="-spec)"],
 .cs-hero svg [fill*="-glowx)"],
 .cs-hero svg rect[fill="#ffffff"]:not([x="78"]):not([x="80"]) {
-  opacity: 0.45;
+  opacity: 0.2;
 }
