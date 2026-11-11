@@ -98,6 +98,10 @@ header img[src="/brand/south-river-logo-row.svg"] {
 .cs-hero svg rect[x="181"][fill="#ffffff"]:not([x="78"]):not([x="80"]) {
   opacity: 1;
   clip-path: polygon(0 250px, 240px 250px, 240px 418px, 0 418px) view-box;
+  /* Ray: "can highlights in label be the lighter shade of the label
+     background" - blended, the white lifts the label's own colour (a light
+     red on red, a light navy on navy) instead of sitting on it as white. */
+  mix-blend-mode: overlay;
 }
 .cs-hero svg [stroke="#ffffff"],
 .cs-hero svg [stroke*="-rib)"] {
