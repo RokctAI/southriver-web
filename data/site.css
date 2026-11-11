@@ -84,9 +84,9 @@ header img[src="/brand/south-river-logo-row.svg"] {
 }
 /* Ray, 2026-11-11: clearer plastic ("i expected b neck to be more redish",
    then A with that plastic), then "reduce highlight on bottle and avoid on
-   label": the plastic film and its sheen are fainter, the long vertical
-   glints that cross the label are gone, and the rest of the bottle's
-   glints drop to 0.15. */
+   label": the plastic film and its sheen are fainter, then "my instruction was to
+   avoid reducing" on the label: the long vertical glints keep full strength
+   across the label only, and the rest of the bottle's glints drop to 0.15. */
 .cs-hero svg path[fill="#eef6f9"] {
   opacity: 0.25;
 }
@@ -95,8 +95,9 @@ header img[src="/brand/south-river-logo-row.svg"] {
 }
 .cs-hero svg [fill*="-spec)"],
 .cs-hero svg [fill*="-glowx)"],
-.cs-hero svg rect[x="181"] {
-  opacity: 0;
+.cs-hero svg rect[x="181"][fill="#ffffff"]:not([x="78"]):not([x="80"]) {
+  opacity: 1;
+  clip-path: polygon(0 250px, 240px 250px, 240px 418px, 0 418px) view-box;
 }
 .cs-hero svg [stroke="#ffffff"],
 .cs-hero svg [stroke*="-rib)"] {
