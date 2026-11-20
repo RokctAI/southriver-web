@@ -290,3 +290,10 @@ header img[src="/brand/south-river-logo-row.svg"] {
 .cs-hero .cs-loop-bottle:has(.cs-roll-face) {
   z-index: 1;
 }
+/* Ray, 2026-11-20: "fix footer logo of southriver to be white in dark mode".
+   The footer logo is a mask tinted with the brand text colour (red), so in
+   dark mode the tint is set to white instead. */
+html.dark .cs-site .cs-footer-logo,
+html.cs-site.dark .cs-footer-logo {
+  background-color: #ffffff;
+}
