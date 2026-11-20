@@ -290,10 +290,10 @@ header img[src="/brand/south-river-logo-row.svg"] {
 .cs-hero .cs-loop-bottle:has(.cs-roll-face) {
   z-index: 1;
 }
-/* Ray, 2026-11-20: "fix footer logo of southriver to be white in dark mode" -
-   the footer's two-line logo is drawn as a flat white mark on the dark
-   background. */
-html.dark footer img[src="/brand/south-river-logo.svg"],
-html.cs-site.dark footer img[src="/brand/south-river-logo.svg"] {
-  filter: brightness(0) invert(1);
+/* Ray, 2026-11-20: "fix footer logo of southriver to be white in dark mode".
+   The footer logo is a mask tinted with the brand text colour (red), so in
+   dark mode the tint is set to white instead. */
+html.dark .cs-site .cs-footer-logo,
+html.cs-site.dark .cs-footer-logo {
+  background-color: #ffffff;
 }
