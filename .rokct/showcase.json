@@ -10,5 +10,12 @@
     "desktop": "latest/desktop-light.webp",
     "phone": "latest/phone-light.webp"
   },
-  "logo_back": null
+  "logo_back": null,
+  "features": [
+    "Custom-label bottled water: logo to case",
+    "Three bottle sizes, four label styles",
+    "Case pricing with a discount from ten cases",
+    "Labels for shops, offices, weddings and events",
+    "Order enquiry and WhatsApp ordering"
+  ]
 }
