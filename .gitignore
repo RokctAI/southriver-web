@@ -86,12 +86,16 @@ next-env.d.ts
 /app/admin/system/translations/page.tsx
 /app/admin/system/update/page.tsx
 /app/brand-icon/route.tsx
+/app/indexnow-key.txt/route.ts
 /app/landing/page.tsx
 /app/legal/\[id\]/page.tsx
 /app/legal/page.tsx
+/app/lib/ai-discovery.ts
+/app/lib/i18n/phrases.ts
 /app/lib/i18n/sdk/base.json
 /app/lib/i18n/sdk/telemetry.json
 /app/lib/site-metadata.ts
+/app/llms.txt/route.ts
 /app/manager/layout.tsx
 /app/manager/page.tsx
 /app/manager/reports/page.tsx
@@ -106,6 +110,7 @@ next-env.d.ts
 /app/services/base/tenant-hosts.ts
 /app/site-shots/\[file\]/route.ts
 /app/styles/rokct-marquee.css
+/app/styles/rokct-rise.css
 /app/styles/rokct-scroll.css
 /app/team/page.tsx
 /app/twitter-image.tsx
